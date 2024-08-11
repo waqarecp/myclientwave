@@ -7,6 +7,7 @@ use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
 
 use App\Http\Controllers\DashboardController;
@@ -67,6 +68,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
+    
+    // calendars routes
+    Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
 
     // Utility Company routes
     Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');

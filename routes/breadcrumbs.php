@@ -130,5 +130,11 @@ Breadcrumbs::for('appointments.index', function (BreadcrumbTrail $trail) {
 // Home > Appointment > [Appointment]
 Breadcrumbs::for('appointments.show', function (BreadcrumbTrail $trail, Appointment $appointment) {
     $trail->parent('appointments.index');
-    $trail->push(ucwords($appointment->appointment_date), route('appointments.show', $appointment));
+    $trail->push(ucwords($appointment->id), route('appointments.show', $appointment));
+});
+
+// Home > Calendar > index
+Breadcrumbs::for('calendars.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Calendar', route('calendars.index'));
 });

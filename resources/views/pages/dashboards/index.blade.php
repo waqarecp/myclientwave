@@ -10,26 +10,26 @@
 
     <!--begin::Row-->
     <div class="row gx-5 gx-xl-10">
-    @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-                @if (session('success'))
-                    <div class="alert alert-success text-center">
-                        {{ session('success') }}
-                    </div>
-                @endif
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+        @if (session('success'))
+        <div class="alert alert-success text-center">
+            {{ session('success') }}
+        </div>
+        @endif
 
-                @if (session('error'))
-                    <div class="alert alert-danger text-center">
-                        {{ session('error') }}
-                    </div>
-                @endif
+        @if (session('error'))
+        <div class="alert alert-danger text-center">
+            {{ session('error') }}
+        </div>
+        @endif
         <!--begin::Col-->
         <div class="col-xxl-4 mb-5 mb-xl-10">
             <!--begin::Chart widget 27-->
@@ -1760,388 +1760,388 @@
         <!--end::Col-->
     </div>
     <!--end::Row-->
-    
+
     <!--begin::Modal - Create Lead-->
-<div class="modal fade" id="kt_modal_create_lead" tabindex="-1" aria-hidden="true">
-	<!--begin::Modal dialog-->
-	<div class="modal-dialog modal-dialog-centered modal-xl">
-		<!--begin::Modal content-->
-		<div class="modal-content rounded">
-			<!--begin::Modal header-->
-			<div class="modal-header pb-0 border-0 justify-content-end">
-				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-					{!! getIcon('cross', 'fs-1') !!}
-				</div>
-			</div>
-			<!--end::Modal header-->
-			<!--begin::Modal body-->
-			<div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-				<!--begin:Form-->
-				<form id="kt_modal_create_lead_form" class="form" method="POST" action="{{ route('leads.store') }}">
-					@csrf
-					<!--begin::Heading-->
-					<div class="mb-13 text-center">
-						<h2 class="mb-3">Create Lead</h2>
-					</div>
-					<!--end::Heading-->
-					<!--begin::Accordion-->
-					<div class="accordion" id="leadAccordion">
-						<!--begin::Lead Information-->
-						<div class="accordion-item">
-							<h2 class="accordion-header" id="leadInfoHeader">
-								<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#leadInfoCollapse" aria-expanded="true" aria-controls="leadInfoCollapse">
-									Lead Information
-								</button>
-							</h2>
-							<div id="leadInfoCollapse" class="accordion-collapse collapse show" aria-labelledby="leadInfoHeader" data-bs-parent="#leadAccordion">
-								<div class="accordion-body">
-									<div class="row">
-										<div class="col-md-6">
-											<!--begin::Lead Owner-->
-											<div class="fv-row">
-												<label class="d-flex align-items-center fs-6 fw-semibold ">
-													<span class="required">Lead Owner</span>
-												</label>
-												<select class="form-control form-control-solid" name="owner_id" required>
-													<option value="">Choose</option>
-													@foreach($users as $user)
-													<option value="{{$user->id}}">{{$user->name}}</option>
-													@endforeach
-												</select>
-                                                @error('owner_id')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-                                                
-											</div>
-											<!--end::Lead Owner-->
+    <div class="modal fade" id="kt_modal_create_lead" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <!--begin::Modal content-->
+            <div class="modal-content rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header pb-0 border-0 justify-content-end">
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        {!! getIcon('cross', 'fs-1') !!}
+                    </div>
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                    <!--begin:Form-->
+                    <form id="kt_modal_create_lead_form" class="form" method="POST" action="{{ route('leads.store') }}">
+                        @csrf
+                        <!--begin::Heading-->
+                        <div class="mb-13 text-center">
+                            <h2 class="mb-3">Create Lead</h2>
+                        </div>
+                        <!--end::Heading-->
+                        <!--begin::Accordion-->
+                        <div class="accordion" id="leadAccordion">
+                            <!--begin::Lead Information-->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="leadInfoHeader">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#leadInfoCollapse" aria-expanded="true" aria-controls="leadInfoCollapse">
+                                        Lead Information
+                                    </button>
+                                </h2>
+                                <div id="leadInfoCollapse" class="accordion-collapse collapse show" aria-labelledby="leadInfoHeader" data-bs-parent="#leadAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!--begin::Lead Owner-->
+                                                <div class="fv-row">
+                                                    <label class="d-flex align-items-center fs-6 fw-semibold ">
+                                                        <span class="required">Lead Owner</span>
+                                                    </label>
+                                                    <select class="form-control form-control-solid" name="owner_id" required>
+                                                        <option value="">Choose</option>
+                                                        @foreach($users as $user)
+                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('owner_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
 
-											<!--begin::Sales Representative-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Sales Representative</label>
-												<select class="form-control form-control-solid" name="sale_representative">
-													<option value="">Choose</option>
-                                                    @foreach($users as $user)
-													<option value="{{$user->id}}">{{$user->name}}</option>
-													@endforeach
-												</select>
-                                                @error('sale_representative')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Sales Representative-->
+                                                </div>
+                                                <!--end::Lead Owner-->
 
-											<!--begin::First Name-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">First Name</label>
-												<input type="text" class="form-control form-control-solid" name="first_name"  required/>
-                                                @error('first_name')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::First Name-->
+                                                <!--begin::Sales Representative-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Sales Representative</label>
+                                                    <select class="form-control form-control-solid" name="sale_representative">
+                                                        <option value="">Choose</option>
+                                                        @foreach($users as $user)
+                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('sale_representative')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Sales Representative-->
 
-											<!--begin::Last Name-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Last Name</label>
-												<input type="text" class="form-control form-control-solid" name="last_name"  required/>
-                                                @error('last_name')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Last Name-->
+                                                <!--begin::First Name-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">First Name</label>
+                                                    <input type="text" class="form-control form-control-solid" name="first_name" required />
+                                                    @error('first_name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::First Name-->
 
-											<!--begin::Mobile-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Mobile</label>
-												<input type="text" class="form-control form-control-solid" name="mobile"  minlength="11" maxlength="15" required/>
-                                                @error('mobile')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Mobile-->
+                                                <!--begin::Last Name-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Last Name</label>
+                                                    <input type="text" class="form-control form-control-solid" name="last_name" required />
+                                                    @error('last_name')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Last Name-->
 
-											<!--begin::Phone-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Phone</label>
-												<input type="text" class="form-control form-control-solid" minlength="11" maxlength="15" name="phone" />
-                                                @error('phone')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Phone-->
+                                                <!--begin::Mobile-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Mobile</label>
+                                                    <input type="text" class="form-control form-control-solid" name="mobile" minlength="11" maxlength="15" required />
+                                                    @error('mobile')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Mobile-->
 
-											<!--begin::Email-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Email</label>
-												<input type="email" class="form-control form-control-solid" name="email"  required/>
-                                                @error('email')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Email-->
+                                                <!--begin::Phone-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Phone</label>
+                                                    <input type="text" class="form-control form-control-solid" minlength="11" maxlength="15" name="phone" />
+                                                    @error('phone')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Phone-->
 
-											<!--begin::Utility Company-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Utility Company</label>
-												<select class="form-control form-control-solid" name="utility_company_id">
-                                                    <option value="">Choose</option>
-                                                    @foreach($utilitycompanies as $utilitycompany)
-													<option value="{{$utilitycompany->id}}">{{$utilitycompany->utility_company_name}}</option>
-													@endforeach
-												</select>
-                                                @error('utility_company_id')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Utility Company-->
-										</div>
-										<div class="col-md-6">
-											<!--begin::Call Center Representative-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Call Center Representative</label>
-												<select class="form-control form-control-solid" name="call_center_representative">
-                                                    <option value="">Choose</option>
-                                                    @foreach($users as $user)
-													<option value="{{$user->id}}">{{$user->name}}</option>
-													@endforeach
-												</select>
-                                                @error('call_center_representative')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Call Center Representative-->
+                                                <!--begin::Email-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Email</label>
+                                                    <input type="email" class="form-control form-control-solid" name="email" required />
+                                                    @error('email')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Email-->
 
-											<!--begin::Lead Status-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Lead Status</label>
-												<select class="form-control form-control-solid" name="lead_status" required>
-                                                    <option value="">Choose Status</option>
-                                                    <option value="1">Fresh</option>
-                                                    <option value="2">Site Survey</option>
-                                                    <option value="3">Engineering Design</option>
-                                                    <option value="4">Proposal</option>
-                                                    <option value="5">System Details Finalized</option>
-                                                    <option value="6">PO Received</option>
-                                                    <option value="7">Cold</option>
-												</select>
-                                                @error('lead_status')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Lead Status-->
+                                                <!--begin::Utility Company-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Utility Company</label>
+                                                    <select class="form-control form-control-solid" name="utility_company_id">
+                                                        <option value="">Choose</option>
+                                                        @foreach($utilitycompanies as $utilitycompany)
+                                                        <option value="{{$utilitycompany->id}}">{{$utilitycompany->utility_company_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('utility_company_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Utility Company-->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <!--begin::Call Center Representative-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Call Center Representative</label>
+                                                    <select class="form-control form-control-solid" name="call_center_representative">
+                                                        <option value="">Choose</option>
+                                                        @foreach($users as $user)
+                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('call_center_representative')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Call Center Representative-->
 
-											<!--begin::Lead Source-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Lead Source</label>
-												<select class="form-control form-control-solid" name="lead_source_id">
-                                                    <option value="">Select</option>
-                                                    @foreach($sources as $source)
-													<option value="{{$source->id}}">{{$source->source_name}}</option>
-													@endforeach
-												</select>
-                                                @error('lead_source_id')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Lead Source-->
+                                                <!--begin::Lead Status-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Lead Status</label>
+                                                    <select class="form-control form-control-solid" name="lead_status" required>
+                                                        <option value="">Choose Status</option>
+                                                        <option value="1">Fresh</option>
+                                                        <option value="2">Site Survey</option>
+                                                        <option value="3">Engineering Design</option>
+                                                        <option value="4">Proposal</option>
+                                                        <option value="5">System Details Finalized</option>
+                                                        <option value="6">PO Received</option>
+                                                        <option value="7">Cold</option>
+                                                    </select>
+                                                    @error('lead_status')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Lead Status-->
 
-											<!--begin::Appointment Sat-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold mb-2" for="appointment_sat">Appointment Sat</label>
-												<input type="checkbox" class="form-check-input" id="appointment_sat" name="appointment_sat" value="1" />
-                                                @error('appointment_sat')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Appointment Sat-->
+                                                <!--begin::Lead Source-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Lead Source</label>
+                                                    <select class="form-control form-control-solid" name="lead_source_id">
+                                                        <option value="">Select</option>
+                                                        @foreach($sources as $source)
+                                                        <option value="{{$source->id}}">{{$source->source_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @error('lead_source_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Lead Source-->
 
-											<!--begin::Appointment Date-->
-											<div class="fv-row" id="appointment_date_group">
-												<label class="fs-6 fw-semibold ">Appointment Date</label>
-												<input type="date" class="form-control form-control-solid" name="appointment_date" />
-                                                @error('appointment_date')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Appointment Date-->
+                                                <!--begin::Appointment Sat-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold mb-2" for="appointment_sat">Appointment Sat</label>
+                                                    <input type="checkbox" class="form-check-input" id="appointment_sat" name="appointment_sat" value="1" />
+                                                    @error('appointment_sat')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Appointment Sat-->
 
-											<!--begin::Appointment Time-->
-											<div class="fv-row" id="appointment_time_group">
-												<label class="fs-6 fw-semibold ">Appointment Time</label>
-												<input type="time" class="form-control form-control-solid" name="appointment_time" />
-                                                @error('appointment_time')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Appointment Time-->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--end::Lead Information-->
+                                                <!--begin::Appointment Date-->
+                                                <div class="fv-row" id="appointment_date_group">
+                                                    <label class="fs-6 fw-semibold ">Appointment Date</label>
+                                                    <input type="date" class="form-control form-control-solid" name="appointment_date" />
+                                                    @error('appointment_date')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Appointment Date-->
 
-						<!--begin::Address Information-->
-						<div class="accordion-item">
-							<h2 class="accordion-header" id="addressInfoHeader">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addressInfoCollapse" aria-expanded="false" aria-controls="addressInfoCollapse">
-									Address Information
-								</button>
-							</h2>
-							<div id="addressInfoCollapse" class="accordion-collapse collapse" aria-labelledby="addressInfoHeader" data-bs-parent="#leadAccordion">
-								<div class="accordion-body">
-									<div class="row">
-										<div class="col-md-6">
-											<!--begin::Street-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Street</label>
-												<input type="text" class="form-control form-control-solid" name="street" />
-                                                @error('street')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Street-->
+                                                <!--begin::Appointment Time-->
+                                                <div class="fv-row" id="appointment_time_group">
+                                                    <label class="fs-6 fw-semibold ">Appointment Time</label>
+                                                    <input type="time" class="form-control form-control-solid" name="appointment_time" />
+                                                    @error('appointment_time')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Appointment Time-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Lead Information-->
 
-											<!--begin::City-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">City</label>
-												<input type="text" class="form-control form-control-solid" name="city" />
-                                                @error('city')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::City-->
+                            <!--begin::Address Information-->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="addressInfoHeader">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#addressInfoCollapse" aria-expanded="false" aria-controls="addressInfoCollapse">
+                                        Address Information
+                                    </button>
+                                </h2>
+                                <div id="addressInfoCollapse" class="accordion-collapse collapse" aria-labelledby="addressInfoHeader" data-bs-parent="#leadAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <!--begin::Street-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Street</label>
+                                                    <input type="text" class="form-control form-control-solid" name="street" />
+                                                    @error('street')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Street-->
 
-											<!--begin::State-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">State</label>
-												<input type="text" class="form-control form-control-solid" name="state" />
-                                                @error('state')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::State-->
-										</div>
-										<div class="col-md-6">
-											<!--begin::ZIP Code-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">ZIP Code</label>
-												<input type="text" class="form-control form-control-solid" name="zip" />
-                                                @error('zip')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::ZIP Code-->
+                                                <!--begin::City-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">City</label>
+                                                    <input type="text" class="form-control form-control-solid" name="city" />
+                                                    @error('city')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::City-->
 
-											<!--begin::Country-->
-											<div class="fv-row">
-												<label class="fs-6 fw-semibold ">Country</label>
-												<input type="text" class="form-control form-control-solid" name="country" />
-                                                @error('country')
-                                                    <span class="text-danger">{{ $message }}</span> 
-                                                @enderror
-											</div>
-											<!--end::Country-->
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--end::Address Information-->
+                                                <!--begin::State-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">State</label>
+                                                    <input type="text" class="form-control form-control-solid" name="state" />
+                                                    @error('state')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::State-->
+                                            </div>
+                                            <div class="col-md-6">
+                                                <!--begin::ZIP Code-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">ZIP Code</label>
+                                                    <input type="text" class="form-control form-control-solid" name="zip" />
+                                                    @error('zip')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::ZIP Code-->
 
-						<!--begin::Description Information-->
-						<div class="accordion-item">
-							<h2 class="accordion-header" id="descriptionInfoHeader">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionInfoCollapse" aria-expanded="false" aria-controls="descriptionInfoCollapse">
-									Description Information
-								</button>
-							</h2>
-							<div id="descriptionInfoCollapse" class="accordion-collapse collapse" aria-labelledby="descriptionInfoHeader" data-bs-parent="#leadAccordion">
-								<div class="accordion-body">
-									<!--begin::Appointment Notes-->
-									<div class="fv-row">
-										<label class="fs-6 fw-semibold ">Appointment Notes</label>
-										<textarea class="form-control form-control-solid" rows="3" name="appointment_notes"></textarea>
-                                        @error('appointment_notes')
-                                            <span class="text-danger">{{ $message }}</span> 
-                                        @enderror
-									</div>
-									<!--end::Appointment Notes-->
+                                                <!--begin::Country-->
+                                                <div class="fv-row">
+                                                    <label class="fs-6 fw-semibold ">Country</label>
+                                                    <input type="text" class="form-control form-control-solid" name="country" />
+                                                    @error('country')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                                <!--end::Country-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Address Information-->
 
-									<!--begin::Notes-->
-									<div class="fv-row">
-										<label class="fs-6 fw-semibold ">Notes</label>
-										<textarea class="form-control form-control-solid" rows="3" name="notes"></textarea>
-                                        @error('notes')
-                                            <span class="text-danger">{{ $message }}</span> 
-                                        @enderror
-									</div>
-									<!--end::Notes-->
-								</div>
-							</div>
-						</div>
-						<!--end::Description Information-->
+                            <!--begin::Description Information-->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="descriptionInfoHeader">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionInfoCollapse" aria-expanded="false" aria-controls="descriptionInfoCollapse">
+                                        Description Information
+                                    </button>
+                                </h2>
+                                <div id="descriptionInfoCollapse" class="accordion-collapse collapse" aria-labelledby="descriptionInfoHeader" data-bs-parent="#leadAccordion">
+                                    <div class="accordion-body">
+                                        <!--begin::Appointment Notes-->
+                                        <div class="fv-row">
+                                            <label class="fs-6 fw-semibold ">Appointment Notes</label>
+                                            <textarea class="form-control form-control-solid" rows="3" name="appointment_notes"></textarea>
+                                            @error('appointment_notes')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <!--end::Appointment Notes-->
 
-					</div>
-					<!--end::Accordion-->
+                                        <!--begin::Notes-->
+                                        <div class="fv-row">
+                                            <label class="fs-6 fw-semibold ">Notes</label>
+                                            <textarea class="form-control form-control-solid" rows="3" name="notes"></textarea>
+                                            @error('notes')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <!--end::Notes-->
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Description Information-->
 
-					<!--begin::Actions-->
-					<div class="text-center">
-						<button type="button" class="btn btn-warning" data-bs-dismiss="modal">
-							<span class="indicator-label">Close</span>
-						</button>
-						<button type="submit" class="btn btn-primary">
-							<span class="indicator-label">Save Lead</span>
-							<span class="indicator-progress">Please wait...
-								<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-						</button>
-					</div>
-					<!--end::Actions-->
-				</form>
-				<!--end:Form-->
-			</div>
-			<!--end::Modal body-->
-		</div>
-		<!--end::Modal content-->
-	</div>
-	<!--end::Modal dialog-->
-</div>
-<!--end::Modal - Create Lead-->
+                        </div>
+                        <!--end::Accordion-->
+
+                        <!--begin::Actions-->
+                        <div class="text-center">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
+                                <span class="indicator-label">Close</span>
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="indicator-label">Save Lead</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end:Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - Create Lead-->
     @include('partials/modals/adwords-terms')
 
     @push('scripts')
-        <script>
-            $(document).ready(function() {
-                // Initially hide the appointment date and time fields
-                $('#appointment_date_group').hide();
-                $('#appointment_time_group').hide();
+    <script>
+        $(document).ready(function() {
+            // Initially hide the appointment date and time fields
+            $('#appointment_date_group').hide();
+            $('#appointment_time_group').hide();
 
-                // Show/Hide appointment date and time based on checkbox
-                $('#appointment_sat').change(function() {
-                    $('input[name="appointment_date"]').val('');
-                    $('input[name="appointment_time"]').val('');
-                    if ($(this).is(':checked')) {
-                        $('#appointment_date_group').show();
-                        $('#appointment_time_group').show();
-                    } else {
-                        $('#appointment_date_group').hide();
-                        $('#appointment_time_group').hide();
-                    }
-                });
+            // Show/Hide appointment date and time based on checkbox
+            $('#appointment_sat').change(function() {
+                $('input[name="appointment_date"]').val('');
+                $('input[name="appointment_time"]').val('');
+                if ($(this).is(':checked')) {
+                    $('#appointment_date_group').show();
+                    $('#appointment_time_group').show();
+                } else {
+                    $('#appointment_date_group').hide();
+                    $('#appointment_time_group').hide();
+                }
             });
-        </script>
-		<!--begin::Vendors Javascript(used for this page only)-->
-		<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
-		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-		<!--end::Vendors Javascript-->
+        });
+    </script>
+    <!--begin::Vendors Javascript(used for this page only)-->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/continentsLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
+    <!--end::Vendors Javascript-->
     @endpush
 </x-default-layout>
