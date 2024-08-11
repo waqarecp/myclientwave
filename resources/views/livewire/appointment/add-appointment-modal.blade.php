@@ -21,10 +21,10 @@
                         <div class="row">
                             <div class="fv-row mb-7 col-md-6" wire:ignore>
                                 <label class="required fw-semibold fs-6 mb-2">Lead</label>
-                                <select data-dropdown-parent="body" wire:model.lazy="lead_id" name="lead_id" aria-label="Select Lead" class="form-select form-select-solid border fw-semibold">
+                                <select data-dropdown-parent="body" wire:model.lazy="lead_id" id="lead_id" name="lead_id" onchange="get_lead_address(this)" aria-label="Select Lead" class="form-select form-select-solid border fw-semibold">
                                     <option value="">Choose</option>
                                     @foreach($leads as $lead)
-                                        <option value="{{$lead->id}}">{{$lead->first_name}} {{$lead->last_name}}</option>
+                                        <option value="{{$lead->id}}" data-street="{{$lead->street}}" data-city="{{$lead->city}}" data-state="{{$lead->state}}" data-zip="{{$lead->zip}}" data-country="{{$lead->country}}">{{$lead->first_name}} {{$lead->last_name}}</option>
                                     @endforeach
                                 </select>
                                 @error('lead_id')

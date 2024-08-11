@@ -56,6 +56,7 @@ class AddUserModal extends Component
         DB::transaction(function () use ($validatedData) {
             // Prepare the data for creating a new user
             $data = [
+                'company_id' => Auth::user()->company_id,
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),

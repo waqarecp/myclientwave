@@ -67,8 +67,22 @@
             @if($hasPermissionAppointment)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('appointments')}}">
                     <a class="menu-link {{ request()->routeIs('appointments') ? 'active' : '' }}" href="{{ route('appointments.index') }}">
-                        <span class="menu-icon">{!! getIcon('calendar', 'fs-3') !!}</span>
+                        <span class="menu-icon">{!! getIcon('profile-user', 'fs-3') !!}</span>
                         <span class="menu-title">Appointments</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
+            
+            <!--begin:Menu item-->
+            @php
+                $hasPermissionCalendar = auth()->user()->can('read appointment') || auth()->user()->can('write appointment') || auth()->user()->can('create appointment');
+            @endphp
+            @if($hasPermissionCalendar)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('calendars')}}">
+                    <a class="menu-link {{ request()->routeIs('calendars') ? 'active' : '' }}" href="{{ route('calendars.index') }}">
+                        <span class="menu-icon">{!! getIcon('calendar', 'fs-3') !!}</span>
+                        <span class="menu-title">Calendars</span>
                     </a>
                 </div>
             @endif
