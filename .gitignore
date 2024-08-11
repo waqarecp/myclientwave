@@ -16,3 +16,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/public/assets/plugins/global/plugins.bundle.rtl.css
+/public/assets/plugins/global/plugins.bundle.js
