@@ -26,7 +26,7 @@
             <!--end::Daterangepicker-->
             
             <!--begin::Primary button-->
-            <a href="javascript:void(0)" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Add Lead</a>
+            <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
             <!--end::Primary button-->
 		</div>
         @endif

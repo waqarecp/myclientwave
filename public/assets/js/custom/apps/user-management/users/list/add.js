@@ -29,6 +29,17 @@ var KTUsersAddUser = function () {
                             }
                         }
                     },
+                    'password': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Valid password is required'
+                            },
+                            stringLength: {
+                                min: 4,
+                                message: 'The password must be at least 4 characters'
+                            }
+                        }
+                    }
                 },
 
                 plugins: {

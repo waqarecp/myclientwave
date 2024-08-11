@@ -7833,6 +7833,7 @@ var KTLayoutSearch = function() {
 		init: function() {
             // Elements
             element = document.querySelector('#kt_header_search');
+
             if (!element) {
                 return;
             }
@@ -7854,6 +7855,7 @@ var KTLayoutSearch = function() {
             
             // Initialize search handler
             searchObject = new KTSearch(element);
+
             // Demo search handler
             searchObject.on('kt.search.process', processs);
 
@@ -8201,6 +8203,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = KTThemeMode;
 }
 "use strict";
+
 // Define a function to handle the AJAX request
 var updateDateRange = function(startDate, endDate) {
     var currentUrl = window.location.pathname;
@@ -8218,23 +8221,20 @@ var updateDateRange = function(startDate, endDate) {
 
     $.ajax({
         url: ajaxRoute,
-        type: 'POST',
+        type: 'GET',
         data: {
             start_date: startDate,
-            end_date: endDate,
-            _token: $('meta[name="csrf-token"]').attr('content') 
+            end_date: endDate
         },
         success: function(response) {
             // Update UI with fetched data
             $('.data-container').html(response);
-            location.reload();
         },
         error: function(xhr, status, error) {
             console.error(error);
         }
     });
 };
-
 
 // Bind an event listener to the date picker
 $('[data-kt-daterangepicker="true"]').on('apply.daterangepicker', function(ev, picker) {
