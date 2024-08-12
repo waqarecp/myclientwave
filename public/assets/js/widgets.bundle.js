@@ -12471,7 +12471,7 @@ var KTChartsWidget36 = (function () {
 	}
 })();
 
-KTChartsWidget36.init(chartDataArray);
+KTChartsWidget36.init();
 
 // Webpack support
 if (typeof module !== 'undefined') {
