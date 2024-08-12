@@ -185,25 +185,20 @@
                                                 </div>
                                                 <!--end::Appointment Sat-->
 
-                                                <!--begin::Appointment Date-->
-                                                <div class="fv-row" id="appointment_date_group">
+                                                <div class="fv-row appointment_fields">
                                                     <label class="fs-6 fw-semibold ">Appointment Date</label>
                                                     <input type="date" class="form-control form-control-solid form-control-sm" wire:model="appointment_date" name="appointment_date" />
                                                     @error('appointment_date')
                                                         <span class="text-danger">{{ $message }}</span> 
                                                     @enderror
                                                 </div>
-                                                <!--end::Appointment Date-->
-
-                                                <!--begin::Appointment Time-->
-                                                <div class="fv-row" id="appointment_time_group">
+                                                <div class="fv-row appointment_fields">
                                                     <label class="fs-6 fw-semibold ">Appointment Time</label>
                                                     <input type="time" class="form-control form-control-solid form-control-sm" wire:model="appointment_time" name="appointment_time" />
                                                     @error('appointment_time')
                                                         <span class="text-danger">{{ $message }}</span> 
                                                     @enderror
                                                 </div>
-                                                <!--end::Appointment Time-->
                                             </div>
                                         </div>
 								    </div>

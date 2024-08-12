@@ -40,11 +40,9 @@ $(document).ready(function() {
     // Show/Hide appointment date and time based on checkbox
     $('#appointment_sat').change(function() {
         if ($(this).is(':checked')) {
-            $('#appointment_date_group').show();
-            $('#appointment_time_group').show();
+            $('.appointment_fields').show();
         } else {
-            $('#appointment_date_group').hide();
-            $('#appointment_time_group').hide();
+            $('.appointment_fields').hide();
         }
     });
 });

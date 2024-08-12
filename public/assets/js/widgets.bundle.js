@@ -11057,14 +11057,11 @@ KTUtil.onDOMContentLoaded(function () {
 // Class definition
 var KTChartsWidget31 = (function () {
 	// Private methods
-	var initChart1 = function(chartData) {
+	var initChart1 = function () {
 		// Check if amchart library is included
 		if (typeof am5 === "undefined") {
 			return;
 		}
-	
-		
-	
 
 		var element = document.getElementById("kt_charts_widget_31_chart");
 
@@ -11076,7 +11073,6 @@ var KTChartsWidget31 = (function () {
 		var root;
 
 		var init = function() {
-			
 			// Create root element
 			// https://www.amcharts.com/docs/v5/getting-started/#Root_element
 			root = am5.Root.new(element);
@@ -11215,7 +11211,6 @@ var KTChartsWidget31 = (function () {
 					centerY: am5.p50
 				})
 			);
-			
 			legend.data.setAll([series1, series2]);
 
 			legend.labels.template.setAll({
@@ -11226,75 +11221,53 @@ var KTChartsWidget31 = (function () {
 
 			// Set data
 			// https://www.amcharts.com/docs/v5/charts/radar-chart/#Setting_data
-		
-			// var data = [
-			// 	{
-			// 		name: chartData.name,
-			// 		value1: chartData.total_value,
-					
-			// 	},
-			// 	{
-			// 		name: "Organic Search",
-			// 		value1: 120.1,
-			// 		value2: 50.5,
-			// 	},
-			// 	{
-			// 		name: "Paid Search",
-			// 		value1: 150.7,
-			// 		value2: 12.3,
-			// 	},
-			// 	{
-			// 		name: "Paid Social",
-			// 		value1: 69.4,
-			// 		value2: 74.5,
-			// 	},
-			// 	{
-			// 		name: "Direct",
-			// 		value1: 78.5,
-			// 		value2: 29.7,
-			// 	},
-			// 	{
-			// 		name: "Referral",
-			// 		value1: 77.6,
-			// 		value2: 102.2,
-			// 	},
-			// 	{
-			// 		name: "Email",
-			// 		value1: 69.8,
-			// 		value2: 22.6,
-			// 	},
-			// 	{
-			// 		name: "Organic Social",
-			// 		value1: 63.6,
-			// 		value2: 45.3,
-			// 	},
-	
-			// ];
-			var data = [];
 
-Object.keys(chartData.currentData).forEach(function(key) {
-    var item = chartData.currentData[key];
-    data.push({
-        name: item.name,
-        value1: item.total_value,
-       
-    });
+			var data = [
+				{
+					name: "unassigned",
+					value1: 8.043,
+					value2: '(4.5%)',
+				},
+				{
+					name: "Organic Search",
+					value1: 120.1,
+					value2: 50.5,
+				},
+				{
+					name: "Paid Search",
+					value1: 150.7,
+					value2: 12.3,
+				},
+				{
+					name: "Paid Social",
+					value1: 69.4,
+					value2: 74.5,
+				},
+				{
+					name: "Direct",
+					value1: 78.5,
+					value2: 29.7,
+				},
+				{
+					name: "Referral",
+					value1: 77.6,
+					value2: 102.2,
+				},
+				{
+					name: "Email",
+					value1: 69.8,
+					value2: 22.6,
+				},
+				{
+					name: "Organic Social",
+					value1: 63.6,
+					value2: 45.3,
+				},
 	
-});
+			];
 
-var data1 = [];
-
-Object.keys(chartData.currentData).forEach(function(key) {
-    var item = chartData.currentData[key];
-    data.push({
-        name: item.name,
-        value1: item.total_value,
-       
-    });
-	
-});
-			series1.data.setAll(chartData.currentData);
-			series2.data.setAll(chartData.previousData);
+			series1.data.setAll(data);
+			series2.data.setAll(data);
 			xAxis.data.setAll(data);
 
 			// Animate chart and series in
@@ -11321,10 +11294,8 @@ Object.keys(chartData.currentData).forEach(function(key) {
 
 	// Public methods
 	return {
-		init: function (responseCp) {
-			
-				initChart1(responseCp);
-			
+		init: function () {
+			initChart1();
 		}
 	};
 })();
@@ -11336,7 +11307,7 @@ if (typeof module !== "undefined") {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-	// KTChartsWidget31.init(responseCp);
+	KTChartsWidget31.init();
 });
 
 "use strict";
@@ -12334,200 +12305,173 @@ KTUtil.onDOMContentLoaded(function() {
 "use strict";
 
 var KTChartsWidget36 = (function () {
-    var charts = [];
+	var charts = [];
 
-    var initChart = function(chartData, index, startIndex, endIndex) {
-        var element = document.getElementById("kt_charts_widget_36_" + index);
+	var initChart = function(chartData, index) {
+		var element = document.getElementById("kt_charts_widget_36_" + index);
 
-        if (!element) {
-            return;
-        }
+		if (!element) {
+			return;
+		}
 
-        var slicedData = {
-            categories: chartData.categories.slice(startIndex, endIndex),
-            sessionsData: chartData.sessionsData.slice(startIndex, endIndex),
-            previousMonthData: chartData.previousMonthData.slice(startIndex, endIndex)
-        };
+		var height = parseInt(KTUtil.css(element, 'height'));
+	var labelColor = KTUtil.getCssVariableValue('--bs-gray-500');
+	var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
+	var baseprimaryColor = KTUtil.getCssVariableValue('--bs-primary');
+	var lightprimaryColor = KTUtil.getCssVariableValue('--bs-primary');
+	var basesuccessColor = KTUtil.getCssVariableValue('--bs-success');
+	var lightsuccessColor = KTUtil.getCssVariableValue('--bs-success');
 
-        var minValue = Math.min.apply(Math, slicedData.sessionsData);
-        var maxValue = Math.max.apply(Math, slicedData.sessionsData);
-		
+	var options = {
+		series: [{
+			name: 'Sessions',
+			data: chartData.sessionsData
+		}, {
+			name: 'Same Period 1 month ago',
+			data: chartData.previousMonthData
+		}],
+		chart: {
+			fontFamily: 'inherit',
+			type: 'area',
+			height: height,
+			toolbar: {
+				show: false
+			}
+		},
+		plotOptions: { },
+		legend: {
+			show: false
+		},
+		dataLabels: {
+			enabled: false
+		},
+		fill: {
+			type: "gradient",
+			gradient: {
+				shadeIntensity: 1,
+				opacityFrom: 0.4,
+				opacityTo: 0.2,
+				stops: [15, 120, 100]
+			}
+		},
+		stroke: {
+			curve: 'smooth',
+			show: true,
+			width: 3,
+			colors: [baseprimaryColor, basesuccessColor]
+		},
+		xaxis: {
+			categories: chartData.categories, // Use categories from chartData
+			axisBorder: {
+				show: false,
+			},
+			axisTicks: {
+				show: false
+			},
+			tickAmount: 6,
+			labels: {
+				rotate: 0,
+				rotateAlways: true,
+				style: {
+					colors: labelColor,
+					fontSize: '12px'
+				}
+			},
+			crosshairs: {
+				position: 'front',
+				stroke: {
+					color: [baseprimaryColor, basesuccessColor],
+					width: 1,
+					dashArray: 3
+				}
+			},
+			tooltip: {
+				enabled: true,
+				formatter: undefined,
+				offsetY: 0,
+				style: {
+					fontSize: '12px'
+				}
+			}
+		},
+		yaxis: {
+			max: 120,
+			min: 30,
+			tickAmount: 6,
+			labels: {
+				style: {
+					colors: labelColor,
+					fontSize: '12px'
+				} 
+			}
+		},
+		states: {
+			normal: {
+				filter: {
+					type: 'none',
+					value: 0
+				}
+			},
+			hover: {
+				filter: {
+					type: 'none',
+					value: 0
+				}
+			},
+			active: {
+				allowMultipleDataPointsSelection: false,
+				filter: {
+					type: 'none',
+					value: 0
+				}
+			}
+		},
+		tooltip: {
+			style: {
+				fontSize: '12px'
+			} 
+		},
+		colors: [lightprimaryColor, lightsuccessColor],
+		grid: {
+			borderColor: borderColor,
+			strokeDashArray: 4,
+			yaxis: {
+				lines: {
+					show: true
+				}
+			}
+		},
+		markers: {
+			strokeColor: [baseprimaryColor, basesuccessColor],
+			strokeWidth: 3
+		}
+	};
 
-        var height = parseInt(KTUtil.css(element, 'height'));
-        var labelColor = KTUtil.getCssVariableValue('--bs-gray-500');
-        var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
-        var baseprimaryColor = KTUtil.getCssVariableValue('--bs-primary');
-        var lightprimaryColor = KTUtil.getCssVariableValue('--bs-primary');
-        var basesuccessColor = KTUtil.getCssVariableValue('--bs-success');
-        var lightsuccessColor = KTUtil.getCssVariableValue('--bs-success');
+	var chart = new ApexCharts(element, options);
+	chart.render();
+	charts.push(chart);    
 
-        var options = {
-            series: [{
-                name: 'Sessions',
-                data: slicedData.sessionsData
-            }, {
-                name: 'Same Period 1 month ago',
-                data: slicedData.previousMonthData
-            }],
-            chart: {
-                fontFamily: 'inherit',
-                type: 'area',
-                height: height,
-                toolbar: {
-                    show: false
-                }
-            },
-            plotOptions: { },
-            legend: {
-                show: false
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.2,
-                    stops: [15, 120, 100]
-                }
-            },
-            stroke: {
-                curve: 'smooth',
-                show: true,
-                width: 3,
-                colors: [baseprimaryColor, basesuccessColor]
-            },
-            xaxis: {
-                categories: slicedData.categories,
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false
-                },
-                tickAmount: 6,
-                labels: {
-                    rotate: 0,
-                    rotateAlways: true,
-                    style: {
-                        colors: labelColor,
-                        fontSize: '12px'
-                    }
-                },
-                crosshairs: {
-                    position: 'front',
-                    stroke: {
-                        color: [baseprimaryColor, basesuccessColor],
-                        width: 1,
-                        dashArray: 3
-                    }
-                },
-                tooltip: {
-                    enabled: true,
-                    offsetY: 0,
-                    style: {
-                        fontSize: '12px'
-                    }
-                }
-            },
-            yaxis: {
-                max: maxValue + 50,
-                min: minValue,
-                tickAmount: 6,
-                labels: {
-                    style: {
-                        colors: labelColor,
-                        fontSize: '12px'
-                    }
-                }
-            },
-            states: {
-                normal: {
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                },
-                hover: {
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                },
-                active: {
-                    allowMultipleDataPointsSelection: false,
-                    filter: {
-                        type: 'none',
-                        value: 0
-                    }
-                }
-            },
-            tooltip: {
-                style: {
-                    fontSize: '12px'
-                }
-            },
-            colors: [lightprimaryColor, lightsuccessColor],
-            grid: {
-                borderColor: borderColor,
-                strokeDashArray: 4,
-                yaxis: {
-                    lines: {
-                        show: true
-                    }
-                }
-            },
-            markers: {
-                strokeColor: [baseprimaryColor, basesuccessColor],
-                strokeWidth: 3
-            }
-        };
+	};
 
-        var chart = new ApexCharts(element, options);
-        chart.render();
-        charts.push(chart);
-    };
-
-    return {
-        init: function(chartDataArray) {
-            chartDataArray.forEach(function(chartData, index) {
-                // Initial load: Load first 10 data points initially
-                var startIndex = 0;
-                var endIndex = Math.min(chartData.categories.length, 10);
-                initChart(chartData, index, startIndex, endIndex);
-
-                // Slider event listener
-                var slider = document.getElementById('chart-slider-' + index);
-                slider.addEventListener('input', function() {
-                    var sliderValue = parseInt(slider.value) / 100; // Adjust slider value as needed
-
-                    // Calculate new startIndex and endIndex based on sliderValue
-                    startIndex = Math.floor(sliderValue * (chartData.categories.length - 10));
-                    endIndex = Math.min(startIndex + 10, chartData.categories.length);
-
-                    // Load new data chunk
-                    var slicedData = {
-                        categories: chartData.categories.slice(startIndex, endIndex),
-                        sessionsData: chartData.sessionsData.slice(startIndex, endIndex),
-                        previousMonthData: chartData.previousMonthData.slice(startIndex, endIndex)
-                    };
-
-                    // Update existing chart with new data chunk
-                    charts[index].updateSeries([{
-                        data: slicedData.sessionsData
-                    }, {
-                        data: slicedData.previousMonthData
-                    }]);
-                });
-            });
-        }
-    };
+	return {
+		init: function(chartDataArray) {
+			if (Array.isArray(chartDataArray)) {
+				// If chartDataArray is an array
+				chartDataArray.forEach(function(chartData, index) {
+					initChart(chartData, index);
+				});
+			} else if (typeof chartDataArray === 'object' && chartDataArray !== null) {
+				// If chartDataArray is an object
+				Object.keys(chartDataArray).forEach(function(key, index) {
+					var chartData = chartDataArray[key];
+					initChart(chartData, index);
+				});
+			} 
+		}
+	}
 })();
 
-
-
+KTChartsWidget36.init(chartDataArray);
 
 // Webpack support
 if (typeof module !== 'undefined') {
@@ -12536,7 +12480,7 @@ if (typeof module !== 'undefined') {
 
 // On document ready
 KTUtil.onDOMContentLoaded(function() {
-    // KTChartsWidget36.init(chartDataArray);
+    KTChartsWidget36.init();
 });
 
 "use strict";

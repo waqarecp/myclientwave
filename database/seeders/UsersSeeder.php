@@ -19,19 +19,19 @@ class UsersSeeder extends Seeder
         $usersData = [
             [
                 'name'              => 'Yasel Corporan',
-                'email'             => 'yasel@gmail.com',
+                'email'             => 'yasel@fusionsolarenergy.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ],
             [
                 'name'              => 'Waqar Ahmad',
-                'email'             => 'waqar@gmail.com',
+                'email'             => 'waqarecp1992@gmail.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ],
             [
-                'name'              => 'Syed Khan',
-                'email'             => 'sayrd@gmail.com',
+                'name'              => 'Erick F',
+                'email'             => 'erick@fusionsolarenergy.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ]

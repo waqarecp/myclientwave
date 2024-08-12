@@ -4,7 +4,7 @@
 var KTAccountAPIKeys = function () {
     // Private functions
     var initLicenceCopy = function() {
-        KTUtil.each(document.querySelectorAll('.table [data-action="copy"]'), function(button) {
+        KTUtil.each(document.querySelectorAll('#kt_api_keys_table [data-action="copy"]'), function(button) {
             var tr = button.closest('tr');
             var license = KTUtil.find(tr, '[data-bs-target="license"]');
 

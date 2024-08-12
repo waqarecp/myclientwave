@@ -157,7 +157,7 @@ var KTSigninGeneral = function () {
                         }
                     }).catch(function (error) {
                         Swal.fire({
-                            text: (error.response.data.message ? error.response.data.message : "Sorry, looks like there are some errors detected, please try again."),
+                            text: "Sorry, looks like there are some errors detected, please try again.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
