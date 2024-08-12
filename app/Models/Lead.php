@@ -26,7 +26,7 @@ class Lead extends Model
         'email',
         'utility_company_id',
         'call_center_representative',
-        'lead_status',
+        'status_id',
         'lead_source_id',
         'appointment_sat',
         'street',
@@ -34,6 +34,8 @@ class Lead extends Model
         'state',
         'zip',
         'country',
+        'address_1',
+        'address_2',
         'created_by',
     ];
 
@@ -51,30 +53,20 @@ class Lead extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
-    public function appointment()
+    
+    public function status()
     {
-        return $this->hasOne(Appointment::class);
+        return $this->belongsTo(LeadStatus::class, 'status_id');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
     
     public function note()
     {
         return $this->hasOne(Note::class);
-    }
-
-    public static $statuses = [
-        1 => 'Fresh',
-        2 => 'Site Survey',
-        3 => 'Engineering Design',
-        4 => 'Proposal',
-        5 => 'System Details Finalized',
-        6 => 'PO Received',
-        7 => 'Cold',
-    ];
-
-    public function getStatusAttribute()
-    {
-        return self::$statuses[$this->lead_status] ?? 'Unknown';
     }
     
     public function company()

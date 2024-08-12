@@ -10,6 +10,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Address;
+use App\Models\LeadSource;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +23,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CompaniesSeeder::class,
             UsersSeeder::class,
-            RolesPermissionsSeeder::class
+            RolesPermissionsSeeder::class,
+            LeadSourcesSeeder::class,
+            StatusesSeeder::class,
+            UtilityCompaniesSeeder::class,
         ]);
 
         // \App\Models\User::factory(20)->create();

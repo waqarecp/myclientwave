@@ -18,20 +18,30 @@ class UsersSeeder extends Seeder
     {
         $usersData = [
             [
+                'company_id'              => '1',
                 'name'              => 'Yasel Corporan',
                 'email'             => 'yasel@fusionsolarenergy.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ],
             [
+                'company_id'              => '1',
                 'name'              => 'Waqar Ahmad',
                 'email'             => 'waqarecp1992@gmail.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ],
             [
+                'company_id'              => '2',
                 'name'              => 'Erick F',
                 'email'             => 'erick@fusionsolarenergy.com',
+                'password'          => Hash::make('demo'),
+                'email_verified_at' => now(),
+            ],
+            [
+                'company_id'              => '2',
+                'name'              => 'Aryeen GH',
+                'email'             => 'aryeen@fusionsolarenergy.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ]

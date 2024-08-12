@@ -3,8 +3,8 @@
     <div class="app-navbar-item ms-1 ms-md-4">
         <!--begin::Drawer toggle-->
 		<div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-200px h-35px">
-            <div class="navbar-item" title="You are currently using {{ session('dealer_name') }} account">
-                <b>CRM Admin Panel</b>
+            <div class="navbar-item" title="{{ session('company')['name'] }} CRM Dashboard">
+                <b>{{ ucwords(session('company')['name']) }}</b>
             </div>
         </div>
         <!--end::Drawer toggle-->

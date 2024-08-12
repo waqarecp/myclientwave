@@ -6,26 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Note extends Model
+class LeadStatus extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'notes';
+    protected $table = 'lead_status';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'lead_id',
         'company_id',
-        'user_id',
-        'notes',
-        'is_read',
+        'status_name',
         'created_by',
     ];
-
-    public function lead()
-    {
-        return $this->belongsTo(Lead::class, 'lead_id');
-    }
 }

@@ -1825,7 +1825,7 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="required fs-6 fw-semibold ">Sales Representative</label>
-                                                    <select class="form-select" name="sale_representative">
+                                                    <select class="form-select" name="sale_representative" required>
                                                         <option value="">--- Select a User ---</option>
                                                         @foreach($users as $user)
                                                             <option value="{{$user->id}}">{{$user->name}}</option>
@@ -1837,7 +1837,7 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="required fs-6 fw-semibold ">Lead Source</label>
-                                                    <select class="form-select" name="lead_source_id">
+                                                    <select class="form-select" name="lead_source_id" required>
                                                         <option value="">--- Select Lead Source ---</option>
                                                         @foreach($sources as $source)
                                                         <option value="{{$source->id}}">{{$source->source_name}}</option>
@@ -1862,7 +1862,7 @@
                                                     @enderror
                                                 </div>
                                                 <div class="col-md-4 mt-3">
-                                                    <label class="fs-6 fw-semibold ">Mobile</label>
+                                                    <label class="required fs-6 fw-semibold ">Mobile</label>
                                                     <input type="text" class="form-control" name="mobile" minlength="11" maxlength="15" required />
                                                     @error('mobile')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -1876,7 +1876,7 @@
                                                     @enderror
                                                 </div>
                                                 <div class="col-md-4 mt-3">
-                                                    <label class="fs-6 fw-semibold ">Email</label>
+                                                    <label class="required fs-6 fw-semibold ">Email</label>
                                                     <input type="email" class="form-control" name="email" required />
                                                     @error('email')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -1908,17 +1908,13 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="required fs-6 fw-semibold">Lead Status</label>
-                                                    <select class="form-select" name="lead_status" required>
+                                                    <select class="form-select" name="status_id" required>
                                                         <option value="">--- Choose a Status ---</option>
-                                                        <option selected value="1">Fresh</option>
-                                                        <option value="2">Site Survey</option>
-                                                        <option value="3">Engineering Design</option>
-                                                        <option value="4">Proposal</option>
-                                                        <option value="5">System Details Finalized</option>
-                                                        <option value="6">PO Received</option>
-                                                        <option value="7">Cold</option>
+                                                        @foreach($statuses as $status)
+                                                        <option value="{{$status->id}}">{{$status->status_name}}</option>
+                                                        @endforeach
                                                     </select>
-                                                    @error('lead_status')
+                                                    @error('status_id')
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>

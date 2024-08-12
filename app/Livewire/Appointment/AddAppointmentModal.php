@@ -17,6 +17,13 @@ class AddAppointmentModal extends Component
     public $appointment_date;
     public $appointment_time;
     public $appointment_notes;
+    public $appointment_street;
+    public $appointment_city;
+    public $appointment_state;
+    public $appointment_zip;
+    public $appointment_country;
+    public $appointment_address_1;
+    public $appointment_address_2;
 
     public $edit_mode = false;
 
@@ -26,6 +33,13 @@ class AddAppointmentModal extends Component
         'appointment_date' => 'required|date',
         'appointment_time' => 'required|string',
         'appointment_notes' => 'required|string',
+        'appointment_street' => 'nullable|string|max:255',
+        'appointment_city' => 'nullable|string|max:100',
+        'appointment_state' => 'nullable|string|max:100',
+        'appointment_zip' => 'nullable|string|max:20',
+        'appointment_country' => 'required|string',
+        'appointment_address_1' => 'required|string',
+        'appointment_address_2' => 'nullable|string',
     ];
 
     protected $listeners = [
@@ -56,6 +70,13 @@ class AddAppointmentModal extends Component
                 'appointment_date' => $this->appointment_date,
                 'appointment_time' => $this->appointment_time,
                 'appointment_notes' => $this->appointment_notes,
+                'appointment_street' => $this->appointment_street,
+                'appointment_city' => $this->appointment_city,
+                'appointment_state' => $this->appointment_state,
+                'appointment_zip' => $this->appointment_zip,
+                'appointment_country' => $this->appointment_country,
+                'appointment_address_1' => $this->appointment_address_1,
+                'appointment_address_2' => $this->appointment_address_2,
                 'created_by' => Auth::user()->id,
             ];
 
@@ -84,6 +105,13 @@ class AddAppointmentModal extends Component
             $appointment->appointment_date = $this->appointment_date;
             $appointment->appointment_time = $this->appointment_time;
             $appointment->appointment_notes = $this->appointment_notes;
+            $appointment->appointment_street = $this->appointment_street;
+            $appointment->appointment_city = $this->appointment_city;
+            $appointment->appointment_state = $this->appointment_state;
+            $appointment->appointment_zip = $this->appointment_zip;
+            $appointment->appointment_country = $this->appointment_country;
+            $appointment->appointment_address_1 = $this->appointment_address_1;
+            $appointment->appointment_address_2 = $this->appointment_address_2;
 
             if ($appointment->save()) {
                 // Emit a success event with a message
@@ -119,6 +147,13 @@ class AddAppointmentModal extends Component
         $this->appointment_date = $appointment->appointment_date;
         $this->appointment_time = $appointment->appointment_time;
         $this->appointment_notes = $appointment->appointment_notes;
+        $this->appointment_street = $appointment->appointment_street;
+        $this->appointment_city = $appointment->appointment_city;
+        $this->appointment_state = $appointment->appointment_state;
+        $this->appointment_zip = $appointment->appointment_zip;
+        $this->appointment_country = $appointment->appointment_country;
+        $this->appointment_address_1 = $appointment->appointment_address_1;
+        $this->appointment_address_2 = $appointment->appointment_address_2;
     }
 
     public function hydrate()

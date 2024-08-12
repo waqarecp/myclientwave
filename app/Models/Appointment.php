@@ -22,6 +22,13 @@ class Appointment extends Model
         'appointment_date',
         'appointment_time',
         'appointment_notes',
+        'appointment_street',
+        'appointment_city',
+        'appointment_state',
+        'appointment_zip',
+        'appointment_country',
+        'appointment_address_1',
+        'appointment_address_2',
         'created_by',
     ];
 

@@ -8,6 +8,7 @@ use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 
 class UsersDataTable extends DataTable
 {
@@ -44,7 +45,7 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()->whereNull('deleted_at');
+        return $model->newQuery()->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
     }
 
     /**

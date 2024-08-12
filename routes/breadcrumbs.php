@@ -8,6 +8,7 @@ use App\Models\LeadSource;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Appointment;
+use App\Models\LeadStatus;
 
 // Home
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
@@ -137,4 +138,16 @@ Breadcrumbs::for('appointments.show', function (BreadcrumbTrail $trail, Appointm
 Breadcrumbs::for('calendars.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Calendar', route('calendars.index'));
+});
+
+// Home > Lead Statuses > index
+Breadcrumbs::for('lead-statuses.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Lead Status', route('lead-statuses.index'));
+});
+
+// Home > Lead Statuses > [Lead Status]
+Breadcrumbs::for('lead-statuses.show', function (BreadcrumbTrail $trail, LeadStatus $leadstatus) {
+    $trail->parent('lead-statuses.index');
+    $trail->push(ucwords($leadstatus->status_name), route('lead-statuses.show', $leadstatus));
 });

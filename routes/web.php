@@ -4,6 +4,7 @@ use App\Http\Controllers\Apps\PermissionManagementController;
 use App\Http\Controllers\Apps\RoleManagementController;
 use App\Http\Controllers\Apps\UserManagementController;
 use App\Http\Controllers\LeadSourceController;
+use App\Http\Controllers\LeadStatusController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
@@ -62,6 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Lead Sources routes
     Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
+
+    // Lead Statuses routes
+    Route::resource('lead-statuses', LeadStatusController::class)->middleware('check.dynamic.route.permissions:lead status');
 
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');

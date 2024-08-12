@@ -20,6 +20,13 @@ return new class extends Migration
             $table->date('appointment_date')->nullable();
             $table->time('appointment_time')->nullable();
             $table->longText('appointment_notes')->nullable();
+            $table->string('appointment_street')->nullable();
+            $table->string('appointment_city')->nullable();
+            $table->string('appointment_state')->nullable();
+            $table->string('appointment_zip')->nullable();
+            $table->string('appointment_country')->nullable();
+            $table->longText('appointment_address_1')->nullable();
+            $table->longText('appointment_address_2')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();

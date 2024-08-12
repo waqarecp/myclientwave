@@ -1,17 +1,17 @@
 <x-default-layout>
 
     @section('title')
-        View Lead Details
+    View Lead Details
     @endsection
 
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('leads.show', $lead) }}
+    {{ Breadcrumbs::render('leads.show', $lead) }}
     @endsection
 
     <!--begin::Layout-->
     <div class="d-flex flex-column flex-lg-row">
         <!--begin::Sidebar-->
-        <div class="flex-column flex-lg-row-auto mb-10" style="width: 100%;" >
+        <div class="flex-column flex-lg-row-auto mb-10" style="width: 100%;">
             <!--begin::Card-->
             <div class="card mb-5 mb-xl-8">
                 <!--begin::Card body-->
@@ -25,7 +25,7 @@
                             </div>
                         </div>
                         <!--begin::Name-->
-                        <a href="javascript:void(0)" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">{{ $lead->first_name }}  {{ $lead->last_name }}</a>
+                        <a href="javascript:void(0)" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">{{ $lead->first_name }} {{ $lead->last_name }}</a>
                         <!--end::Name-->
                     </div>
                     <!--end::lead Info-->
@@ -58,18 +58,27 @@
                         <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
                             <div class="pb-5 fs-6 ">
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Date</div>
-                                <div class="text-gray-600">{{ $lead->appointment->appointment_date }}</div>
-                                <div class="fw-bold mt-5">Appointment Time</div>
-                                <div class="text-gray-600">{{ $lead->appointment->appointment_time }}</div>
+                                <div class="fw-bold mt-5">Appointment Date/Time</div>
+                                <?php
+                                $count = 0;
+                                if ($lead->appointments) {
+                                    foreach ($lead->appointments as $data) {
+                                        $count++;
+                                ?>
+                                        <div class="text-gray-600"><b>Event {{$count}} : </b>{{ \Carbon\Carbon::parse($data->appointment_date)->format('d F Y') }} / {{ \Carbon\Carbon::parse($data->appointment_time)->format('g:i A') }}</div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                                <div class="text-gray-600"></div>
                                 <div class="fw-bold mt-5">Call Center Representative</div>
                                 <div class="text-gray-600">{{ $lead->user->name }}</div>
                                 <div class="fw-bold mt-5">Lead Status</div>
-                                <div class="text-gray-600">{{ $lead->status }}</div>
+                                <div class="text-gray-600">{{ $lead->status->status_name }}</div>
                                 <div class="fw-bold mt-5">Lead Created By</div>
-                                <?php 
-                                    $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
-                                    $created_by = $lead->created_by ? $lead->user->name : 'N/A';
+                                <?php
+                                $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
+                                $created_by = $lead->created_by ? $lead->user->name : 'N/A';
                                 ?>
                                 <div class="text-gray-600">{{ $created_by . ' | ' .$created_at }}</div>
                                 <div class="fw-bold mt-5">Lead Source</div>
@@ -82,7 +91,7 @@
                         </div>
                         <!--end::Details content-->
                     </div>
-                    
+
                     <div class="row">
                         <!--begin::Details content-->
                         <div id="kt_dealer_view_details" class="collapse show col-md-6">
@@ -110,16 +119,14 @@
                         </div>
                         <!--end::Details content-->
                     </div>
-                    
+
                     <div class="row">
                         <!--begin::Details content-->
                         <div id="kt_dealer_view_details" class="collapse show col-md-12">
                             <h3>Description information</h3>
                             <div class="pb-5 fs-6">
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Notes</div>
-                                <div class="text-gray-600">{{ $lead->appointment->appointment_notes }}</div>
-                                <div class="fw-bold mt-5">Notes</div>
+                                <div class="fw-bold mt-5">Lead Notes</div>
                                 <div class="text-gray-600">{{ $lead->note->notes }}</div>
                             </div>
                         </div>

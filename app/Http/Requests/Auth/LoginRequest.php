@@ -2,12 +2,14 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\Company;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Session;
 
 class LoginRequest extends FormRequest
 {
@@ -65,6 +67,10 @@ class LoginRequest extends FormRequest
             throw ValidationException::withMessages([
                 'error' => "You cannot login to your account. Contact Admin!",
             ]);
+        } else {
+            $company = Company::where('id', $authenticatedUser->company_id)->first();
+            // Set session variables
+            session(['company' => $company]);
         }
 
         RateLimiter::clear($this->throttleKey());

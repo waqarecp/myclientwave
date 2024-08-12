@@ -22,6 +22,14 @@ class CompaniesSeeder extends Seeder
                 'logo'           => 'default.png', 
                 'website'        => 'www.fusionsolarenergy.com',
                 'address'        => 'Test company address',
+            ],
+            [
+                'name'           => 'My Client Wave',
+                'email'          => 'info@myclientwave.com',
+                'phone'          => '0232311919',
+                'logo'           => 'default.png', 
+                'website'        => 'www.myclientwave.com',
+                'address'        => 'Test company address',
             ]
         ];
 

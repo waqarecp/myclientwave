@@ -1,11 +1,11 @@
 <x-default-layout>
 
     @section('title')
-        Appointment
+        Lead Status
     @endsection
 
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('appointments.index') }}
+        {{ Breadcrumbs::render('lead-statuses.index') }}
     @endsection
     <div class="card">
         <!--begin::Card header-->
@@ -15,7 +15,7 @@
                 <!--begin::Search-->
                 <div class="d-flex align-items-center position-relative my-1">
                     {!! getIcon('magnifier', 'fs-3 position-absolute ms-5') !!}
-                    <input type="text" data-kt-appointment-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Appointment" id="mySearchInput"/>
+                    <input type="text" data-kt-leadstatus-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Lead status" id="mySearchInput"/>
                 </div>
                 <!--end::Search-->
             </div>
@@ -24,21 +24,21 @@
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end" data-kt-appointment-table-toolbar="base">
-                    <!--begin::Add appointment-->
-                    @if(auth()->user()->can('create appointment'))
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_appointment">
+                <div class="d-flex justify-content-end" data-kt-leadstatus-table-toolbar="base">
+                    <!--begin::Add leadstatus-->
+                    @if(auth()->user()->can('create lead status'))
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_leadstatus">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                        Add New appointment
+                        Add New Lead Status
                     </button>
                     @endif
-                    <!--end::Add appointment-->
+                    <!--end::Add leadstatus-->
                 </div>
                 <!--end::Toolbar-->
             </div>
             <!--end::Card toolbar-->
             <!--begin::Modal-->
-            <livewire:appointment.add-appointment-modal></livewire:appointment.add-appointment-modal>
+            <livewire:leadstatus.add-leadstatus-modal></livewire:leadstatus.add-leadstatus-modal>
             <!--end::Modal-->
         </div>
         <!--end::Card header-->
@@ -58,16 +58,16 @@
         {{ $dataTable->scripts() }}
         <script>
             document.getElementById('mySearchInput').addEventListener('keyup', function () {
-                window.LaravelDataTables['appointment-table'].search(this.value).draw();
+                window.LaravelDataTables['leadstatus-table'].search(this.value).draw();
             });
             document.addEventListener('livewire:init', function () {
                 Livewire.on('success', function () {
-                    $('#kt_modal_add_appointment').modal('hide');
-                    window.LaravelDataTables['appointment-table'].ajax.reload();
+                    $('#kt_modal_add_leadstatus').modal('hide');
+                    window.LaravelDataTables['leadstatus-table'].ajax.reload();
                 });
             });
-            $('#kt_modal_add_appointment').on('hidden.bs.modal', function () {
-                Livewire.dispatch('new_appointment');
+            $('#kt_modal_add_leadstatus').on('hidden.bs.modal', function () {
+                Livewire.dispatch('new_leadstatus');
                 Livewire.dispatch('reset_form');
             });
         </script>

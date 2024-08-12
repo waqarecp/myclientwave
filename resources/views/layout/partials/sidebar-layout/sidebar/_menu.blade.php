@@ -34,6 +34,20 @@
             
             <!--begin:Menu item-->
             @php
+                $hasPermissionLeadStatus = auth()->user()->can('read lead status') || auth()->user()->can('write lead status') || auth()->user()->can('create lead status');
+            @endphp
+            @if($hasPermissionLeadStatus)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('lead-statuses')}}">
+                    <a class="menu-link {{ request()->routeIs('lead-statuses') ? 'active' : '' }}" href="{{ route('lead-statuses.index') }}">
+                        <span class="menu-icon">{!! getIcon('cloud', 'fs-2') !!}</span>
+                        <span class="menu-title">Lead Statuses</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
+            
+            <!--begin:Menu item-->
+            @php
                 $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
             @endphp
             @if($hasPermissionUtilityCompanies)

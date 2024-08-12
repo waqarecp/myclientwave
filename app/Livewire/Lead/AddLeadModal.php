@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\LeadSource;
 use App\Models\Appointment;
 use App\Models\Note;
+use App\Models\LeadStatus;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class AddLeadModal extends Component
     public $email;
     public $utility_company_id;
     public $call_center_representative;
-    public $lead_status;
+    public $status_id;
     public $lead_source_id;
     public $appointment_sat = 0;
     public $appointment_date;
@@ -37,6 +38,8 @@ class AddLeadModal extends Component
     public $country;
     public $appointment_notes;
     public $notes;
+    public $address_1;
+    public $address_2;
 
     public $edit_mode = false;
 
@@ -50,7 +53,7 @@ class AddLeadModal extends Component
         'email' => 'required|email|max:255',
         'utility_company_id' => 'nullable|integer',
         'call_center_representative' => 'nullable|integer',
-        'lead_status' => 'required|integer',
+        'status_id' => 'required|integer',
         'lead_source_id' => 'nullable|integer',
         'appointment_sat' => 'nullable|boolean',
         'appointment_date' => 'nullable|date',
@@ -59,9 +62,11 @@ class AddLeadModal extends Component
         'city' => 'nullable|string|max:100',
         'state' => 'nullable|string|max:100',
         'zip' => 'nullable|string|max:20',
-        'country' => 'nullable|string|max:100',
+        'country' => 'required|string',
         'appointment_notes' => 'nullable|string',
         'notes' => 'nullable|string',
+        'address_1' => 'required|string',
+        'address_2' => 'nullable|string',
     ];
 
     protected $listeners = [
@@ -79,7 +84,8 @@ class AddLeadModal extends Component
         $sources = LeadSource::where('deleted_at', null)->get();
         $appointment = Appointment::where('deleted_at', null)->with('lead')->get();
         $note = Note::where('deleted_at', null)->get();
-        return view('livewire.lead.add-lead-modal',compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note'));
+        $statuses = LeadStatus::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        return view('livewire.lead.add-lead-modal',compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note', 'statuses'));
     }
 
     public function createLead()
@@ -100,7 +106,7 @@ class AddLeadModal extends Component
                 'email' => $this->email,
                 'utility_company_id' => $this->utility_company_id,
                 'call_center_representative' => $this->call_center_representative,
-                'lead_status' => $this->lead_status,
+                'status_id' => $this->status_id,
                 'lead_source_id' => $this->lead_source_id,
                 'appointment_sat' => $this->appointment_sat ?: 0,
                 'street' => $this->street,
@@ -108,6 +114,8 @@ class AddLeadModal extends Component
                 'state' => $this->state,
                 'zip' => $this->zip,
                 'country' => $this->country,
+                'address_1' => $this->address_1,
+                'address_2' => $this->address_2,
                 'created_at' => now(),
                 'created_by' => Auth::user()->id,
             ];
@@ -122,6 +130,13 @@ class AddLeadModal extends Component
                     'appointment_date' => $this->appointment_date,
                     'appointment_time' => $this->appointment_time,
                     'appointment_notes' => $this->appointment_notes,
+                    'appointment_street' => $this->street,
+                    'appointment_city' => $this->city,
+                    'appointment_state' => $this->state,
+                    'appointment_zip' => $this->zip,
+                    'appointment_country' => $this->country,
+                    'appointment_address_1' => $this->address_1,
+                    'appointment_address_2' => $this->address_2,
                     'created_by' => Auth::user()->id,
                 ]);
 
@@ -159,7 +174,7 @@ class AddLeadModal extends Component
             $lead->email = $this->email;
             $lead->utility_company_id = $this->utility_company_id;
             $lead->call_center_representative = $this->call_center_representative;
-            $lead->lead_status = $this->lead_status;
+            $lead->status_id = $this->status_id;
             $lead->lead_source_id = $this->lead_source_id;
             $lead->appointment_sat = $this->appointment_sat ?: 0;
             $lead->street = $this->street;
@@ -167,14 +182,10 @@ class AddLeadModal extends Component
             $lead->state = $this->state;
             $lead->zip = $this->zip;
             $lead->country = $this->country;
+            $lead->address_1 = $this->address_1;
+            $lead->address_2 = $this->address_2;
 
             if ($lead->save()) {
-                $appointment = Appointment::findOrFail($lead->id);
-                $appointment->appointment_date = $this->appointment_date;
-                $appointment->appointment_time = $this->appointment_time;
-                $appointment->appointment_notes = $this->appointment_notes;
-                $appointment->save();
-
                 $note = Note::findOrFail($lead->id);
                 $note->notes = $this->notes;
                 $note->save();
@@ -211,10 +222,6 @@ class AddLeadModal extends Component
         $this->edit_mode = true;
 
         $lead = Lead::find($id);
-        if ($lead) {
-            $appointment = Appointment::find($lead->id);
-            $note = Note::find($lead->id);
-        }
         $this->lead_id = $lead->id;
         $this->owner_id = $lead->owner_id;
         $this->first_name = $lead->first_name;
@@ -225,18 +232,21 @@ class AddLeadModal extends Component
         $this->email = $lead->email;
         $this->utility_company_id = $lead->utility_company_id;
         $this->call_center_representative = $lead->call_center_representative;
-        $this->lead_status = $lead->lead_status;
+        $this->status_id = $lead->status_id;
         $this->lead_source_id = $lead->lead_source_id;
         $this->appointment_sat = $lead->appointment_sat == 1 ?: 0;
-        $this->appointment_date = $appointment->appointment_date;
-        $this->appointment_time = $appointment->appointment_time;
         $this->street = $lead->street;
         $this->city = $lead->city;
         $this->state = $lead->state;
         $this->zip = $lead->zip;
         $this->country = $lead->country;
-        $this->appointment_notes = $appointment->appointment_notes;
-        $this->notes = $note->notes;
+        $this->address_1 = $lead->address_1;
+        $this->address_2 = $lead->address_2;
+
+        if ($lead) {
+            $note = Note::find($lead->id);
+                $this->notes = $note->notes;
+        }
     }
 
     public function hydrate()
