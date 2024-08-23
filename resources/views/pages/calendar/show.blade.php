@@ -60,8 +60,6 @@
                         <div id="kt_dealer_view_details" class="collapse show col-md-12">
                             <div class="pb-5 fs-6">
                                 <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Notes</div>
-                                <div class="text-gray-600">{{ $appointment->appointment_notes }}</div>
                             </div>
                         </div>
                         <!--end::Details content-->

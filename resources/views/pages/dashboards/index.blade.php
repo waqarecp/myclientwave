@@ -1635,14 +1635,14 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="required fs-6 fw-semibold ">Mobile</label>
-                                                    <input type="text" class="form-control" name="mobile" minlength="11" maxlength="15" required />
+                                                    <input type="text" class="form-control" name="mobile" />
                                                     @error('mobile')
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="fs-6 fw-semibold ">Phone</label>
-                                                    <input type="text" class="form-control" minlength="11" maxlength="15" name="phone" />
+                                                    <input type="text" class="form-control" minlength="5" maxlength="25" name="phone" required/>
                                                     @error('phone')
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -1678,50 +1678,25 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                                <div class="col-md-4 mt-3">
-                                                    <label class="required fs-6 fw-semibold">Lead Status</label>
-                                                    <select class="form-select" name="status_id" required>
-                                                        <option value="">--- Choose a Status ---</option>
-                                                        @foreach($statuses as $status)
-                                                        <option value="{{$status->id}}">{{$status->status_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('status_id')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="fs-row mt-4">
-                                                    <div class="me-5">
-                                                        <label class="btn btn-outline btn-outline-primary btn-sm mb-3 fs-5 fw-semibold"><input type="checkbox" id="appointment_sat" name="appointment_sat" value="1"> Schedule a meeting</label>
-                                                        <div class="fs-7 fw-semibold text-muted">Check the box if you want to schedule a meeting with customer</div>
-                                                    </div>
-                                                    @error('appointment_sat')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4 appointment_fields">
-                                                    <label class="fs-6 fw-semibold mt-3">Select Appointment Date</label>
-                                                    <input type="date" class="form-control" name="appointment_date" />
-                                                    @error('appointment_date')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-4 appointment_fields">
-                                                    <label class="fs-6 fw-semibold mt-3">Select Appointment Time</label>
-                                                    <input type="time" class="form-control" name="appointment_time" />
-                                                    @error('appointment_time')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-md-12 appointment_fields">
-                                                    <label class="fs-6 fw-semibold mt-3">Appointment Notes</label>
-                                                    <textarea placeholder="Write appointment notes ..." class="form-control" rows="3" name="appointment_notes"></textarea>
-                                                    @error('appointment_notes')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
+                                            <div class="col-md-12 mt-3">
+                                                <label class="fw-semibold">Tag users in comment</label>
+                                                <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
+                                                        <option value="all">Tag All Users</option>
+                                                        @foreach($users as $user)
+                                                            <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
+                                                        @endforeach
+                                                </select>
+                                                @error('user_ids')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 mt-3">
+                                                <label class="fs-6 fw-semibold ">Notes</label>
+                                                <textarea placeholder="Write any extra notes ..." class="form-control" rows="3" name="notes" id="lead_notes"></textarea>
+                                                @error('notes')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -1957,7 +1932,7 @@
                                                     <option value="UA" data-kt-select2-country="assets/media/flags/ukraine.svg">Ukraine</option>
                                                     <option value="AE" data-kt-select2-country="assets/media/flags/united-arab-emirates.svg">United Arab Emirates</option>
                                                     <option value="GB" data-kt-select2-country="assets/media/flags/united-kingdom.svg">United Kingdom</option>
-                                                    <option value="US" data-kt-select2-country="assets/media/flags/united-states.svg">United States</option>
+                                                    <option value="US" selected data-kt-select2-country="assets/media/flags/united-states.svg">United States</option>
                                                     <option value="UY" data-kt-select2-country="assets/media/flags/uruguay.svg">Uruguay</option>
                                                     <option value="UZ" data-kt-select2-country="assets/media/flags/uzbekistan.svg">Uzbekistan</option>
                                                     <option value="VU" data-kt-select2-country="assets/media/flags/vanuatu.svg">Vanuatu</option>
@@ -2024,17 +1999,67 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="descriptionInfoHeader">
                                     <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionInfoCollapse" aria-expanded="false" aria-controls="descriptionInfoCollapse">
-                                        Lead Information & Notes
+                                        Lead Appointment Schedule
                                     </button>
                                 </h2>
                                 <div id="descriptionInfoCollapse" class="accordion-collapse collapse" aria-labelledby="descriptionInfoHeader" data-bs-parent="#leadAccordion">
                                     <div class="accordion-body">
-                                        <div class="fv-row">
-                                            <label class="fs-6 fw-semibold ">Notes</label>
-                                            <textarea placeholder="Write any extra notes ..." class="form-control" rows="3" name="notes"></textarea>
-                                            @error('notes')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                                        <div class="row">
+                                            <div class="fs-row mt-4">
+                                                <div class="me-5">
+                                                    <label class="btn btn-outline btn-outline-primary btn-sm mb-3 fs-5 fw-semibold"><input type="checkbox" id="appointment_sat" name="appointment_sat" value="1"> Schedule a meeting</label>
+                                                    <div class="fs-7 fw-semibold text-muted">Check the box if you want to schedule a meeting with customer</div>
+                                                </div>
+                                                @error('appointment_sat')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4 mt-3 appointment_fields">
+                                                <label class="required fs-6 fw-semibold">Select an appointment status</label>
+                                                <select class="form-select" name="status_id" id="status_id" required>
+                                                    @foreach($statuses as $status)
+                                                        <option value="{{ $status->id }}" data-color="{{ $status->color_code }}">
+                                                            {{ $status->status_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('status_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4 appointment_fields">
+                                                <label class="fs-6 fw-semibold mt-3">Select Appointment Date</label>
+                                                <input type="date" class="form-control" name="appointment_date" />
+                                                @error('appointment_date')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-4 appointment_fields">
+                                                <label class="fs-6 fw-semibold mt-3">Select Appointment Time</label>
+                                                <input type="time" class="form-control" name="appointment_time" />
+                                                @error('appointment_time')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 mt-3 appointment_fields">
+                                                <label class="fw-semibold">Tag users in appointment comment</label>
+                                                <select onchange="selectAll(this)" name="appointment_user_ids[]" id="tag_users_appointment" class="form-select select2" data-control="select2" data-search="true" multiple>
+                                                        <option value="all">Tag All Users</option>
+                                                        @foreach($users as $user)
+                                                            <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
+                                                        @endforeach
+                                                </select>
+                                                @error('user_ids')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-md-12 appointment_fields">
+                                                <label class="fs-6 fw-semibold mt-3">Appointment Notes</label>
+                                                <textarea placeholder="Write appointment notes ..." class="form-control" rows="3" name="appointment_notes" id="appointment_notes"></textarea>
+                                                @error('appointment_notes')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2063,6 +2088,7 @@
     <!--end::Modal - Create Lead-->
 
     @push('scripts')
+    <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
     <script>
         $(document).ready(function() {
             // Initially hide the appointment date and time fields
@@ -2078,7 +2104,59 @@
                     $('.appointment_fields').hide();
                 }
             });
+
+             // Initialize Select2 normally
+             $('#status_id').select2({
+                templateResult: formatState,
+                templateSelection: formatState,
+                dropdownParent: $('#kt_modal_create_lead') // Ensure dropdown appends to modal
+            });
+
+            // Function to format Select2 options with color
+            function formatState(state) {
+                if (!state.id) {
+                    return state.text;
+                }
+                var $state = $(
+                    '<span><span class="badge-circle" style="background-color:' + $(state.element).data('color') + '; width: 15px; height: 15px; display: inline-block; margin-right: 5px; border-radius: 50%;"></span>' + state.text + '</span>'
+                );
+                return $state;
+            }
+
+            // Re-initialize Select2 when the modal is shown
+            $('#kt_modal_create_lead').on('shown.bs.modal', function () {
+                $('#status_id').select2({
+                    templateResult: formatState,
+                    templateSelection: formatState,
+                    dropdownParent: $('#kt_modal_create_lead') // Ensure dropdown appends to modal
+                });
+            });
         });
+
+        CKEDITOR.replace('lead_notes', {
+            height: '150px',
+        });
+
+        CKEDITOR.replace('appointment_notes', {
+            height: '150px',
+        });
+        $('#tag_users, #tag_users_appointment').select2({
+            placeholder: "Select users to tag", // Add placeholder
+            allowClear: true // Allows clearing of the selection
+        });
+
+        function selectAll(element) {
+            if ($(element).val() == 'all') {
+                $(element).find("option").each(function() {
+                    if ($(this).val() !== 'all') { // Exclude the option with value 'all'
+                        $(this).prop("selected", true);
+                    } else {
+                        $(this).prop("selected", false);
+                    }
+                });
+                $(element).find("option").trigger("change");
+            }
+        }
     </script>
     <!--begin::Vendors Javascript(used for this page only)-->
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
@@ -2092,7 +2170,7 @@
     <script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-    <script src="assets/js/custom/apps/ecommerce/settings/settings.js"></script>
+    <script src="{{asset('assets/js/custom/apps/ecommerce/settings/settings.js')}}"></script>
     <!--end::Vendors Javascript-->
     @endpush
 </x-default-layout>

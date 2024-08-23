@@ -20,15 +20,27 @@ class AppointmentDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->rawColumns(['appointment_date', 'appointment_time', 'appointment_notes'])
+            ->rawColumns(['name', 'appointment_date', 'appointment_time', 'appointment_status'])
             ->editColumn('appointment_date', function (Appointment $appointment) {
                 return view('pages/appointment.columns._appointment', compact('appointment'));
             })
-            ->editColumn('appointment_notes', function (Appointment $appointment) {
-                return strlen($appointment->appointment_notes) > 30 ? substr($appointment->appointment_notes, 0, 30) . " ..." : $appointment->appointment_notes;
+            ->editColumn('appointment_time', function (Appointment $appointment) {
+                return \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A');
+            })
+            ->editColumn('name', function (Appointment $appointment) {
+                return $appointment->lead 
+                ? "<div class='d-flex flex-column'>
+                       <a href='" . route('leads.show', $appointment->lead_id) . "' class='text-gray-800 text-hover-primary mb-1'>" 
+                       . $appointment->lead->first_name . ' ' . $appointment->lead->last_name . '<br>LeadID # ' . str_pad($appointment->lead->id, 4, "0", STR_PAD_LEFT) . 
+                       "</a>
+                   </div>" 
+                : '';
             })
             ->editColumn('created_at', function (Appointment $appointment) {
                 return \Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i a');
+            })
+            ->editColumn('appointment_status', function (Appointment $appointment) {
+                return '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' . $appointment->status->color_code . ';"></span>' . $appointment->status->status_name;
             })
             ->addColumn('action', function (Appointment $appointment) {
                 return view('pages/appointment.columns._actions', compact('appointment'));
@@ -42,7 +54,13 @@ class AppointmentDataTable extends DataTable
      */
     public function query(Appointment $model): QueryBuilder
     {
-        return $model->newQuery()->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
+        return $model->newQuery()
+            ->whereNull('deleted_at')
+            ->whereHas('lead', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->with(['lead'])
+            ->with('status');
     }
 
     /**
@@ -66,9 +84,10 @@ class AppointmentDataTable extends DataTable
     {
         return [
             Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
-            Column::make('appointment_date')->addClass('align-items-center')->name('appointment_date')->title('Date')->searchable(true),
-            Column::make('appointment_time')->addClass('align-items-center')->name('appointment_time')->title('Time')->searchable(true),
-            Column::make('appointment_notes')->addClass('align-items-center')->name('appointment_notes')->title('Notes')->searchable(true),
+            Column::make('name')->addClass('align-items-center')->name('name')->title('Lead Info')->searchable(true),
+            Column::make('appointment_date')->title('Appointment Date')->searchable(true),
+            Column::make('appointment_time')->title('Appointment Time')->searchable(true),
+            Column::make('appointment_status')->title('Appointment Status')->searchable(false),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),
             Column::computed('action')
                 ->addClass('text-end text-nowrap')

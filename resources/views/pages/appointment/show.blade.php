@@ -1,78 +1,242 @@
 <x-default-layout>
 
     @section('title')
-        View Appointment Details
+    View Appointment Details
     @endsection
 
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('appointments.show', $appointment) }}
+    {{ Breadcrumbs::render('appointments.show', $appointment) }}
     @endsection
-
-    <!--begin::Layout-->
-    <div class="d-flex flex-column flex-lg-row">
-        <!--begin::Sidebar-->
-        <div class="flex-column flex-lg-row-auto mb-10" style="width: 100%;">
-            <!--begin::Card-->
-            <div class="card mb-5 mb-xl-8">
-                <!--begin::Card body-->
-                <div class="card-body">
-                    <!--begin::Summary-->
-                    <!--begin::appointment Info-->
-                    <div class="d-flex flex-center flex-column py-5">
-                        <!--begin::Name-->
-                        <h1 class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">Appointment Details</h1>
-                        <!--end::Name-->
-                    </div>
-                    <!--end::appointment Info-->
-                    <!--end::Summary-->
-                    <div class="separator"></div>
-                    <!--begin::Details content-->
-                    <div class="row">
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6">
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment ID</div>
-                                <div class="text-gray-600">{{ $appointment->id }}</div>
-                                <div class="fw-bold mt-5">Lead Name</div>
-                                <div class="text-gray-600">{{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</div>
-                                <div class="fw-bold mt-5">Call Center Representative</div>
-                                <div class="text-gray-600">{{ $appointment->user->name }}</div>
-                                <div class="fw-bold mt-5">Appointment Date</div>
-                                <div class="text-gray-600">{{ $appointment->appointment_date }}</div>
-                            </div>
+    <!--begin::Content-->
+    <div class="flex-lg-row-fluid ms-lg-15">
+        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8">
+            <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" data-bs-target="#kt_appointment_information" href="javascript:void(0)">Appointment information</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" data-bs-target="#kt_status_timeline" href="javascript:void(0)">Appointment Timeline</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <!--begin:::Tab pane-->
+            <div class="tab-pane fade show active" id="kt_appointment_information" role="tabpanel">
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title flex-column">
+                            <h2>{{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</h2>
+                            <div class="fs-6 fw-semibold text-muted"> Appointment details for {{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</div>
                         </div>
-                        
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6">
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Time</div>
-                                <div class="text-gray-600">{{ $appointment->appointment_time }}</div>
-                                <div class="fw-bold mt-5">Appointment Created By</div>
-                                <div class="text-gray-600">{{ $appointment->user->name }}</div>
-                                <div class="fw-bold mt-5">Appointment Created Date</div>
-                                <div class="text-gray-600">{{ \Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i a') }}</div>
+                        <!--end::Card title-->
+                    </div>
+                    <div class="card-body">
+                        <div class="separator"></div>
+                        <div class="row">
+                            <!--begin::Details content-->
+                            <div id="kt_dealer_view_details" class="collapse show col-md-6">
+                                <div class="pb-5 fs-6">
+                                    <!--begin::Details item-->
+                                    <div class="fw-bold mt-5">Appointment ID</div>
+                                    <div class="text-gray-600">{{ $appointment->id }}</div>
+                                    <div class="fw-bold mt-5">Call Center Representative</div>
+                                    <div class="text-gray-600">{{ $appointment->user->name }}</div>
+                                    <div class="fw-bold mt-5">Appointment Created By</div>
+                                    <div class="text-gray-600">{{ $appointment->user->name }}</div>
+                                    <div class="fw-bold mt-5">Appointment Date</div>
+                                    <div class="text-gray-600">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d F Y') }}</div>
+                                    <div class="fw-bold mt-5">Appointment Time</div>
+                                    <div class="text-gray-600">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i a') }}</div>
+                                    <div class="fw-bold mt-5">Appointment Created Date</div>
+                                    <div class="text-gray-600">{{ \Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i a') }}</div>
+                                </div>
                             </div>
+                            <!--end::Details content-->
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-12">
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Notes</div>
-                                <div class="text-gray-600">{{ $appointment->appointment_notes }}</div>
-                            </div>
-                        </div>
-                        <!--end::Details content-->
-                    </div>
-                    <!--end::Details content-->
                 </div>
-                <!--end::Card body-->
             </div>
-            <!--end::Card-->
+            <!--end:::Tab pane-->
+            <!--begin:::Tab pane-->
+            <div class="tab-pane fade" id="kt_status_timeline" role="tabpanel">
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title flex-column">
+                            <h2>{{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</h2>
+                            <div class="fs-6 fw-semibold text-muted">Appointment status timeline</div>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <div class="card-body">
+
+                        <!--begin::Timeline-->
+                        <div class="timeline timeline-border-dashed">
+                            @foreach ($timelines as $timeline)
+                            <!--begin::Timeline item-->
+                            <div class="timeline-item">
+                                <!--begin::Timeline line-->
+                                <div class="timeline-line"></div>
+                                <!--end::Timeline line-->
+                                <!--begin::Timeline icon-->
+                                @if ($loop->last)
+                                <div class="timeline-icon bg-light-primary">
+                                    <i class="ki-duotone ki-calendar fs-2 text-primary">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </div>
+                                @else
+                                <div class="timeline-icon bg-light">
+                                    <i class="ki-duotone ki-check fs-2 text-success">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                        <span class="path3"></span>
+                                    </i>
+                                </div>
+                                @endif
+                                <!--end::Timeline icon-->
+                                <!--begin::Timeline content-->
+                                <div class="timeline-content mb-10 mt-n1">
+                                    <!--begin::Timeline heading-->
+                                    <div class="pe-3 mb-5">
+                                        <!--begin::Title-->
+                                        <div class="fs-5 fw-semibold mb-2 {{$loop->last ? 'fw-bolder text-primary' : ''}}">{{$timeline->status->status_name}}</div>
+                                        <!--end::Title-->
+                                        <!--begin::Description-->
+                                        <div class="d-flex align-items-center mt-1 fs-6">
+                                            <!--begin::Info-->
+                                            <div class="text-muted me-2 fs-7">Added at {{\Carbon\Carbon::parse($timeline->created_at)->format('d F Y, g:i A')}} by <b>{{ $timeline->user->name }}</b></div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::Description-->
+                                    </div>
+                                    <!--end::Timeline heading-->
+                                    <!--begin::Timeline details-->
+                                    <div class="overflow-auto pb-5">
+                                        <!--begin::Notice-->
+                                        <div class="notice d-flex {{$loop->last ? 'bg-light-primary border-primary' : 'border-gray-300'}} rounded border border-dashed min-w-lg-600px flex-shrink-0 p-6">
+                                            <!--begin::Icon-->
+                                            <i class="ki-duotone ki-devices-2 fs-2tx text-primary me-4">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                            </i>
+                                            <!--end::Icon-->
+                                            <!--begin::Comments-->
+                                            <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+                                                <div class="mb-3 mb-md-0 fw-semibold">
+                                                    <h4 class="text-gray-900 fw-bold">Comments for {{$timeline->status->status_name}}</h4>
+                                                    <div class="fs-6 text-gray-700 pe-7">Click to view comments while lead was at this stage!</div>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-primary align-self-center text-nowrap" data-kt-status-id="{{ $timeline->status_id }}" data-kt-status-name="{{ $timeline->status->status_name }}" data-kt-appointment-id="{{ $timeline->appointment_id }}" onclick="viewStatusComments(this)" data-url="{{ route('appointments.viewStatusComments') }}">View Comments</button>
+                                            </div>
+                                            <!--end::Comments-->
+                                        </div>
+                                        <!--end::Notice-->
+
+                                        @if (count($timeline->timelineDocs) > 0)
+                                        <div class="d-flex align-items-center p-5">
+                                            @foreach ($timeline->timelineDocs as $index => $doc)
+                                            @php
+                                            $filePath = public_path('appointmentFileUploded/' . $doc->file_uploaded);
+                                            $fileType = pathinfo($doc->file_uploaded, PATHINFO_EXTENSION);
+                                            $fileSize = file_exists($filePath) ? number_format(filesize($filePath) / 1048576, 2) : '0.00'; // Convert bytes to MB if the file exists
+                                            $icon = '';
+
+                                            switch ($fileType) {
+                                            case 'pdf':
+                                            $icon = asset('assets/media/svg/files/pdf.svg');
+                                            break;
+                                            case 'doc':
+                                            case 'docx':
+                                            $icon = asset('assets/media/svg/files/doc.svg');
+                                            break;
+                                            case 'css':
+                                            $icon = asset('assets/media/svg/files/css.svg');
+                                            break;
+                                            case 'jpg':
+                                            case 'jpeg':
+                                            $icon = asset('assets/media/svg/files/blank-image.svg');
+                                            break;
+                                            case 'png':
+                                            $icon = asset('assets/media/svg/files/image.svg');
+                                            break;
+                                            default:
+                                            $icon = asset('assets/media/svg/files/blank-image.svg'); // A default file icon
+                                            break;
+                                            }
+                                            @endphp
+                                            <div class="d-flex flex-aligns-center pe-10 pe-lg-20">
+                                                <img alt="" class="w-30px me-3" src="{{$icon}}">
+                                                <div class="ms-1 fw-semibold" style="width: max-content;">
+                                                    <a target="_blank" href="{{ asset('appointmentFileUploded/' . $doc->file_uploaded) }}" class="fs-6 text-hover-primary fw-bold">File Attachment {{ $index + 1 }}</a>
+                                                    <div class="text-gray-500">{{ $fileSize }}mb</div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <!--end::Timeline details-->
+                                </div>
+                                <!--end::Timeline content-->
+                            </div>
+                            <!--end::Timeline item-->
+                            @endforeach
+                        </div>
+                        <!--end::Timeline-->
+                    </div>
+                </div>
+                <!--end::Card-->
+            </div>
+            <!--end:::Tab pane-->
         </div>
-        <!--end::Sidebar-->
+        <!--end:::Tab content-->
     </div>
-    <!--end::Layout-->
+    <!--end::Content-->
+    <!--begin::Modal - View Lead Details-->
+    <div class="modal fade" id="kt_modal_view_status_comments" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body py-10 px-lg-17 kt_modal_attach_comments">
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - New Address-->
+    <script>
+        function viewStatusComments(element) {
+            var status_id = $(element).attr('data-kt-status-id');
+            var status_name = $(element).attr('data-kt-status-name');
+            var appointment_id = $(element).attr('data-kt-appointment-id');
+            var url = $(element).data('url'); // Get the URL from the data-url attribute
+
+            $.ajax({
+                url: url, // Use the URL from the data attribute
+                method: 'post',
+                data: {
+                    status_id: status_id,
+                    appointment_id: appointment_id,
+                    status_name: status_name,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                },
+                success: function(data) {
+                    $('.kt_modal_attach_comments').html(data);
+                    $('#kt_modal_view_status_comments').modal('show');
+                },
+                error: function(data) {
+                    alert("Error code : " + data.status + " , Error message : " + data.statusText);
+                }
+            });
+        };
+    </script>
 </x-default-layout>

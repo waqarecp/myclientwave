@@ -143,18 +143,6 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
-                                                <div class="col-md-4 mt-3">
-                                                    <label class="required fs-6 fw-semibold">Lead Status</label>
-                                                    <select class="form-select" wire:model="status_id" name="status_id" required>
-                                                        <option value="">--- Choose a Status ---</option>
-                                                        @foreach($statuses as $status)
-                                                        <option value="{{$status->id}}">{{$status->status_name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('status_id')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -453,27 +441,6 @@
                                 </div>
                             </div>
                             <!--end::Address Information-->
-
-                            <!--begin::Description Information-->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="descriptionInfoHeader">
-                                    <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionInfoCollapse" aria-expanded="false" aria-controls="descriptionInfoCollapse">
-                                        Description Information & Notes
-                                    </button>
-                                </h2>
-                                <div id="descriptionInfoCollapse" class="accordion-collapse collapse" aria-labelledby="descriptionInfoHeader" data-bs-parent="#leadAccordion">
-                                    <div class="accordion-body">
-                                        <div class="fv-row">
-                                            <label class="fs-6 fw-semibold ">Notes</label>
-                                            <textarea placeholder="Write any extra notes ..." class="form-control" rows="3" wire:model="notes" name="notes"></textarea>
-                                            @error('notes')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--end::Description Information-->
                         </div>
                         <!--end::Accordion-->
                     </div>

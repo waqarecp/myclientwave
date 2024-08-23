@@ -26,7 +26,6 @@ class Lead extends Model
         'email',
         'utility_company_id',
         'call_center_representative',
-        'status_id',
         'lead_source_id',
         'appointment_sat',
         'street',
@@ -37,6 +36,7 @@ class Lead extends Model
         'address_1',
         'address_2',
         'created_by',
+        'note_added'
     ];
 
     public function leadSource()
@@ -53,22 +53,17 @@ class Lead extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    
-    public function status()
-    {
-        return $this->belongsTo(LeadStatus::class, 'status_id');
-    }
 
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
     }
-    
+
     public function note()
     {
-        return $this->hasOne(Note::class);
+        return $this->hasMany(Note::class, 'lead_id');
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');

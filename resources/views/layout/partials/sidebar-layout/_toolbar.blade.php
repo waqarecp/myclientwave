@@ -24,10 +24,12 @@
                     </div>
                 @endif
             <!--end::Daterangepicker-->
-            
-            <!--begin::Primary button-->
-            <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
-            <!--end::Primary button-->
+            @if(auth()->user()->can('create lead'))
+                <!--begin::Primary button-->
+                <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
+                <!--end::Primary button-->
+            @endif
+
 		</div>
         @endif
 		<!--end::Actions-->

@@ -25,7 +25,7 @@
             @if($hasPermissionLeadSources)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('lead-sources')}}">
                     <a class="menu-link {{ request()->routeIs('lead-sources') ? 'active' : '' }}" href="{{ route('lead-sources.index') }}">
-                        <span class="menu-icon">{!! getIcon('cloud', 'fs-2') !!}</span>
+                        <span class="menu-icon">{!! getIcon('outline', 'ki-chart') !!}</span>
                         <span class="menu-title">Lead Sources</span>
                     </a>
                 </div>
@@ -34,13 +34,13 @@
             
             <!--begin:Menu item-->
             @php
-                $hasPermissionLeadStatus = auth()->user()->can('read lead status') || auth()->user()->can('write lead status') || auth()->user()->can('create lead status');
+                $hasPermissionStatus = auth()->user()->can('read status') || auth()->user()->can('write status') || auth()->user()->can('create status');
             @endphp
-            @if($hasPermissionLeadStatus)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('lead-statuses')}}">
-                    <a class="menu-link {{ request()->routeIs('lead-statuses') ? 'active' : '' }}" href="{{ route('lead-statuses.index') }}">
+            @if($hasPermissionStatus)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('statuses')}}">
+                    <a class="menu-link {{ request()->routeIs('statuses') ? 'active' : '' }}" href="{{ route('statuses.index') }}">
                         <span class="menu-icon">{!! getIcon('cloud', 'fs-2') !!}</span>
-                        <span class="menu-title">Lead Statuses</span>
+                        <span class="menu-title">Statuses</span>
                     </a>
                 </div>
             @endif

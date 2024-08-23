@@ -17,11 +17,9 @@ class Appointment extends Model
      */
     protected $fillable = [
         'lead_id',
-        'company_id',
         'representative_user',
         'appointment_date',
         'appointment_time',
-        'appointment_notes',
         'appointment_street',
         'appointment_city',
         'appointment_state',
@@ -29,7 +27,12 @@ class Appointment extends Model
         'appointment_country',
         'appointment_address_1',
         'appointment_address_2',
+        'note_added',
+        'has_new_comments',
         'created_by',
+        'status_id',
+        'timeline_date',
+        'file_uploaded'
     ];
 
     public function lead()
@@ -40,5 +43,20 @@ class Appointment extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+    
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
+    
+    public function timeline()
+    {
+        return $this->hasMany(Timeline::class, 'appointment_id');
+    }
+
+    public function appointmentNotes()
+    {
+        return $this->hasMany(AppointmentNote::class, 'appointment_id');
     }
 }

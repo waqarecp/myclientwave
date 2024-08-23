@@ -8,6 +8,7 @@ use App\Models\Lead;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class AddAppointmentModal extends Component
 {
@@ -16,7 +17,6 @@ class AddAppointmentModal extends Component
     public $representative_user;
     public $appointment_date;
     public $appointment_time;
-    public $appointment_notes;
     public $appointment_street;
     public $appointment_city;
     public $appointment_state;
@@ -32,7 +32,6 @@ class AddAppointmentModal extends Component
         'representative_user' => 'integer|required',
         'appointment_date' => 'required|date',
         'appointment_time' => 'required|string',
-        'appointment_notes' => 'required|string',
         'appointment_street' => 'nullable|string|max:255',
         'appointment_city' => 'nullable|string|max:100',
         'appointment_state' => 'nullable|string|max:100',
@@ -48,6 +47,29 @@ class AddAppointmentModal extends Component
         'new_appointment' => 'hydrate',
         'reset_form' => 'resetForm'
     ];
+
+    #[On('getLeadAddress')]
+    public function getLeadAddress($leadId): void
+    {
+        if ($leadId) {
+            $lead = Lead::find($leadId);
+            $this->appointment_street = $lead->street;
+            $this->appointment_city = $lead->city;
+            $this->appointment_state = $lead->state;
+            $this->appointment_zip = $lead->zip;
+            $this->appointment_country = $lead->country;
+            $this->appointment_address_1 = $lead->address_1;
+            $this->appointment_address_2 = $lead->address_2;
+        } else {
+            $this->appointment_street = null;
+            $this->appointment_city = null;
+            $this->appointment_state = null;
+            $this->appointment_zip = null;
+            $this->appointment_country = null;
+            $this->appointment_address_1 = null;
+            $this->appointment_address_2 = null;
+         }
+    }
 
     public function render()
     {
@@ -69,7 +91,6 @@ class AddAppointmentModal extends Component
                 'representative_user' => $this->representative_user,
                 'appointment_date' => $this->appointment_date,
                 'appointment_time' => $this->appointment_time,
-                'appointment_notes' => $this->appointment_notes,
                 'appointment_street' => $this->appointment_street,
                 'appointment_city' => $this->appointment_city,
                 'appointment_state' => $this->appointment_state,
@@ -104,7 +125,6 @@ class AddAppointmentModal extends Component
             $appointment->representative_user = $this->representative_user;
             $appointment->appointment_date = $this->appointment_date;
             $appointment->appointment_time = $this->appointment_time;
-            $appointment->appointment_notes = $this->appointment_notes;
             $appointment->appointment_street = $this->appointment_street;
             $appointment->appointment_city = $this->appointment_city;
             $appointment->appointment_state = $this->appointment_state;
@@ -146,7 +166,6 @@ class AddAppointmentModal extends Component
         $this->representative_user = $appointment->representative_user;
         $this->appointment_date = $appointment->appointment_date;
         $this->appointment_time = $appointment->appointment_time;
-        $this->appointment_notes = $appointment->appointment_notes;
         $this->appointment_street = $appointment->appointment_street;
         $this->appointment_city = $appointment->appointment_city;
         $this->appointment_state = $appointment->appointment_state;
@@ -155,7 +174,7 @@ class AddAppointmentModal extends Component
         $this->appointment_address_1 = $appointment->appointment_address_1;
         $this->appointment_address_2 = $appointment->appointment_address_2;
     }
-
+    
     public function hydrate()
     {
         $this->resetErrorBag();

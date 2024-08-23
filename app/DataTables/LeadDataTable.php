@@ -27,14 +27,10 @@ class LeadDataTable extends DataTable
             ->editColumn('lead_source_id', function (Lead $lead) {
                 return $lead->leadSource ? $lead->leadSource->source_name : 'N/A'; // Display 'source_name' or 'N/A' if not set
             })
-            ->editColumn('status_id', function (Lead $lead) {
-                $status_id = $lead->status_id ? $lead->status->status_name : 'N/A';
-                return $status_id;
-            })
             ->editColumn('created_by', function (Lead $lead) {
                 $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
                 $created_by = $lead->created_by ? $lead->user->name : 'N/A';
-                return $created_by . ' | ' .$created_at;
+                return $created_by . ' <br> ' .$created_at;
             })
             ->addColumn('action', function (Lead $lead) {
                 return view('pages/lead.columns._actions', compact('lead'));
@@ -48,7 +44,7 @@ class LeadDataTable extends DataTable
      */
     public function query(Lead $model): QueryBuilder
     {
-        return $model->newQuery()->with('leadSource')->with('utilityCompany')->with('user')->with('company')->with('appointments')->with('note')->with('status')->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
+        return $model->newQuery()->with('leadSource')->with('utilityCompany')->with('user')->with('company')->with('appointments')->with('note')->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
     }
 
     /**
@@ -77,7 +73,6 @@ class LeadDataTable extends DataTable
             Column::make('email')->title('Email')->searchable(true),
             Column::make('lead_source_id')->title('Lead Source')->searchable(true),
             Column::make('created_by')->title('Created By')->searchable(true),
-            Column::make('status_id')->title('Status')->searchable(true),
             Column::computed('action')
                 ->addClass('text-end text-nowrap')
                 ->exportable(false)

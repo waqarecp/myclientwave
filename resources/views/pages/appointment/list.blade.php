@@ -1,11 +1,11 @@
 <x-default-layout>
 
     @section('title')
-        Appointment
+    Appointment
     @endsection
 
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('appointments.index') }}
+    {{ Breadcrumbs::render('appointments.index') }}
     @endsection
     <div class="card">
         <!--begin::Card header-->
@@ -15,7 +15,7 @@
                 <!--begin::Search-->
                 <div class="d-flex align-items-center position-relative my-1">
                     {!! getIcon('magnifier', 'fs-3 position-absolute ms-5') !!}
-                    <input type="text" data-kt-appointment-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Appointment" id="mySearchInput"/>
+                    <input type="text" data-kt-appointment-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Appointment" id="mySearchInput" />
                 </div>
                 <!--end::Search-->
             </div>
@@ -54,23 +54,34 @@
         <!--end::Card body-->
     </div>
 
-    @push('scripts')
-        {{ $dataTable->scripts() }}
-        <script>
-            document.getElementById('mySearchInput').addEventListener('keyup', function () {
-                window.LaravelDataTables['appointment-table'].search(this.value).draw();
-            });
-            document.addEventListener('livewire:init', function () {
-                Livewire.on('success', function () {
-                    $('#kt_modal_add_appointment').modal('hide');
-                    window.LaravelDataTables['appointment-table'].ajax.reload();
-                });
-            });
-            $('#kt_modal_add_appointment').on('hidden.bs.modal', function () {
-                Livewire.dispatch('new_appointment');
-                Livewire.dispatch('reset_form');
-            });
-        </script>
-    @endpush
+    <!--begin::Modal - View Lead Details-->
+    <div class="modal fade" id="kt_modal_update_appointment_timeline" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body py-10 px-lg-17 kt_modal_attach_appointment_notes">
 
+                </div>
+                <!--end::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - New Address-->
+    @push('scripts')
+    {{ $dataTable->scripts() }}
+    <script>
+        document.getElementById('mySearchInput').addEventListener('keyup', function() {
+            window.LaravelDataTables['appointment-table'].search(this.value).draw();
+        });
+        document.addEventListener('livewire:init', function() {
+            Livewire.on('success', function() {
+                $('#kt_modal_add_appointment').modal('hide');
+                window.LaravelDataTables['appointment-table'].ajax.reload();
+            });
+        });
+        $('#kt_modal_add_appointment').on('hidden.bs.modal', function() {
+            Livewire.dispatch('new_appointment');
+            Livewire.dispatch('reset_form');
+        });
+    </script>
+    @endpush
 </x-default-layout>

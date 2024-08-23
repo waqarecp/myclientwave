@@ -4,10 +4,11 @@ use App\Http\Controllers\Apps\PermissionManagementController;
 use App\Http\Controllers\Apps\RoleManagementController;
 use App\Http\Controllers\Apps\UserManagementController;
 use App\Http\Controllers\LeadSourceController;
-use App\Http\Controllers\LeadStatusController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
 
@@ -64,15 +65,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Lead Sources routes
     Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
 
-    // Lead Statuses routes
-    Route::resource('lead-statuses', LeadStatusController::class)->middleware('check.dynamic.route.permissions:lead status');
+    // Statuses routes
+    Route::resource('statuses', StatusController::class)->middleware('check.dynamic.route.permissions:status');
 
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');
-    
+    Route::post('/leads/noteStore', [LeadController::class, 'noteStore'])->name('leads.noteStore');
+    Route::post('/leads/get-data', [LeadController::class, 'getData'])->name('leads.getData');
+    Route::post('/leads/mark-as-read', [LeadController::class, 'markAsRead'])->name('leads.markAsRead');
+    Route::post('/leads/view-lead-comments', [LeadController::class, 'viewLeadComments'])->name('leads.viewLeadComments');
+
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
-    
+    Route::post('/appointments/update-timeline', [AppointmentController::class, 'updateTimeline'])->name('appointments.updateTimeline');
+    Route::post('/appointments/mark-as-read', [AppointmentController::class, 'markAsRead'])->name('appointments.markAsRead');
+    Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');
+    Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');
+
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
 

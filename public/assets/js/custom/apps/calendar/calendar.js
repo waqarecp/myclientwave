@@ -71,6 +71,7 @@ var KTAppCalendar = function () {
                 tooltip.innerHTML = `
                     <strong>Lead:</strong> ${info.event.title}<br>
                     <strong>Created By:</strong> ${eventObj.created_by}
+                    ${eventObj.has_new_comments == 1 ? "<br><span class='badge badge-sm badge-danger'>New Updates Available</span>" : ""}
                 `;
                 
                 // Apply styling to the tooltip
@@ -111,7 +112,7 @@ var KTAppCalendar = function () {
             // Select dates action --- more info: https://fullcalendar.io/docs/select-callback
             select: function (arg) {
                 formatArgs(arg);
-                handleNewEvent();
+                // handleNewEvent();
             },
 
             // Click event --- more info: https://fullcalendar.io/docs/eventClick

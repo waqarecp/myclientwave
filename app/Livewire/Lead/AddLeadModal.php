@@ -9,7 +9,6 @@ use App\Models\Company;
 use App\Models\LeadSource;
 use App\Models\Appointment;
 use App\Models\Note;
-use App\Models\LeadStatus;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -26,21 +25,17 @@ class AddLeadModal extends Component
     public $email;
     public $utility_company_id;
     public $call_center_representative;
-    public $status_id;
     public $lead_source_id;
     public $appointment_sat = 0;
-    public $appointment_date;
-    public $appointment_time;
     public $street;
     public $city;
     public $state;
     public $zip;
     public $country;
-    public $appointment_notes;
     public $notes;
     public $address_1;
     public $address_2;
-
+    
     public $edit_mode = false;
 
     protected $rules = [
@@ -53,17 +48,13 @@ class AddLeadModal extends Component
         'email' => 'required|email|max:255',
         'utility_company_id' => 'nullable|integer',
         'call_center_representative' => 'nullable|integer',
-        'status_id' => 'required|integer',
         'lead_source_id' => 'nullable|integer',
         'appointment_sat' => 'nullable|boolean',
-        'appointment_date' => 'nullable|date',
-        'appointment_time' => 'nullable|string',
         'street' => 'nullable|string|max:255',
         'city' => 'nullable|string|max:100',
         'state' => 'nullable|string|max:100',
         'zip' => 'nullable|string|max:20',
         'country' => 'required|string',
-        'appointment_notes' => 'nullable|string',
         'notes' => 'nullable|string',
         'address_1' => 'required|string',
         'address_2' => 'nullable|string',
@@ -78,84 +69,17 @@ class AddLeadModal extends Component
 
     public function render()
     {
-        $users = User::where('deleted_at', null)->get();
-        $utilitycompanies = UtilityCompany::where('deleted_at', null)->get();
+        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $utilitycompanies = UtilityCompany::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $companies = Company::where('deleted_at', null)->get();
-        $sources = LeadSource::where('deleted_at', null)->get();
+        $sources = LeadSource::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $appointment = Appointment::where('deleted_at', null)->with('lead')->get();
         $note = Note::where('deleted_at', null)->get();
-        $statuses = LeadStatus::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        return view('livewire.lead.add-lead-modal',compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note', 'statuses'));
+        return view('livewire.lead.add-lead-modal',compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note'));
     }
 
     public function createLead()
     {
-        $errorMessage = null;
-        $this->validate();
-
-        DB::transaction(function () use ($errorMessage) {
-            // Prepare the data for creating a new user
-            $data = [
-                'company_id' => Auth::user()->company_id,
-                'first_name' => $this->first_name,
-                'last_name' => $this->last_name,
-                'owner_id' => $this->owner_id,
-                'sale_representative' => $this->sale_representative,
-                'mobile' => $this->mobile,
-                'phone' => $this->phone,
-                'email' => $this->email,
-                'utility_company_id' => $this->utility_company_id,
-                'call_center_representative' => $this->call_center_representative,
-                'status_id' => $this->status_id,
-                'lead_source_id' => $this->lead_source_id,
-                'appointment_sat' => $this->appointment_sat ?: 0,
-                'street' => $this->street,
-                'city' => $this->city,
-                'state' => $this->state,
-                'zip' => $this->zip,
-                'country' => $this->country,
-                'address_1' => $this->address_1,
-                'address_2' => $this->address_2,
-                'created_at' => now(),
-                'created_by' => Auth::user()->id,
-            ];
-
-            $lead = Lead::create($data);
-            if ($lead) {
-                // Create associated Appointment and Note records
-                Appointment::create([
-                    'lead_id' => $lead->id,
-                    'company_id' => Auth::user()->company_id,
-                    'representative_user' => $this->call_center_representative,
-                    'appointment_date' => $this->appointment_date,
-                    'appointment_time' => $this->appointment_time,
-                    'appointment_notes' => $this->appointment_notes,
-                    'appointment_street' => $this->street,
-                    'appointment_city' => $this->city,
-                    'appointment_state' => $this->state,
-                    'appointment_zip' => $this->zip,
-                    'appointment_country' => $this->country,
-                    'appointment_address_1' => $this->address_1,
-                    'appointment_address_2' => $this->address_2,
-                    'created_by' => Auth::user()->id,
-                ]);
-
-                Note::create([
-                    'lead_id' => $lead->id,
-                    'company_id' => Auth::user()->company_id,
-                    'user_id' => Auth::user()->id,
-                    'notes' => $this->notes,
-                    'created_by' => Auth::user()->id,
-                ]);
-                // Emit a success event with a message
-                $this->dispatch('success', __('New lead created ' . $errorMessage));
-            } else {
-                $this->dispatch('error', __('Failed to create new lead'));
-            }
-
-        });
-        // Reset the form fields after successful submission
-        $this->reset();
     }
 
     public function updateLead()
@@ -174,9 +98,7 @@ class AddLeadModal extends Component
             $lead->email = $this->email;
             $lead->utility_company_id = $this->utility_company_id;
             $lead->call_center_representative = $this->call_center_representative;
-            $lead->status_id = $this->status_id;
             $lead->lead_source_id = $this->lead_source_id;
-            $lead->appointment_sat = $this->appointment_sat ?: 0;
             $lead->street = $this->street;
             $lead->city = $this->city;
             $lead->state = $this->state;
@@ -186,15 +108,12 @@ class AddLeadModal extends Component
             $lead->address_2 = $this->address_2;
 
             if ($lead->save()) {
-                $note = Note::findOrFail($lead->id);
-                $note->notes = $this->notes;
-                $note->save();
                 // Emit a success event with a message
-                $this->dispatch('success', __('lead updated successfully'));
+                $this->dispatch('success', __('Lead updated successfully'));
                 // Reset the form fields after successful submission
                 $this->reset();
             } else {
-                $this->dispatch('error', __('Failed to update lead'));
+                $this->dispatch('error', __('Failed to update this lead'));
             }
         });
     }
@@ -203,15 +122,7 @@ class AddLeadModal extends Component
     {
         $lead = Lead::findOrFail($id);
         $lead->deleted_at = now();
-        if($lead->save()) {
-            $appointment = Appointment::findOrFail($lead->id);
-            $appointment->deleted_at = now();
-            $appointment->save();
-            
-            $note = Note::findOrFail($lead->id);
-            $note->deleted_at = now();
-            $note->save();
-        }
+        $lead->save();
 
         // Emit a success event with a message
         $this->dispatch('success', 'Lead successfully deleted');
@@ -232,7 +143,6 @@ class AddLeadModal extends Component
         $this->email = $lead->email;
         $this->utility_company_id = $lead->utility_company_id;
         $this->call_center_representative = $lead->call_center_representative;
-        $this->status_id = $lead->status_id;
         $this->lead_source_id = $lead->lead_source_id;
         $this->appointment_sat = $lead->appointment_sat == 1 ?: 0;
         $this->street = $lead->street;
@@ -242,13 +152,8 @@ class AddLeadModal extends Component
         $this->country = $lead->country;
         $this->address_1 = $lead->address_1;
         $this->address_2 = $lead->address_2;
-
-        if ($lead) {
-            $note = Note::find($lead->id);
-                $this->notes = $note->notes;
-        }
     }
-
+    
     public function hydrate()
     {
         $this->resetErrorBag();

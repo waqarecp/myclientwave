@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 return new class extends Migration
@@ -29,9 +30,9 @@ return new class extends Migration
             $table->string('zip')->nullable();
             $table->string('country')->nullable();
             $table->unsignedBigInteger('call_center_representative')->nullable();
-            $table->unsignedBigInteger('status_id')->nullable();
             $table->unsignedBigInteger('lead_source_id')->nullable();
             $table->tinyInteger('appointment_sat')->default(0)->comment('0: unchecked, 1:checked');
+            $table->tinyInteger('note_added')->default(0)->comment('0:Not Added, 1: Added');
             $table->longText('address_1')->nullable();
             $table->longText('address_2')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
@@ -44,7 +45,6 @@ return new class extends Migration
             $table->foreign('utility_company_id')->references('id')->on('utility_companies')->onDelete('set null');
             $table->foreign('call_center_representative')->references('id')->on('users')->onDelete('set null');
             $table->foreign('lead_source_id')->references('id')->on('lead_source')->onDelete('set null');
-            $table->foreign('status_id')->references('id')->on('lead_status')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
         });
         $abilities = ['create', 'read', 'write'];

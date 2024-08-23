@@ -8,136 +8,218 @@
     {{ Breadcrumbs::render('leads.show', $lead) }}
     @endsection
 
-    <!--begin::Layout-->
-    <div class="d-flex flex-column flex-lg-row">
-        <!--begin::Sidebar-->
-        <div class="flex-column flex-lg-row-auto mb-10" style="width: 100%;">
-            <!--begin::Card-->
-            <div class="card mb-5 mb-xl-8">
-                <!--begin::Card body-->
-                <div class="card-body">
-                    <!--begin::Summary-->
-                    <!--begin::lead Info-->
-                    <div class="d-flex flex-center flex-column py-5">
-                        <div class="symbol symbol-100px symbol-circle mb-7">
-                            <div class="symbol-label fs-1 {{ app(\App\Actions\GetThemeType::class)->handle('bg-light-? text-?', $lead->first_name) }}">
-                                {{ substr($lead->first_name, 0, 1) }}
-                            </div>
+    <!--begin::Content-->
+    <div class="flex-lg-row-fluid ms-lg-15">
+        <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8">
+            <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" data-bs-target="#kt_lead_information" href="javascript:void(0)">Lead information</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" data-bs-target="#kt_lead_schedule_appointment" href="javascript:void(0)">Scheduled Appointments</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <!--begin:::Tab pane-->
+            <div class="tab-pane fade show active" id="kt_lead_information" role="tabpanel">
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title flex-column">
+                            <h2>{{ $lead->first_name }} {{ $lead->last_name }}</h2>
+                            <div class="fs-6 fw-semibold text-muted"> Lead details for {{ $lead->first_name }} {{ $lead->last_name }}</div>
                         </div>
-                        <!--begin::Name-->
-                        <a href="javascript:void(0)" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-3">{{ $lead->first_name }} {{ $lead->last_name }}</a>
-                        <!--end::Name-->
+                        <!--end::Card title-->
                     </div>
-                    <!--end::lead Info-->
-                    <!--end::Summary-->
-                    <div class="separator"></div>
-                    <div class="row">
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6">
-                            <h3>Lead information</h3>
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Lead ID</div>
-                                <div class="text-gray-600">{{ $lead->id }}</div>
-                                <div class="fw-bold mt-5">Lead Owner</div>
-                                <div class="text-gray-600">{{ $lead->user->name }}</div>
-                                <div class="fw-bold mt-5">Sales Representative</div>
-                                <div class="text-gray-600">{{ $lead->user->name }}</div>
-                                <div class="fw-bold mt-5">Mobile</div>
-                                <div class="text-gray-600">{{ $lead->mobile }}</div>
-                                <div class="fw-bold mt-5">Phone</div>
-                                <div class="text-gray-600">{{ $lead->phone }}</div>
-                                <div class="fw-bold mt-5">Email</div>
-                                <div class="text-gray-600">{{ $lead->email }}</div>
-                                <div class="fw-bold mt-5">Utility Company</div>
-                                <div class="text-gray-600">{{ $lead->utilitycompany->utility_companyname }}</div>
+                    <div class="card-body">
+                        <div class="separator"></div>
+                        <div class="row">
+                            <!--begin::Details content-->
+                            <div id="kt_dealer_view_details" class="collapse show col-md-6">
+                                <div class="pb-5 fs-6">
+                                    <!--begin::Details item-->
+                                    <div class="fw-bold mt-5">Lead ID</div>
+                                    <div class="text-gray-600">{{ $lead->id }}</div>
+                                    <div class="fw-bold mt-5">Lead Owner</div>
+                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="fw-bold mt-5">Sales Representative</div>
+                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="fw-bold mt-5">Mobile</div>
+                                    <div class="text-gray-600">{{ $lead->mobile }}</div>
+                                    <div class="fw-bold mt-5">Phone</div>
+                                    <div class="text-gray-600">{{ $lead->phone }}</div>
+                                    <div class="fw-bold mt-5">Utility Company</div>
+                                    <div class="text-gray-600">{{ $lead->utilitycompany->utility_companyname ?: 'N/A' }}</div>
+                                </div>
                             </div>
-                        </div>
-                        <!--end::Details content-->
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
-                            <div class="pb-5 fs-6 ">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Appointment Date/Time</div>
-                                <?php
-                                $count = 0;
-                                if ($lead->appointments) {
-                                    foreach ($lead->appointments as $data) {
-                                        $count++;
-                                ?>
-                                        <div class="text-gray-600"><b>Event {{$count}} : </b>{{ \Carbon\Carbon::parse($data->appointment_date)->format('d F Y') }} / {{ \Carbon\Carbon::parse($data->appointment_time)->format('g:i A') }}</div>
-                                <?php
-                                    }
-                                }
-                                ?>
-                                <div class="text-gray-600"></div>
-                                <div class="fw-bold mt-5">Call Center Representative</div>
-                                <div class="text-gray-600">{{ $lead->user->name }}</div>
-                                <div class="fw-bold mt-5">Lead Status</div>
-                                <div class="text-gray-600">{{ $lead->status->status_name }}</div>
-                                <div class="fw-bold mt-5">Lead Created By</div>
-                                <?php
-                                $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
-                                $created_by = $lead->created_by ? $lead->user->name : 'N/A';
-                                ?>
-                                <div class="text-gray-600">{{ $created_by . ' | ' .$created_at }}</div>
-                                <div class="fw-bold mt-5">Lead Source</div>
-                                <div class="text-gray-600">{{ $lead->leadSource->source_name }}</div>
-                                <div class="fw-bold mt-5">Layout</div>
-                                <div class="text-gray-600">{{ $lead->company->name }}</div>
-                                <div class="fw-bold mt-5">Appointment Sat</div>
-                                <div class="text-gray-600">{{ $lead->appointment_sat==1 ? "Yes" : "No" }}</div>
+                            <!--end::Details content-->
+                            <!--begin::Details content-->
+                            <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
+                                <div class="pb-5 fs-6 ">
+                                    <!--begin::Details item-->
+                                    <div class="text-gray-600"></div>
+                                    <div class="fw-bold mt-5">Call Center Representative</div>
+                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="fw-bold mt-5">Lead Created By</div>
+                                    <?php
+                                    $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
+                                    $created_by = $lead->created_by ? $lead->user->name : 'N/A';
+                                    ?>
+                                    <div class="text-gray-600">{{ $created_by . ' | ' .$created_at }}</div>
+                                    <div class="fw-bold mt-5">Lead Source</div>
+                                    <div class="text-gray-600">{{ $lead->leadSource->source_name }}</div>
+                                    <div class="fw-bold mt-5">Layout</div>
+                                    <div class="text-gray-600">{{ $lead->company->name }}</div>
+                                    <div class="fw-bold mt-5">Email</div>
+                                    <div class="text-gray-600">{{ $lead->email }}</div>
+                                </div>
                             </div>
+                            <!--end::Details content-->
                         </div>
-                        <!--end::Details content-->
-                    </div>
 
-                    <div class="row">
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6">
-                            <h3>Address information</h3>
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Street</div>
-                                <div class="text-gray-600">{{ $lead->street }}</div>
-                                <div class="fw-bold mt-5">City</div>
-                                <div class="text-gray-600">{{ $lead->city }}</div>
-                                <div class="fw-bold mt-5">State</div>
-                                <div class="text-gray-600">{{ $lead->state }}</div>
+                        <div class="row">
+                            <!--begin::Details content-->
+                            <div id="kt_dealer_view_details" class="collapse show col-md-6">
+                                <h3>Address information</h3>
+                                <div class="pb-5 fs-6">
+                                    <!--begin::Details item-->
+                                    <div class="fw-bold mt-5">Country</div>
+                                    <div class="text-gray-600">{{ $lead->country }}</div>
+                                    <div class="fw-bold mt-5">City</div>
+                                    <div class="text-gray-600">{{ $lead->city }}</div>
+                                    <div class="fw-bold mt-5">State</div>
+                                    <div class="text-gray-600">{{ $lead->state }}</div>
+                                    <div class="fw-bold mt-5">Zip Code</div>
+                                    <div class="text-gray-600">{{ $lead->zip }}</div>
+                                </div>
                             </div>
-                        </div>
-                        <!--end::Details content-->
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
-                            <div class="pb-5 fs-6 ">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Zip Code</div>
-                                <div class="text-gray-600">{{ $lead->zip }}</div>
-                                <div class="fw-bold mt-5">Country</div>
-                                <div class="text-gray-600">{{ $lead->country }}</div>
+                            <!--end::Details content-->
+                            <!--begin::Details content-->
+                            <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
+                                <div class="pb-5 fs-6 ">
+                                    <!--begin::Details item-->
+                                    <div class="fw-bold mt-5">Street</div>
+                                    <div class="text-gray-600">{{ $lead->street }}</div>
+                                    <div class="fw-bold mt-5">Address Line 1</div>
+                                    <div class="text-gray-600">{{ $lead->address_1 }}</div>
+                                    <div class="fw-bold mt-5">Address Line 2</div>
+                                    <div class="text-gray-600">{{ $lead->address_2 }}</div>
+                                </div>
                             </div>
+                            <!--end::Details content-->
                         </div>
-                        <!--end::Details content-->
-                    </div>
-
-                    <div class="row">
-                        <!--begin::Details content-->
-                        <div id="kt_dealer_view_details" class="collapse show col-md-12">
-                            <h3>Description information</h3>
-                            <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
-                                <div class="fw-bold mt-5">Lead Notes</div>
-                                <div class="text-gray-600">{{ $lead->note->notes }}</div>
-                            </div>
-                        </div>
-                        <!--end::Details content-->
                     </div>
                 </div>
-                <!--end::Card body-->
             </div>
-            <!--end::Card-->
+            <!--end:::Tab pane-->
+            <!--begin:::Tab pane-->
+            <div class="tab-pane fade" id="kt_lead_schedule_appointment" role="tabpanel">
+                <!--begin::Card-->
+                <div class="card pt-4 mb-6 mb-xl-9">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0">
+                        <!--begin::Card title-->
+                        <div class="card-title flex-column">
+                            <h2>{{ $lead->first_name }} {{ $lead->last_name }}</h2>
+                            <div class="fs-6 fw-semibold text-muted">List of all scheduled appointments.</div>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Appointment Date</th>
+                                    <th>Appointment Time</th>
+                                    <th>Address</th>
+                                    <th>Created By</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $count = 1 @endphp
+                                @foreach ($appointments as $appointment)
+                                <tr>
+                                    <td>{{$count++}}</td>
+                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_date)->format('d F Y')}}</td>
+                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A')}}</td>
+                                    <td>{{$appointment->appointment_street . ", " . $appointment->appointment_city . ", " . $appointment->appointment_state . ", " . $appointment->appointment_zip . ", " . $appointment->appointment_address_1 . ", " . $appointment->appointment_address_2}}</td>
+                                    <td>{{\Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i A')}}<br>{{($appointment->created_by ? $appointment->user->name : 'N/A')}}</td>
+                                    <td>
+                                        <span class="btn btn-sm btn-success">{{$appointment->status->status_name}}</span>
+                                        <button class="btn btn-sm btn-light-primary" data-kt-appointment-id="{{ $appointment->id }}" onclick="updateAppointmentTimeline('{{ $appointment->id }}')">Comments</button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--end::Card-->
+            </div>
+            <!--end:::Tab pane-->
         </div>
-        <!--end::Sidebar-->
+        <!--end:::Tab content-->
     </div>
-    <!--end::Layout-->
+    <!--end::Content-->
+     
+     <!--begin::Modal - View Lead Details-->
+     <div class="modal fade" id="kt_modal_view_lead_comments" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body py-10 px-lg-17 kt_modal_attach">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - New Address-->
+    <!--begin::Modal - View Lead Details-->
+    <div class="modal fade" id="kt_modal_update_appointment_timeline" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body py-10 px-lg-17 kt_modal_attach_appointment_notes">
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - New Address-->
+<script>
+    function updateAppointmentTimeline(appointment_id, activeCommentsTab = false) {
+        $.ajax({
+            url: "{{ route('appointments.updateTimeline') }}", // Use the URL from the data attribute
+            method: 'post',
+            data: {
+                appointment_id: appointment_id,
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+            },
+            success: function(data) {
+                $('.kt_modal_attach_appointment_notes').html(data);
+                $('#kt_modal_update_appointment_timeline').modal('show');
+                if (activeCommentsTab) {
+                    $('#update_followup .nav-item a').removeClass('active');
+                    $('#update_followup .nav-item a').eq(1).addClass('active');
+                    $('#appointment-note-content .tab-pane').removeClass('active show');
+                    $('#appointment-note-content .tab-pane').eq(1).addClass('active show');
+                }
+            },
+            error: function(data) {
+                Swal.fire({
+                    text: 'Failed to view timeline for this appointment!', 
+                    icon: 'error',
+                    confirmButtonText: "Close",
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: "btn btn-light-danger"
+                    }
+                });
+            }
+        });
+    }
+</script>
 </x-default-layout>

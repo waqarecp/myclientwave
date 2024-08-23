@@ -13,7 +13,6 @@
     @endsection
     <!--begin::Card header-->
     <div class="card-header border-0 pt-6">
-
         <!--begin::Modal-->
         <livewire:appointment.add-appointment-modal></livewire:appointment.add-appointment-modal>
         <!--end::Modal-->
@@ -39,7 +38,7 @@
                         @if(auth()->user()->can('create appointment'))
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_appointment">
                             {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                            Add New Event
+                            Add New Appointment
                         </button>
                         @endif
                         <!--end::Add appointment-->
@@ -201,15 +200,15 @@
                         <!--begin::Modal header-->
                         <div class="modal-header border-0 justify-content-end">
                             <!--begin::Edit-->
-                            <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Edit Event" id="kt_modal_view_event_edit">
+                            <!-- <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Edit Event" id="kt_modal_view_event_edit">
                                 <i class="ki-duotone ki-pencil fs-2">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
                                 </i>
-                            </div>
+                            </div> -->
                             <!--end::Edit-->
                             <!--begin::Edit-->
-                            <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Delete Event" id="kt_modal_view_event_delete">
+                            <!-- <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" data-bs-dismiss="click" title="Delete Event" id="kt_modal_view_event_delete">
                                 <i class="ki-duotone ki-trash fs-2">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
@@ -217,7 +216,7 @@
                                     <span class="path4"></span>
                                     <span class="path5"></span>
                                 </i>
-                            </div>
+                            </div> -->
                             <!--end::Edit-->
                             <!--begin::Close-->
                             <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" data-bs-dismiss="modal">

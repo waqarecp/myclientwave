@@ -17,8 +17,9 @@ class Note extends Model
      */
     protected $fillable = [
         'lead_id',
-        'company_id',
         'user_id',
+        'user_ids',
+        'unread_ids',
         'notes',
         'is_read',
         'created_by',
