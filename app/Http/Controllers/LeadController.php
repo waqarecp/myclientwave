@@ -10,8 +10,10 @@ use App\Models\Appointment;
 use App\Models\AppointmentNote;
 use App\Models\Note;
 use App\Models\User;
+use App\Models\FirebaseToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\FirebaseNotifications;
 
 class LeadController extends Controller
 {
@@ -158,7 +160,19 @@ class LeadController extends Controller
                 }
             }
         }
+        // Retrieve FCM tokens for the sales representative
+        $fcmTokens = FirebaseToken::where('user_id', $request->input('sale_representative'))
+        ->pluck('fcm_token')
+        ->toArray();
 
+        // Check if there are any tokens to send notifications to
+        if (!empty($fcmTokens)) {
+            FirebaseNotifications::sendNotification(
+                'New Lead Created',
+                'A new lead has been assigned to you.',
+                $fcmTokens
+            );
+        }
         return redirect()->back()->with('success', 'Lead has been created successfully.');
     }
 

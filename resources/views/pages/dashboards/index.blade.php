@@ -41,24 +41,24 @@
                         <!--begin::Heading-->
                         <div class="d-flex align-items-center mb-2">
                             <!--begin::Title-->
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">35,568</span>
+                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countLeads}}</span>
                             <!--end::Title-->
                             <!--begin::Label-->
-                            <span class="badge badge-light-danger fs-base">
+                            <!-- <span class="badge badge-light-danger fs-base">
                                 <i class="ki-duotone ki-arrow-up fs-5 text-danger ms-n1">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
-                                </i>8.02%</span>
+                                </i>8.02%</span> -->
                             <!--end::Label-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Description-->
-                        <span class="fs-6 fw-semibold text-gray-500">Organic Sessions</span>
+                        <span class="fs-6 fw-semibold text-gray-500">Total Leads</span>
                         <!--end::Description-->
                     </div>
                     <!--end::Statistics-->
                     <!--begin::Toolbar-->
-                    <div class="card-toolbar">
+                    <div class="card-toolbar d-none">
                         <!--begin::Menu-->
                         <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
                             <i class="ki-duotone ki-dots-square fs-1 text-gray-500 me-n1">
@@ -141,6 +141,7 @@
                 <!--end::Header-->
                 <!--begin::Body-->
                 <div class="card-body pt-0 pb-1">
+                    <input type="hidden" id="lead_data" value='{{ $leadData }}'/>
                     <div id="kt_charts_widget_27" class="min-h-auto"></div>
                 </div>
                 <!--end::Body-->
@@ -159,24 +160,24 @@
                         <!--begin::Heading-->
                         <div class="d-flex align-items-center mb-2">
                             <!--begin::Title-->
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">2,579</span>
+                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countAppointments}}</span>
                             <!--end::Title-->
                             <!--begin::Label-->
-                            <span class="badge badge-light-success fs-base">
+                            <!-- <span class="badge badge-light-success fs-base">
                                 <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
-                                </i>2.2%</span>
+                                </i>2.2%</span> -->
                             <!--end::Label-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Description-->
-                        <span class="fs-6 fw-semibold text-gray-500">Domain External Links</span>
+                        <span class="fs-6 fw-semibold text-gray-500">Total Appointments</span>
                         <!--end::Description-->
                     </div>
                     <!--end::Statistics-->
                     <!--begin::Toolbar-->
-                    <div class="card-toolbar">
+                    <div class="card-toolbar d-none">
                         <!--begin::Menu-->
                         <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
                             <i class="ki-duotone ki-dots-square fs-1 text-gray-500 me-n1">
@@ -258,6 +259,7 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Body-->
+                <input type="hidden" id="appointment_data" value='{{ $appointmentData }}'/>
                 <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
                     <!--begin::Chart-->
                     <div id="kt_charts_widget_28" class="h-300px w-100 min-h-auto"></div>
@@ -279,24 +281,24 @@
                         <!--begin::Heading-->
                         <div class="d-flex align-items-center mb-2">
                             <!--begin::Title-->
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">5,037</span>
+                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countLeads}}</span>
                             <!--end::Title-->
                             <!--begin::Label-->
-                            <span class="badge badge-light-success fs-base">
+                            <!-- <span class="badge badge-light-success fs-base">
                                 <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
-                                </i>2.2%</span>
+                                </i>2.2%</span> -->
                             <!--end::Label-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Description-->
-                        <span class="fs-6 fw-semibold text-gray-500">Visits by Social Networks</span>
+                        <span class="fs-6 fw-semibold text-gray-500">Lead By Sources</span>
                         <!--end::Description-->
                     </div>
                     <!--end::Statistics-->
                     <!--begin::Toolbar-->
-                    <div class="card-toolbar">
+                    <div class="card-toolbar d-none">
                         <!--begin::Menu-->
                         <button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
                             <i class="ki-duotone ki-dots-square fs-1 text-gray-500 me-n1">
@@ -378,214 +380,47 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Body-->
+                <input type="hidden" id="lead_source_data" value=''/>
                 <div class="card-body card-body d-flex justify-content-between flex-column pt-3">
                     <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Flag-->
-                        <img src="assets/media/svg/brand-logos/dribbble-icon-1.svg" class="me-4 w-30px" style="border-radius: 4px" alt="" />
-                        <!--end::Flag-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                            <!--begin::Content-->
-                            <div class="me-5">
-                                <!--begin::Title-->
-                                <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">Dribbble</a>
-                                <!--end::Title-->
-                                <!--begin::Desc-->
-                                <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Community</span>
-                                <!--end::Desc-->
-                            </div>
-                            <!--end::Content-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Number-->
-                                <span class="text-gray-800 fw-bold fs-4 me-3">579</span>
-                                <!--end::Number-->
-                                <!--begin::Info-->
-                                <div class="m-0">
-                                    <!--begin::Label-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>2.6%</span>
-                                    <!--end::Label-->
+                    @foreach($leadSources as $leadSource)
+                        <div class="d-flex flex-stack">
+                            <div class="symbol symbol-30px me-5">
+                                <span class="symbol-label">
+                                    <i class="ki-duotone ki-rocket fs-3 text-gray-600">
+                                        <span class="path1"></span>
+                                        <span class="path2"></span>
+                                    </i>
+                                </span>
+                            </div>                            
+                            <!--begin::Section-->
+                            <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
+                                <!--begin::Content-->
+                                <div class="me-5">
+                                    <!--begin::Title-->
+                                    <b class="text-gray-800 fw-bold text-hover-primary fs-6">{{ $leadSource['source_name'] }}</b>
+                                    <!--end::Title-->
+                                    <!--begin::Desc-->
+                                    <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Total Leads</span>
+                                    <!--end::Desc-->
                                 </div>
-                                <!--end::Info-->
+                                <!--end::Content-->
+                                <!--begin::Wrapper-->
+                                <div class="d-flex align-items-center">
+                                    <!--begin::Number-->
+                                    <span class="text-gray-800 fw-bold fs-4 me-3">{{ $leadSource['count'] }}</span>
+                                    <!--end::Number-->
+                                </div>
+                                <!--end::Wrapper-->
                             </div>
-                            <!--end::Wrapper-->
+                            <!--end::Section-->
                         </div>
-                        <!--end::Section-->
-                    </div>
+                    @endforeach
+
                     <!--end::Item-->
                     <!--begin::Separator-->
                     <div class="separator separator-dashed my-3"></div>
                     <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Flag-->
-                        <img src="assets/media/svg/brand-logos/linkedin-1.svg" class="me-4 w-30px" style="border-radius: 4px" alt="" />
-                        <!--end::Flag-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                            <!--begin::Content-->
-                            <div class="me-5">
-                                <!--begin::Title-->
-                                <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">Linked In</a>
-                                <!--end::Title-->
-                                <!--begin::Desc-->
-                                <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social Media</span>
-                                <!--end::Desc-->
-                            </div>
-                            <!--end::Content-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Number-->
-                                <span class="text-gray-800 fw-bold fs-4 me-3">1,088</span>
-                                <!--end::Number-->
-                                <!--begin::Info-->
-                                <div class="m-0">
-                                    <!--begin::Label-->
-                                    <span class="badge badge-light-danger fs-base">
-                                        <i class="ki-duotone ki-arrow-down fs-5 text-danger ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>0.4%</span>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Section-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed my-3"></div>
-                    <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Flag-->
-                        <img src="assets/media/svg/brand-logos/slack-icon.svg" class="me-4 w-30px" style="border-radius: 4px" alt="" />
-                        <!--end::Flag-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                            <!--begin::Content-->
-                            <div class="me-5">
-                                <!--begin::Title-->
-                                <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">Slack</a>
-                                <!--end::Title-->
-                                <!--begin::Desc-->
-                                <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Messanger</span>
-                                <!--end::Desc-->
-                            </div>
-                            <!--end::Content-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Number-->
-                                <span class="text-gray-800 fw-bold fs-4 me-3">794</span>
-                                <!--end::Number-->
-                                <!--begin::Info-->
-                                <div class="m-0">
-                                    <!--begin::Label-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>0.2%</span>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Section-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed my-3"></div>
-                    <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Flag-->
-                        <img src="assets/media/svg/brand-logos/youtube-3.svg" class="me-4 w-30px" style="border-radius: 4px" alt="" />
-                        <!--end::Flag-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                            <!--begin::Content-->
-                            <div class="me-5">
-                                <!--begin::Title-->
-                                <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">YouTube</a>
-                                <!--end::Title-->
-                                <!--begin::Desc-->
-                                <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Video Channel</span>
-                                <!--end::Desc-->
-                            </div>
-                            <!--end::Content-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Number-->
-                                <span class="text-gray-800 fw-bold fs-4 me-3">978</span>
-                                <!--end::Number-->
-                                <!--begin::Info-->
-                                <div class="m-0">
-                                    <!--begin::Label-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>4.1%</span>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Section-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed my-3"></div>
-                    <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Flag-->
-                        <img src="assets/media/svg/brand-logos/instagram-2-1.svg" class="me-4 w-30px" style="border-radius: 4px" alt="" />
-                        <!--end::Flag-->
-                        <!--begin::Section-->
-                        <div class="d-flex align-items-center flex-stack flex-wrap flex-row-fluid d-grid gap-2">
-                            <!--begin::Content-->
-                            <div class="me-5">
-                                <!--begin::Title-->
-                                <a href="#" class="text-gray-800 fw-bold text-hover-primary fs-6">Instagram</a>
-                                <!--end::Title-->
-                                <!--begin::Desc-->
-                                <span class="text-gray-500 fw-semibold fs-7 d-block text-start ps-0">Social Network</span>
-                                <!--end::Desc-->
-                            </div>
-                            <!--end::Content-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Number-->
-                                <span class="text-gray-800 fw-bold fs-4 me-3">1,458</span>
-                                <!--end::Number-->
-                                <!--begin::Info-->
-                                <div class="m-0">
-                                    <!--begin::Label-->
-                                    <span class="badge badge-light-success fs-base">
-                                        <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>8.3%</span>
-                                    <!--end::Label-->
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Section-->
-                    </div>
-                    <!--end::Item-->
                 </div>
                 <!--end::Body-->
             </div>
@@ -1585,10 +1420,18 @@
                                                     <label class="d-flex align-items-center fs-6 fw-semibold ">
                                                         <span class="required">Lead Owner</span>
                                                     </label>
-                                                    <select class="form-select" name="owner_id" required>
+                                                    <select class="form-select" name="owner_id" id="owner_id" required>
                                                         <option value="">Select Lead Owner</option>
-                                                        @foreach($users as $user)
-                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @foreach($roles as $role)
+                                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                                @foreach($users as $user)
+                                                                    @if($user->roles->contains($role))
+                                                                        <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                                            {{ $user->name }}
+                                                                        </option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endforeach
                                                     </select>
                                                     @error('owner_id')
@@ -1596,11 +1439,17 @@
                                                     @enderror
                                                 </div>
                                                 <div class="col-md-4 mt-3">
-                                                    <label class="required fs-6 fw-semibold ">Sales Representative</label>
-                                                    <select class="form-select" name="sale_representative" required>
+                                                    <label class="required fs-6 fw-semibold">Sales Representative</label>
+                                                    <select class="form-select" name="sale_representative" id="sale_representative" disabled required>
                                                         <option value="">--- Select a User ---</option>
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @foreach($roles as $role)
+                                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                                @foreach($users as $user)
+                                                                    @if($user->roles->contains($role))
+                                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endforeach
                                                     </select>
                                                     @error('sale_representative')
@@ -1642,7 +1491,7 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="fs-6 fw-semibold ">Phone</label>
-                                                    <input type="text" class="form-control" minlength="5" maxlength="25" name="phone" required/>
+                                                    <input type="text" class="form-control" minlength="5" maxlength="25" name="phone" required />
                                                     @error('phone')
                                                     <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -1668,10 +1517,16 @@
                                                 </div>
                                                 <div class="col-md-4 mt-3">
                                                     <label class="fs-6 fw-semibold ">Call Center Representative</label>
-                                                    <select class="form-select" name="call_center_representative">
+                                                    <select class="form-select" name="call_center_representative" id="call_center_representative" disabled>
                                                         <option value="">--- Select a User ---</option>
-                                                        @foreach($users as $user)
-                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                        @foreach($roles as $role)
+                                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                                @foreach($users as $user)
+                                                                    @if($user->roles->contains($role))
+                                                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endforeach
                                                     </select>
                                                     @error('call_center_representative')
@@ -1682,10 +1537,10 @@
                                             <div class="col-md-12 mt-3">
                                                 <label class="fw-semibold">Tag users in comment</label>
                                                 <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
-                                                        <option value="all">Tag All Users</option>
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
-                                                        @endforeach
+                                                    <option value="all">Tag All Users</option>
+                                                    @foreach($users as $user)
+                                                    <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('user_ids')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -1949,7 +1804,7 @@
                                             </div>
                                             <div class="col-md-4 mt-3">
                                                 <label class="required fs-6 fw-semibold ">Address Line 1</label>
-                                                <input type="text" class="form-control" name="address1" requried/>
+                                                <input type="text" class="form-control" name="address1" requried />
                                                 @error('address1')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -2018,13 +1873,13 @@
                                                 <label class="required fs-6 fw-semibold">Select an appointment status</label>
                                                 <select class="form-select" name="status_id" id="status_id" required>
                                                     @foreach($statuses as $status)
-                                                        <option value="{{ $status->id }}" data-color="{{ $status->color_code }}">
-                                                            {{ $status->status_name }}
-                                                        </option>
+                                                    <option value="{{ $status->id }}" data-color="{{ $status->color_code }}">
+                                                        {{ $status->status_name }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                                 @error('status_id')
-                                                    <span class="text-danger">{{ $message }}</span>
+                                                <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                             <div class="col-md-4 appointment_fields">
@@ -2044,10 +1899,10 @@
                                             <div class="col-md-12 mt-3 appointment_fields">
                                                 <label class="fw-semibold">Tag users in appointment comment</label>
                                                 <select onchange="selectAll(this)" name="appointment_user_ids[]" id="tag_users_appointment" class="form-select select2" data-control="select2" data-search="true" multiple>
-                                                        <option value="all">Tag All Users</option>
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
-                                                        @endforeach
+                                                    <option value="all">Tag All Users</option>
+                                                    @foreach($users as $user)
+                                                    <option value="{{$user->id}}">{{ucwords($user->name)}}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('user_ids')
                                                 <span class="text-danger">{{ $message }}</span>
@@ -2090,10 +1945,82 @@
     @push('scripts')
     <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
     <script>
+        function ucwords(str) {
+            return str.replace(/\b\w/g, function(char) {
+                return char.toUpperCase();
+            });
+        }
+        $(document).ready(function() {
+            $('#owner_id').on('change', function() {
+                var childUsers = $('#owner_id option:selected').data('child-users');
+                var allUsers = @json($users); // Assuming $users includes role relationship
+                
+                // Clear existing options except the first one and keep the structure intact
+                $('#sale_representative optgroup, #call_center_representative optgroup').remove();
+                
+                if (!childUsers || childUsers === "") {
+                    // If no child users, enable and populate with all users grouped by role
+                    $('#sale_representative, #call_center_representative').prop('disabled', false);
+                    
+                    // Group users by roles
+                    var usersByRole = {};
+                    allUsers.forEach(function(user) {
+                        var roleName = ucwords(user.roles[0].name); // Assuming each user has a single role
+                        if (!usersByRole[roleName]) {
+                            usersByRole[roleName] = [];
+                        }
+                        usersByRole[roleName].push(user);
+                    });
+                    
+                    // Append users grouped by roles
+                    $.each(usersByRole, function(roleName, users) {
+                        if (users.length > 0) {
+                            var optgroup = $('<optgroup>', { label: roleName });
+                            users.forEach(function(user) {
+                                optgroup.append($('<option>', { value: user.id, text: user.name }));
+                            });
+                            $('#sale_representative, #call_center_representative').append(optgroup);
+                        }
+                    });
+
+                } else {
+                    // If there are child users, enable and populate with specific users grouped by role
+                    var childUserIds = childUsers.toString().split(',');
+                    
+                    $('#sale_representative, #call_center_representative').prop('disabled', false);
+                    
+                    // Filter child users by their role
+                    var usersByRole = {};
+                    childUserIds.forEach(function(userId) {
+                        var user = allUsers.find(u => u.id == userId);
+                        if (user) {
+                            var roleName = ucwords(user.roles[0].name); // Assuming each user has a single role
+                            if (!usersByRole[roleName]) {
+                                usersByRole[roleName] = [];
+                            }
+                            usersByRole[roleName].push(user);
+                        }
+                    });
+                    
+                    // Append users grouped by roles
+                    $.each(usersByRole, function(roleName, users) {
+                        if (users.length > 0) {
+                            var optgroup = $('<optgroup>', { label: roleName });
+                            users.forEach(function(user) {
+                                optgroup.append($('<option>', { value: user.id, text: user.name }));
+                            });
+                            $('#sale_representative, #call_center_representative').append(optgroup);
+                        }
+                    });
+                }
+            });
+        });
+
+
         $(document).ready(function() {
             // Initially hide the appointment date and time fields
             $('.appointment_fields').hide();
-            
+
             // Show/Hide appointment date and time based on checkbox
             $('#appointment_sat').change(function() {
                 $('input[name="appointment_date"]').val('');
@@ -2105,8 +2032,8 @@
                 }
             });
 
-             // Initialize Select2 normally
-             $('#status_id').select2({
+            // Initialize Select2 normally
+            $('#status_id').select2({
                 templateResult: formatState,
                 templateSelection: formatState,
                 dropdownParent: $('#kt_modal_create_lead') // Ensure dropdown appends to modal
@@ -2118,13 +2045,13 @@
                     return state.text;
                 }
                 var $state = $(
-                    '<span><span class="badge-circle" style="background-color:' + $(state.element).data('color') + '; width: 15px; height: 15px; display: inline-block; margin-right: 5px; border-radius: 50%;"></span>' + state.text + '</span>'
+                    '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' + $(state.element).data('color') + '"></span>' + state.text + '</span>'
                 );
                 return $state;
             }
 
             // Re-initialize Select2 when the modal is shown
-            $('#kt_modal_create_lead').on('shown.bs.modal', function () {
+            $('#kt_modal_create_lead').on('shown.bs.modal', function() {
                 $('#status_id').select2({
                     templateResult: formatState,
                     templateSelection: formatState,
@@ -2140,6 +2067,7 @@
         CKEDITOR.replace('appointment_notes', {
             height: '150px',
         });
+
         $('#tag_users, #tag_users_appointment').select2({
             placeholder: "Select users to tag", // Add placeholder
             allowClear: true // Allows clearing of the selection

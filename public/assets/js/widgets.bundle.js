@@ -10201,12 +10201,17 @@ KTUtil.onDOMContentLoaded(function() {
 
 "use strict";
 
-// Class definition
 var KTChartsWidget27 = function () {
+    var lead_data = JSON.parse($('#lead_data').val());
     var chart = {
         self: null,
         rendered: false
     };
+
+    // Convert lead data to chart format
+    var cities = Object.keys(lead_data);
+    var counts = Object.values(lead_data);
+
     // Private methods
     var initChart = function(chart) {
         var element = document.getElementById("kt_charts_widget_27"); 
@@ -10217,121 +10222,111 @@ var KTChartsWidget27 = function () {
         
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-800');    
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
-        var maxValue = 18;
         
         var options = {
-            series: [{
-                name: 'Sessions',
-                data: [12.478, 7.546, 6.083, 5.041, 4.420]                                                                                                             
-            }],           
-            chart: {
-                fontFamily: 'inherit',
-                type: 'bar',
-                height: 350,
-                toolbar: {
-                    show: false
-                }                             
-            },                    
-            plotOptions: {
-                bar: {
-                    borderRadius: 8,
-                    horizontal: true,
-                    distributed: true,
-                    barHeight: 50,
-                    dataLabels: {
-				        position: 'bottom' // use 'bottom' for left and 'top' for right align(textAnchor)
-			        }                                                       
-                }
-            },
-            dataLabels: {  // Docs: https://apexcharts.com/docs/options/datalabels/
-                enabled: true,              
-                textAnchor: 'start',  
-                offsetX: 0,                 
-                formatter: function (val, opts) {
-                    var val = val * 1000;
-                    var Format = wNumb({
-                        //prefix: '$',
-                        //suffix: ',-',
-                        thousand: ','
-                    });
-
-                    return Format.to(val);
-                },
-                style: {
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    align: 'left',                                                            
-                }                                       
-            },             
-            legend: {
-                show: false
-            },                               
-            colors: ['#3E97FF', '#F1416C', '#50CD89', '#FFC700', '#7239EA'],                                                                      
-            xaxis: {
-                categories: ["USA", "India", 'Canada', 'Brasil', 'France'],
-                labels: {
-                    formatter: function (val) {
-                        return val + "K"
-                    },
-                    style: {
-                        colors: labelColor,
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        align: 'left'                                              
-                    }                  
-                },
-                axisBorder: {
+			series: [{
+				name: 'Leads',
+				data: counts // Data from lead_data
+			}],           
+			chart: {
+				fontFamily: 'inherit',
+				type: 'bar',
+				height: 350,
+				toolbar: {
 					show: false
-				}                         
-            },
-            yaxis: {
-                labels: {       
-                    formatter: function (val, opt) {
-                        if (Number.isInteger(val)) {
-                            var percentage = parseInt(val * 100 / maxValue) . toString(); 
-                            return val + ' - ' + percentage + '%';
-                        } else {
-                            return val;
-                        }
-                    },            
-                    style: {
-                        colors: labelColor,
-                        fontSize: '14px',
-                        fontWeight: '600'                                                                 
-                    },
-                    offsetY: 2,
-                    align: 'left' 
-                }           
-            },
-            grid: {                
-                borderColor: borderColor,                
-                xaxis: {
-                    lines: {
-                        show: true
-                    }
-                },   
-                yaxis: {
-                    lines: {
-                        show: false  
-                    }
-                },
-                strokeDashArray: 4              
-            },
-            tooltip: {
-                style: {
-                    fontSize: '12px'
-                },
-                y: {
-                    formatter: function (val) {
-                        return val;
-                    }
-                }
-            }                                 
-        };  
+				}                             
+			},                    
+			plotOptions: {
+				bar: {
+					borderRadius: 8,
+					horizontal: true,
+					distributed: true,
+					barHeight: 50,
+					dataLabels: {
+						position: 'bottom'
+					}                                                       
+				}
+			},
+			dataLabels: {
+				enabled: true,
+				textAnchor: 'start',
+				offsetX: 10,
+				formatter: function (val) {
+					return val; // Adjust formatting if needed
+				},
+				style: {
+					fontSize: '14px',
+					fontWeight: '600',
+					align: 'left',                                                            
+				}                                       
+			},             
+			legend: {
+				show: false
+			},                               
+			colors: ['#3E97FF', '#F1416C', '#50CD89', '#FFC700', '#7239EA'],                                                                      
+			xaxis: {
+				categories: cities, // Cities from lead_data
+				labels: {
+					formatter: function (val) {
+						return val; // Adjust formatting if needed
+					},
+					style: {
+						colors: labelColor,
+						fontSize: '14px',
+						fontWeight: '600',
+						align: 'left'                                              
+					}                  
+				},
+				axisBorder: {
+					show: false
+				},
+				min: 0, // Start x-axis at 0
+				tickAmount: Math.max(...counts), // Ensure ticks are at integer intervals based on max lead count
+				forceNiceScale: true // Ensures nice round numbers
+			},
+			yaxis: {
+				labels: {       
+					formatter: function (val) {
+						return val; // Display lead count directly
+					},            
+					style: {
+						colors: labelColor,
+						fontSize: '14px',
+						fontWeight: '600'                                                                 
+					},
+					offsetY: 2,
+					align: 'left' 
+				}           
+			},
+			grid: {                
+				borderColor: borderColor,                
+				xaxis: {
+					lines: {
+						show: true
+					}
+				},   
+				yaxis: {
+					lines: {
+						show: false  
+					}
+				},
+				strokeDashArray: 4              
+			},
+			tooltip: {
+				style: {
+					fontSize: '12px'
+				},
+				y: {
+					formatter: function (val) {
+						return val;
+					}
+				}
+			}                                 
+		};  
+		  
           
         chart.self = new ApexCharts(element, options);
 
-        // Set timeout to properly get the parent elements width
         setTimeout(function() {
             chart.self.render();
             chart.rendered = true;
@@ -10355,6 +10350,7 @@ var KTChartsWidget27 = function () {
     }
 }();
 
+
 // Webpack support
 if (typeof module !== 'undefined') {
     module.exports = KTChartsWidget27;
@@ -10371,6 +10367,7 @@ KTUtil.onDOMContentLoaded(function() {
 
 // Class definition
 var KTChartsWidget28 = function () {
+    var appointment_data = JSON.parse($('#appointment_data').val());
     var chart = {
         self: null,
         rendered: false
@@ -10387,12 +10384,15 @@ var KTChartsWidget28 = function () {
         var height = parseInt(KTUtil.css(element, 'height'));
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-500');
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
-        var baseColor = KTUtil.getCssVariableValue('--bs-info');         
+        var baseColor = KTUtil.getCssVariableValue('--bs-info'); 
+
+        var seriesData = Object.values(appointment_data); // Get appointment counts
+        var categories = Object.keys(appointment_data); // Get appointment dates        
 
         var options = {
             series: [{
-                name: 'Links',
-                data: [190, 230, 230, 200, 200, 190, 190, 200, 200, 220, 220, 200, 200, 210, 210]
+                name: 'Appointment',
+                data: seriesData
             }],            
             chart: {
                 fontFamily: 'inherit',
@@ -10424,11 +10424,11 @@ var KTChartsWidget28 = function () {
                 colors: [baseColor]
             },
             xaxis: {
-                categories: ['May 04', 'May 05', 'May 06', 'May 09', 'May 10', 'May 12', 'May 14', 'May 17', 'May 18', 'May 20', 'May 22', 'May 24', 'May 26', 'May 28', 'May 30'],
+                categories: categories,
                 axisBorder: {
                     show: false,
                 },
-                offsetX: 20,
+                offsetX: 10,
                 axisTicks: {
                     show: false
                 },
@@ -10459,9 +10459,8 @@ var KTChartsWidget28 = function () {
                 }
             },
             yaxis: {
-                tickAmount: 4,
-                max: 250,
-                min: 100,
+				tickAmount: Math.max(...seriesData) + 1,
+                min: 0,
                 labels: {
                     style: {
                         colors: labelColor,

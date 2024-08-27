@@ -54,9 +54,9 @@
                                     <tr>
                                         <td width="50%">
                                             <label>Select Status</label>
-                                            <select name="status_id" class="form-control form-select" required>
+                                            <select data-bs-parent="update_followup" name="status_id" id="status_id" class="form-select" required>
                                                 @foreach ($statuses as $status_id => $status)
-                                                <option value="{{ $status_id }}" {{ $status_id == $appointment->status_id ? 'selected' : '' }}>
+                                                <option value="{{ $status_id }}"  data-color="{{ $status->color_code }}" {{ $status_id == $appointment->status_id ? 'selected' : '' }}>
                                                     {{ $status['status_name'] }}
                                                 </option>
                                                 @endforeach
@@ -73,15 +73,15 @@
                                             <input type="file" style="width: 350px;" name="new_file_uploaded[]" class="form-control" multiple>
                                             <br>
                                             @if ($appointment->file_uploaded)
-                                                <?php $files = explode(',', $appointment->file_uploaded); ?>
-                                                <p class="text-primary">List of files uploaded for this appointment</p>
-                                                @if ($files[0])
-                                                    @foreach ($files as $key => $file)
-                                                        <a class="btn btn-sm btn-active-primary border border border-primary" href="{{ url('appointmentFileUploded/' . $file) }}" target='_blank'> View File {{++$key}}</a>
-                                                    @endforeach
-                                                @endif
+                                            <?php $files = explode(',', $appointment->file_uploaded); ?>
+                                            <p class="text-primary">List of files uploaded for this appointment</p>
+                                            @if ($files[0])
+                                            @foreach ($files as $key => $file)
+                                            <a class="btn btn-sm btn-active-primary border border border-primary" href="{{ url('appointmentFileUploded/' . $file) }}" target='_blank'> View File {{++$key}}</a>
+                                            @endforeach
+                                            @endif
                                             @else
-                                                <small class="text-danger">No Files Uploaded Yet!</small>
+                                            <small class="text-danger">No Files Uploaded Yet!</small>
                                             @endif
                                         </td>
                                     </tr>
@@ -148,38 +148,38 @@
                         <div id="collapseViewComment{{ $timeline->id }}" class="collapse {{ $timeline->status_id == $appointment->status_id ? 'show' : '' }}" data-bs-parent="#accordion_view_comments">
                             <div class="card-body p-2">
                                 @if (isset($allAppointmentNotes[$timeline->status_id]))
-                                    @foreach ($allAppointmentNotes[$timeline->status_id] as $comment)
-                                        <?php
-                                        $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
-                                        $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
-                                        ?>
-                                        <div class="ms-3">
-                                            <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><b>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</b></a>
-                                            <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
-                                        </div>
-                                        <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
-                                            <div class="d-inline-block">{!! $comment->notes !!}</div>
-                                            @if (in_array(Auth::user()->id, $unreadUsers))
-                                            <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
-                                            @endif
-                                        </div>
-                                        <div class="ms-3 mt-2">
-                                            @if (in_array(Auth::user()->id, $unreadUsers))
-                                            <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
-                                                <i class="ki-duotone ki-check fs-3"></i> Mark as read
-                                            </a>
-                                            @endif
-                                            <div class="float-end">
-                                                <small class="text-muted">Tagged Users </small>
-                                                @foreach ($taggedUsers as $taggedUser)
-                                                <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                        <br><br>
-                                    @endforeach
+                                @foreach ($allAppointmentNotes[$timeline->status_id] as $comment)
+                                <?php
+                                $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
+                                $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
+                                ?>
+                                <div class="ms-3">
+                                    <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><b>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</b></a>
+                                    <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
+                                </div>
+                                <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
+                                    <div class="d-inline-block">{!! $comment->notes !!}</div>
+                                    @if (in_array(Auth::user()->id, $unreadUsers))
+                                    <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
+                                    @endif
+                                </div>
+                                <div class="ms-3 mt-2">
+                                    @if (in_array(Auth::user()->id, $unreadUsers))
+                                    <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
+                                        <i class="ki-duotone ki-check fs-3"></i> Mark as read
+                                    </a>
+                                    @endif
+                                    <div class="float-end">
+                                        <small class="text-muted">Tagged Users </small>
+                                        @foreach ($taggedUsers as $taggedUser)
+                                        <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <br><br>
+                                @endforeach
                                 @else
-                                    <div class="ms-3 text-muted">There were no comments found for this appointment while at <b>{{ isset($statuses[$timeline->status_id]) ? $statuses[$timeline->status_id]['status_name'] : 'Unknown Status' }}</b></div>
+                                <div class="ms-3 text-muted">There were no comments found for this appointment while at <b>{{ isset($statuses[$timeline->status_id]) ? $statuses[$timeline->status_id]['status_name'] : 'Unknown Status' }}</b></div>
                                 @endif
                             </div>
                         </div>
@@ -193,6 +193,33 @@
 </div>
 <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
 <script>
+    $(document).ready(function() {
+        $('#status_id').select2({
+            templateResult: formatState,
+            templateSelection: formatState,
+            dropdownParent: $('#update_followup') // Ensure dropdown appends to modal
+        });
+
+        // Function to format Select2 options with color
+        function formatState(state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' + $(state.element).data('color') + '"></span>' + state.text + '</span>'
+            );
+            return $state;
+        }
+
+        // Re-initialize Select2 when the modal is shown
+        $('#update_followup').on('shown.bs.modal', function() {
+            $('#status_id').select2({
+                templateResult: formatState,
+                templateSelection: formatState,
+                dropdownParent: $('#update_followup') // Ensure dropdown appends to modal
+            });
+        });
+    });
     CKEDITOR.replace('appointment_notes', {
         height: '150px',
     });
@@ -231,7 +258,7 @@
             }
         });
     }
-    
+
     $('#btnAddComment').on('click', function(e) {
         e.preventDefault();
 

@@ -39,7 +39,10 @@ class CalendarController extends Controller
                 'end' => Carbon::parse($appointment->appointment_date)->addDay()->format('d F Y'),
                 'description' => $description,
                 'className' => $className,
-                'location' => "Street: " . $appointment->lead->street . ' City: ' . $appointment->lead->city . ' State: ' . $appointment->lead->state . ' Country: ' . $appointment->lead->country,
+                'location' => "Country: " . $appointment->lead->country . "\n" .
+                "State: " . $appointment->lead->state . "\n" .
+                "City: " . $appointment->lead->city . "\n" .
+                "Street: " . $appointment->lead->street,                
                 'created_by' => $appointment->user->name,
                 'has_new_comments' => $appointment->has_new_comments,
             ];

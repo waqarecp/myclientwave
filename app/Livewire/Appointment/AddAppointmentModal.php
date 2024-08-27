@@ -5,6 +5,7 @@ namespace App\Livewire\Appointment;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Lead;
+use App\Models\Role;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -73,9 +74,10 @@ class AddAppointmentModal extends Component
 
     public function render()
     {
-        $users = User::where('deleted_at', null)->get();
+        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $leads = Lead::where('deleted_at', null)->get();
-        return view('livewire.appointment.add-appointment-modal', compact('users', 'leads'));
+        $roles = Role::all();
+        return view('livewire.appointment.add-appointment-modal', compact('users', 'leads', 'roles'));
     }
 
     public function createAppointment()

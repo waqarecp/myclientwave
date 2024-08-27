@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Attributes\On;
 
 class AddUserModal extends Component
 {
@@ -22,6 +23,7 @@ class AddUserModal extends Component
     public $role;
     public $avatar;
     public $saved_avatar;
+    public $child_users = [];
 
     public $edit_mode = false;
 
@@ -32,11 +34,18 @@ class AddUserModal extends Component
         'reset_form' => 'resetForm'
     ];
 
+    
+    #[On('setChildIds')]
+    public function setChildIds($selectedChildIds = null): void
+    {
+        $this->child_users = $selectedChildIds;
+    }
+    
     public function render()
     {
         $roles = Role::all();
-
-        return view('livewire.user.add-user-modal', compact('roles'));
+        $allUsers = User::where('company_id', Auth::user()->company_id)->get();
+        return view('livewire.user.add-user-modal', compact('roles', 'allUsers'));
     }
 
     public function createAccount()
@@ -48,6 +57,8 @@ class AddUserModal extends Component
             'password' => 'required|string|min:4',
             'role' => 'required|string',
             'avatar' => 'nullable|sometimes|image|max:1024',
+            'child_users' => 'nullable|array', // Validation for child_users
+            'child_users.*' => 'exists:users,id', // Ensure each child ID exists in users table
         ];
 
         // Validate the form input data
@@ -61,7 +72,9 @@ class AddUserModal extends Component
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
                 'email_verified_at' => now(),
-                'profile_photo_path' => $this->avatar ? $this->avatar->store('avatars', 'public') : null
+                'profile_photo_path' => $this->avatar ? $this->avatar->store('avatars', 'public') : null,
+                'child_users' => implode(',', $validatedData['child_users'] ?? []), // Convert array to comma-separated string
+
             ];
 
             // Create the user
@@ -90,6 +103,8 @@ class AddUserModal extends Component
             'password' => 'nullable|string|min:4',
             'role' => 'required|string',
             'avatar' => 'nullable|sometimes|image|max:1024',
+            'child_users' => 'nullable|array', // Validation for child_users
+            'child_users.*' => 'exists:users,id', // Ensure each child ID exists in users table
         ];
 
         // Validate the form input data
@@ -113,6 +128,7 @@ class AddUserModal extends Component
                 $user->profile_photo_path = $this->avatar->store('avatars', 'public');
             }
 
+            $user->child_users = implode(',', $validatedData['child_users'] ?? []);
             $user->updated_at = now();
             $user->user_modified = Auth::user()->id;
             $user->save();
@@ -156,6 +172,7 @@ class AddUserModal extends Component
         $this->name = $user->name;
         $this->email = $user->email;
         $this->role = $user->roles?->first()->name ?? '';
+        $this->child_users =explode(',', $user->child_users);
     }
 
     public function hydrate()

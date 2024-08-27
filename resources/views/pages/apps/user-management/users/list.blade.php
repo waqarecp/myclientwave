@@ -1,11 +1,11 @@
 <x-default-layout>
 
     @section('title')
-        Users
+    Users
     @endsection
 
     @section('breadcrumbs')
-        {{ Breadcrumbs::render('user-management.users.index') }}
+    {{ Breadcrumbs::render('user-management.users.index') }}
     @endsection
 
     <div class="card">
@@ -13,7 +13,7 @@
             <div class="card-title">
                 <div class="d-flex align-items-center position-relative my-1">
                     {!! getIcon('magnifier', 'fs-3 position-absolute ms-5') !!}
-                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search user" id="mySearchInput"/>
+                    <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search user" id="mySearchInput" />
                 </div>
             </div>
             <div class="card-toolbar">
@@ -37,23 +37,33 @@
     </div>
 
     @push('scripts')
-        {{ $dataTable->scripts() }}
-        <script>
-            document.getElementById('mySearchInput').addEventListener('keyup', function () {
-                window.LaravelDataTables['users-table'].search(this.value).draw();
+    {{ $dataTable->scripts() }}
+    <script>
+        document.getElementById('mySearchInput').addEventListener('keyup', function() {
+            window.LaravelDataTables['users-table'].search(this.value).draw();
+        });
+        document.addEventListener('livewire:init', function() {
+            Livewire.on('success', function() {
+                $('#kt_modal_add_user').modal('hide');
+                window.LaravelDataTables['users-table'].ajax.reload();
             });
-            document.addEventListener('livewire:init', function () {
-                Livewire.on('success', function () {
-                    $('#kt_modal_add_user').modal('hide');
-                    window.LaravelDataTables['users-table'].ajax.reload();
-                });
-            });
-            $('#kt_modal_add_user').on('hidden.bs.modal', function () {
-                Livewire.dispatch('new_user');
-                Livewire.dispatch('reset_form');
-            });
+        });
+        $('#kt_modal_add_user').on('hidden.bs.modal', function() {
+            Livewire.dispatch('new_user');
+            Livewire.dispatch('reset_form');
+        });
 
-        </script>
+        $('#kt_modal_add_user').on('shown.bs.modal', function () {
+            $('#child_users').select2();
+            $('#child_users').trigger('change');
+        });
+
+        document.addEventListener('livewire:init', () => {
+            $('#child_users').on('change', function (e) {
+                Livewire.dispatch('setChildIds', { selectedChildIds: $(this).val() });
+            });
+        });
+    </script>
     @endpush
 
 </x-default-layout>

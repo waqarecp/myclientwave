@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FirebaseToken;
 
 
 use App\Models\LoginActivity;
@@ -70,8 +71,14 @@ class AuthenticatedSessionController extends Controller
         'device' => $request->header('User-Agent'),
         'ip_address' => $request->getClientIp(),
         'login_time' => Carbon::now(),
-    ]);
+        ]);
+        // Remove the FCM token from the database
+        FirebaseToken::where('user_id', Auth::id())
+        ->where('fcm_token', session('fcm_token')) // Ensure it matches the session token
+        ->delete();
 
+        // Unset the FCM token from the session
+        $request->session()->forget('fcm_token');
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

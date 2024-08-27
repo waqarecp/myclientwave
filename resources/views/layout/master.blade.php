@@ -65,6 +65,7 @@
 @yield('content')
 
 <!--begin::Javascript-->
+
 <!--begin::Global Javascript Bundle(mandatory for all pages)-->
 @foreach(getGlobalAssets() as $path)
     {!! sprintf('<script src="%s"></script>', asset($path)) !!}

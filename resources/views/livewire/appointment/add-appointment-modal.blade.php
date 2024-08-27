@@ -34,8 +34,14 @@
                                 <label class="required fw-semibold fs-6 mb-2">Call Center Representative</label>
                                 <select data-dropdown-parent="body" wire:model.lazy="representative_user" name="representative_user" aria-label="Select Call Center Representative" class="form-select form-select-solid border fw-semibold">
                                     <option value="">--- Select a User ---</option>
-                                    @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @foreach($roles as $role)
+                                        <optgroup label="{{ ucwords($role->name) }}">
+                                            @foreach($users as $user)
+                                                @if($user->roles->contains($role))
+                                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                                @endif
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                                 @error('representative_user')

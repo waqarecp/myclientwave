@@ -44,7 +44,20 @@ class LeadDataTable extends DataTable
      */
     public function query(Lead $model): QueryBuilder
     {
-        return $model->newQuery()->with('leadSource')->with('utilityCompany')->with('user')->with('company')->with('appointments')->with('note')->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
+        return $model->newQuery()
+            ->with('leadSource')
+            ->with('utilityCompany')
+            ->with('user')
+            ->with('company')
+            ->with('appointments')
+            ->with('note')
+            ->whereNull('deleted_at')
+            ->where('company_id', Auth::user()->company_id)
+            ->where(function ($query) {
+                $query->where('owner_id', Auth::user()->id)
+                      ->orWhere('sale_representative', Auth::user()->id)
+                      ->orWhere('call_center_representative', Auth::user()->id);
+            });
     }
 
     /**

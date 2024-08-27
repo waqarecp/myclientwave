@@ -3,6 +3,8 @@
     <!--begin::Form-->
     <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{ route('dashboard') }}" action="{{ route('login') }}">
         @csrf
+        <input type="hidden" name="device_id" id="device_id" value="">
+        <input type="hidden" name="fcm_token" id="fcm_token" value="">
         <!--begin::Heading-->
         <div class="text-center mb-11">
             <!--begin::Title-->
@@ -25,7 +27,7 @@
             <div class="col-md-6">
                 <!--begin::Google link--->
                 <a href="{{ url('/auth/redirect/google') }}?redirect_uri={{ url()->current() }}" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-                    <img alt="Logo" src="{{ image('svg/brand-logos/google-icon.svg') }}" class="h-15px me-3"/>
+                    <img alt="Logo" src="{{ image('svg/brand-logos/google-icon.svg') }}" class="h-15px me-3" />
                     Sign in with Google
                 </a>
                 <!--end::Google link--->
@@ -36,8 +38,8 @@
             <div class="col-md-6">
                 <!--begin::Google link--->
                 <a href="#" class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-                    <img alt="Logo" src="{{ image('svg/brand-logos/apple-black.svg') }}" class="theme-light-show h-15px me-3"/>
-                    <img alt="Logo" src="{{ image('svg/brand-logos/apple-black-dark.svg') }}" class="theme-dark-show h-15px me-3"/>
+                    <img alt="Logo" src="{{ image('svg/brand-logos/apple-black.svg') }}" class="theme-light-show h-15px me-3" />
+                    <img alt="Logo" src="{{ image('svg/brand-logos/apple-black-dark.svg') }}" class="theme-dark-show h-15px me-3" />
                     Sign in with Apple
                 </a>
                 <!--end::Google link--->
@@ -55,14 +57,14 @@
         <!--begin::Input group--->
         <div class="fv-row mb-8">
             <!--begin::Email-->
-            <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" value=""/>
+            <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" value="" />
             <!--end::Email-->
         </div>
 
         <!--end::Input group--->
         <div class="fv-row mb-3">
             <!--begin::Password-->
-            <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent"/>
+            <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
             <!--end::Password-->
         </div>
         <!--end::Input group--->
@@ -87,5 +89,73 @@
 
     </form>
     <!--end::Form-->
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBLRIxATX8TWVYRSUv_sIBRyQAocaVcEf8",
+            authDomain: "crmanagement-7a4dc.firebaseapp.com",
+            projectId: "crmanagement-7a4dc",
+            storageBucket: "crmanagement-7a4dc.appspot.com",
+            messagingSenderId: "168926798104",
+            appId: "1:168926798104:web:fa6ce21271b923a14a3e6d",
+            measurementId: "G-RKS8SKCLX0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        // Request notification permission and get the token
+        Notification.requestPermission().then(function(permission) {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+                // Get the FCM token
+                messaging.getToken({
+                    vapidKey: 'BObb7lSMCUa7cwE4Iq8N-JjXKnQ_2fgTjrBDNMdiX8S9niVty4yvcAB1AT1EtGeI45EHlBky2uR1GN8KbCnS_20'
+                }).then(function(token) {
+                    if (token) {
+                        console.log('FCM Token:', token);
+                        // Set the token value in the hidden input field
+                        document.getElementById('fcm_token').value = token;
+                    } else {
+                        console.log('No registration token available. Request permission to generate one.');
+                    }
+                }).catch(function(err) {
+                    console.log('An error occurred while retrieving token. ', err);
+                });
+            } else {
+                console.log('Unable to get permission to notify.');
+            }
+        }).catch(function(err) {
+            console.error('Error occurred while requesting permission.', err);
+        });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then(function(registration) {
+                    console.log('Service Worker registration successful with scope: ', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed: ', error);
+                });
+        }
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('device_id');
+            if (!deviceId) {
+                deviceId = 'device-' + Math.random().toString(36).substr(2, 9); // A simple example for demonstration
+                localStorage.setItem('device_id', deviceId);
+            }
+            return deviceId;
+        }
+
+        // Set the device ID to the hidden input
+        document.getElementById('device_id').value = getDeviceId();
+        
+        console.log('device_id:', document.getElementById('device_id').value);
+    </script>
+
 
 </x-auth-layout>

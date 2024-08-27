@@ -85,6 +85,16 @@
                             </div>
                             @endforeach
                         </div>
+
+                        <div class="row mb-7" wire:ignore>
+                            <label for="child_users">Select Child Users</label>
+                            <select data-dropdown-parent="body" wire:model.lazy="child_users" name="child_users[]" id="child_users" class="form-control form-select"  data-control="select2" data-search="true" data-placeholder="Select a User..." data-allow-clear="true" multiple="multiple">
+                                @foreach($allUsers as $user)
+                                    <option {{ in_array($user->id, (array) $child_users) ? 'selected' : '' }} value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('child_users') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                     <div class="text-center pt-15">
                         <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close" wire:loading.attr="disabled">Discard</button>

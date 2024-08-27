@@ -17,9 +17,9 @@
                 <div class="ms-3">
                     <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small>
                         @if (array_key_exists($comment->created_by, $users))
-                            <b>{{ ucwords($users[$comment->created_by]) }}</b>
+                        <b>{{ ucwords($users[$comment->created_by]) }}</b>
                         @else
-                            <b>Unknown User</b> <!-- Fallback if user not found -->
+                        <b>Unknown User</b> <!-- Fallback if user not found -->
                         @endif
                     </a>
                     <span class="text-muted fs-7 mb-1 float-end">{{\Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A')}}</span>
@@ -38,13 +38,13 @@
                     @endif
                     <div class="float-end">
                         <small class="text-muted">Tagged Users </small>
-                            @foreach ($taggedUsers as $taggedUser)
-                                @if (array_key_exists($taggedUser, $users))
-                                    <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser]) }}</span>
-                                @else
-                                    <span class="badge bg-light-warning">Unknown User</span> <!-- Fallback if tagged user not found -->
-                                @endif
-                            @endforeach
+                        @foreach ($taggedUsers as $taggedUser)
+                        @if (array_key_exists($taggedUser, $users))
+                        <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser]) }}</span>
+                        @else
+                        <span class="badge bg-light-warning">Unknown User</span> <!-- Fallback if tagged user not found -->
+                        @endif
+                        @endforeach
                     </div>
                 </div>
                 <br><br>

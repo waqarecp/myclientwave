@@ -2,13 +2,12 @@
 
 namespace App\DataTables;
 
-use App\Models\Appointment;
+use App\Models\ViewGlobalData;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
-use Illuminate\Support\Facades\Auth;
 
 class AppointmentDataTable extends DataTable
 {
@@ -20,29 +19,27 @@ class AppointmentDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->rawColumns(['name', 'appointment_date', 'appointment_time', 'appointment_status'])
-            ->editColumn('appointment_date', function (Appointment $appointment) {
+            ->rawColumns(['full_name', 'appointment_date', 'appointment_time', 'status_name'])
+            ->editColumn('appointment_date', function (ViewGlobalData $appointment) {
                 return view('pages/appointment.columns._appointment', compact('appointment'));
             })
-            ->editColumn('appointment_time', function (Appointment $appointment) {
+            ->editColumn('appointment_time', function (ViewGlobalData $appointment) {
                 return \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A');
             })
-            ->editColumn('name', function (Appointment $appointment) {
-                return $appointment->lead 
-                ? "<div class='d-flex flex-column'>
+            ->editColumn('full_name', function (ViewGlobalData $appointment) {
+                return "<div class='d-flex flex-column'>
                        <a href='" . route('leads.show', $appointment->lead_id) . "' class='text-gray-800 text-hover-primary mb-1'>" 
-                       . $appointment->lead->first_name . ' ' . $appointment->lead->last_name . '<br>LeadID # ' . str_pad($appointment->lead->id, 4, "0", STR_PAD_LEFT) . 
+                       . $appointment->full_name . '<br>LeadID # ' . str_pad($appointment->lead_id, 4, "0", STR_PAD_LEFT) . 
                        "</a>
-                   </div>" 
-                : '';
+                   </div>";
             })
-            ->editColumn('created_at', function (Appointment $appointment) {
+            ->editColumn('created_at', function (ViewGlobalData $appointment) {
                 return \Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i a');
             })
-            ->editColumn('appointment_status', function (Appointment $appointment) {
-                return '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' . $appointment->status->color_code . ';"></span>' . $appointment->status->status_name;
+            ->editColumn('status_name', function (ViewGlobalData $appointment) {
+                return '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' . $appointment->color_code . ';"></span>' . $appointment->status_name;
             })
-            ->addColumn('action', function (Appointment $appointment) {
+            ->addColumn('action', function (ViewGlobalData $appointment) {
                 return view('pages/appointment.columns._actions', compact('appointment'));
             })
             ->setRowId('id');
@@ -52,15 +49,10 @@ class AppointmentDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(Appointment $model): QueryBuilder
+    public function query(ViewGlobalData $model): QueryBuilder
     {
         return $model->newQuery()
-            ->whereNull('deleted_at')
-            ->whereHas('lead', function ($query) {
-                $query->whereNull('deleted_at');
-            })
-            ->with(['lead'])
-            ->with('status');
+            ->whereNull('deleted_at');
     }
 
     /**
@@ -84,10 +76,10 @@ class AppointmentDataTable extends DataTable
     {
         return [
             Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
-            Column::make('name')->addClass('align-items-center')->name('name')->title('Lead Info')->searchable(true),
+            Column::make('full_name')->addClass('align-items-center')->title('Lead Info')->searchable(true),
             Column::make('appointment_date')->title('Appointment Date')->searchable(true),
             Column::make('appointment_time')->title('Appointment Time')->searchable(true),
-            Column::make('appointment_status')->title('Appointment Status')->searchable(false),
+            Column::make('status_name')->title('Appointment Status')->searchable(true),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),
             Column::computed('action')
                 ->addClass('text-end text-nowrap')
