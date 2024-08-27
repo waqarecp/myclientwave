@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\UtilityCompany;
+namespace App\Livewire\Utilitycompany;
 
 use App\Models\UtilityCompany;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class AddUtilityCompanyModal extends Component
+class AddUtilitycompanyModal extends Component
 {
     public $utilitycompany_id;
     public $utility_company_name;

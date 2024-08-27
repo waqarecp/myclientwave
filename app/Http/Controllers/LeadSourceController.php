@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\LeadSourceDataTable;
+use App\DataTables\LeadsourceDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\LeadSource;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class LeadSourceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(LeadSourceDataTable $dataTable)
+    public function index(LeadsourceDataTable $dataTable)
     {
         return $dataTable->render('pages/leadsource/list');
     }

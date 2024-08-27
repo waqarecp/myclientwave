@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\UtilityCompanyDataTable;
+use App\DataTables\UtilitycompanyDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\UtilityCompany;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class UtilityCompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(UtilityCompanyDataTable $dataTable)
+    public function index(UtilitycompanyDataTable $dataTable)
     {
         return $dataTable->render('pages/utilitycompany/list');
     }

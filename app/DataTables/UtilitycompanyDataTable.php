@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Auth;
 
 
-class UtilityCompanyDataTable extends DataTable
+class UtilitycompanyDataTable extends DataTable
 {
     /**
      * Build the DataTable class.

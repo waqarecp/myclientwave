@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\LeadSource;
+namespace App\Livewire\Leadsource;
 
 use App\Models\LeadSource;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class AddLeadSourceModal extends Component
+class AddLeadsourceModal extends Component
 {
     public $leadsource_id;
     public $source_name;

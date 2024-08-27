@@ -10,7 +10,7 @@ use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Auth;
 
-class LeadSourceDataTable extends DataTable
+class LeadsourceDataTable extends DataTable
 {
     /**
      * Build the DataTable class.

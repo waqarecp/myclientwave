@@ -116,6 +116,7 @@ class LeadController extends Controller
                     'appointment_country' => $request->input('country'),
                     'appointment_address_1' => $request->input('address1'),
                     'appointment_address_2' => $request->input('address2'),
+                    'timeline_date' => date('Y-m-d'),
                     'note_added' => $appointment_note_added,
                     'has_new_comments' => $appointment_has_new_comment,
                     'created_by' => Auth::user()->id,

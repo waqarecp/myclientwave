@@ -30,7 +30,7 @@ return new class extends Migration
             $table->tinyInteger('has_new_comments')->default(0)->comment('0:No comment, 1: has comment');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('status_id')->nullable();
-            $table->date('timeline_date')->default(DB::raw('CURRENT_DATE'));
+            $table->date('timeline_date')->useCurrent();
             $table->text('file_uploaded')->nullable();
             $table->timestamps();
             $table->softDeletes();
