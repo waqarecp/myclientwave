@@ -1,0 +1,60 @@
+name: Deploy Laravel Application
+
+on:
+  push:
+    branches:
+      - main # Or your default branch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2' # Specify your PHP version
+
+    - name: Install dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader
+        npm install
+        npm run prod
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Cache npm modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    - name: Run tests
+      run: php artisan test
+
+    - name: Deploy to server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.SERVER_HOST }}
+        USER: ${{ secrets.SERVER_USER }}
+      run: |
+        ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $USER@$HOST << 'EOF'
+          cd /var/www/html
+          git pull origin main
+          composer install --no-dev --optimize-autoloader
+          npm install
+          npm run prod
+          php artisan migrate --force
+          php artisan cache:clear
+        EOF
