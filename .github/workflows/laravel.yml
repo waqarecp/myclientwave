@@ -12,46 +12,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2' # Specify your PHP version
-
-    - name: Install dependencies
-      run: |
-        composer install --no-dev --optimize-autoloader
-        npm install
-        npm run prod
-
-    - name: Cache Composer dependencies
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-
-    - name: Cache npm modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          node_modules
-        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-npm-
-
     - name: Deploy to server
       env:
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         HOST: ${{ secrets.SERVER_HOST }}
         USER: ${{ secrets.SERVER_USER }}
       run: |
-        ssh -o StrictHostKeyChecking=no -i $SSH_PASSWORD $USER@$HOST << 'EOF'
+        ssh $USER@$HOST -p $SSH_PASSWORD << 'EOF'
           cd /var/www/html
           git pull origin main
           composer install --no-dev --optimize-autoloader
-          npm install
-          npm run prod
-          php artisan migrate --force
           php artisan cache:clear
         EOF
