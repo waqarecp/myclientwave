@@ -1,20 +1,47 @@
-/node_modules
-/public/build
-/public/hot
-/public/storage
-/public/assets/media/logos
-/public/mix-manifest.json
-/storage/*.key
-/vendor
+# Laravel & Composer
+/vendor/
+node_modules/
+public/storage
+storage/*.key
 .env
-.env.backup
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
+.env.*.local
+
+# Laravel 5 & 6
+/public/hot
+/storage/debugbar
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/views
+/storage/logs
 /.idea
 /.vscode
+/.phpunit.result.cache
+
+# Laravel 7 and above
+/.phpunit.result.cache
+/phpunit.result.cache
+
+# Logs
+*.log
+*.sql
+
+# Cache & session
+bootstrap/cache/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+
+# Misc
+.DS_Store
+*.sqlite
+*.sqlite3
+*.sublime-workspace
+*.sublime-project
+
+# NPM & Yarn
+npm-debug.log
+yarn-error.log
+
 /public/assets/plugins/global/plugins.bundle.rtl.css
 /public/assets/plugins/global/plugins.bundle.js
