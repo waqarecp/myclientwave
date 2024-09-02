@@ -6,15 +6,15 @@ on:
       - main # Or your default branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Setup SSH Key
-      uses: webfactory/ssh-agent@v0.6.0
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -23,7 +23,7 @@ jobs:
         HOST: ${{ secrets.SERVER_HOST }}
         USER: ${{ secrets.SERVER_USER }}
       run: |
-        ssh $USER@$HOST << 'EOF'
+        ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
           cd /var/www/html/myclientwave
           git pull origin main
           composer install --no-dev --optimize-autoloader
