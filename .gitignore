@@ -37,11 +37,15 @@ storage/logs/*
 *.sqlite
 *.sqlite3
 *.sublime-workspace
-*.sublime-project
 
 # NPM & Yarn
 npm-debug.log
 yarn-error.log
 
-/public/assets/plugins/global/plugins.bundle.rtl.css
-/public/assets/plugins/global/plugins.bundle.js
+# Compiled assets (add these to ignore production files)
+/public/js/*
+/public/css/*
+/public/mix-manifest.json
+/public/fonts/*
+/public/images/*
+/public/assets/*
