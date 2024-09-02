@@ -41,6 +41,7 @@ storage/logs/*
 # NPM & Yarn
 npm-debug.log
 yarn-error.log
+package-lock.json
 
 # Compiled assets (add these to ignore production files)
 /public/js/*
@@ -49,3 +50,5 @@ yarn-error.log
 /public/fonts/*
 /public/images/*
 /public/assets/*
+/public/assets/js/*
+/public/assets/css/*
