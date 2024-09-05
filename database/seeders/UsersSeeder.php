@@ -40,8 +40,8 @@ class UsersSeeder extends Seeder
             ],
             [
                 'company_id'              => '2',
-                'name'              => 'Aryeen GH',
-                'email'             => 'aryeen@fusionsolarenergy.com',
+                'name'              => 'Wesley GH',
+                'email'             => 'wesley@fusionsolarenergy.com',
                 'password'          => Hash::make('demo'),
                 'email_verified_at' => now(),
             ]

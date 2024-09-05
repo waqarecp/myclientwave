@@ -16,7 +16,7 @@
     @if(auth()->user()->can('write appointment'))
     <!--begin::Menu item-->
         <div class="menu-item px-3">
-            <a href="#" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_appointment" data-kt-action="update_row">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-kt-appointment-lead-id="{{ $appointment->lead_id }}" data-kt-appointment-representative-user="{{ $appointment->representative_user }}" data-kt-appointment-date="{{ $appointment->appointment_date }}" data-kt-appointment-time="{{ $appointment->appointment_time }}" data-kt-appointment-country-id="{{ $appointment->appointment_country_id }}" data-kt-appointment-state-id="{{ $appointment->appointment_state_id }}" data-kt-appointment-city-id="{{ $appointment->appointment_city_id }}" data-kt-appointment-street="{{ $appointment->appointment_street }}" data-kt-appointment-zip="{{ $appointment->appointment_zip }}" data-kt-appointment-address-1="{{ $appointment->appointment_address_1 }}" data-kt-appointment-address-2="{{ $appointment->appointment_address_2 }}" onclick="appointment_modal(this)">
                 Edit Appointment
             </a>
         </div>
@@ -25,7 +25,7 @@
     @if(auth()->user()->can('write appointment') || auth()->user()->can('create appointment'))
     <!--begin::Menu item-->
     <div class="menu-item px-3 d-none">
-        <a href="#" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-kt-action="delete_row">
+        <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-kt-action="delete_row">
             Delete
         </a>
     </div>

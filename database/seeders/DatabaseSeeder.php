@@ -10,7 +10,6 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Address;
-use App\Models\LeadSource;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

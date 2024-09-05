@@ -8,6 +8,7 @@ var KTAppCalendar = function () {
     var calendar;
     var data = {
         id: '',
+        leadId: '',
         eventName: '',
         eventDescription: '',
         eventLocation: '',
@@ -49,99 +50,112 @@ var KTAppCalendar = function () {
     var viewDeleteButton;
 
 
-    // Private functions
-    var initCalendarApp = function () {
-        // Define variables
-        var calendarEl = document.getElementById('kt_calendar_app');
-        var todayDate = moment().startOf('day');
-        var YM = todayDate.format('YYYY-MM');
-        var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
-        var TODAY = todayDate.format('YYYY-MM-DD');
-        var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
-        // Init calendar --- more info: https://fullcalendar.io/docs/initialize-globals
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            // Add eventMouseEnter to handle hover event
-            eventMouseEnter: function(info) {
-                var eventObj = info.event.extendedProps;
-                
-                // Create a tooltip element
-                var tooltip = document.createElement('div');
-                tooltip.classList.add('fc-tooltip');
-                tooltip.innerHTML = `
-                    <strong>Lead:</strong> ${info.event.title}<br>
-                    <strong>Created By:</strong> ${eventObj.created_by}
-                    ${eventObj.has_new_comments == 1 ? "<br><span class='badge badge-sm badge-danger'>New Updates Available</span>" : ""}
-                `;
-                
-                // Apply styling to the tooltip
-                tooltip.style.position = 'absolute';
-                tooltip.style.zIndex = '10001';
-                tooltip.style.background = '#fff';
-                tooltip.style.border = '1px solid #ccc';
-                tooltip.style.padding = '10px';
-                tooltip.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
-                
-                document.body.appendChild(tooltip);
-                
-                // Position the tooltip
-                info.el.addEventListener('mousemove', function(e) {
-                    tooltip.style.left = e.pageX + 10 + 'px';
-                    tooltip.style.top = e.pageY + 10 + 'px';
-                });
-            },
-            
-            // Remove tooltip when mouse leaves the event
-            eventMouseLeave: function(info) {
-                var tooltips = document.querySelectorAll('.fc-tooltip');
-                tooltips.forEach(function(tooltip) {
-                    tooltip.remove();
-                });
-            },
-            //locale: 'es', // Set local --- more info: https://fullcalendar.io/docs/locale
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            initialDate: TODAY,
-            navLinks: true, // can click day/week names to navigate views
-            selectable: true,
-            selectMirror: true,
+// Private functions
+var initCalendarApp = function () {
+    // Define variables
+    var calendarEl = document.getElementById('kt_calendar_app');
+    var todayDate = moment().startOf('day');
+    var YM = todayDate.format('YYYY-MM');
+    var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+    var TODAY = todayDate.format('YYYY-MM-DD');
+    var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
-            // Select dates action --- more info: https://fullcalendar.io/docs/select-callback
-            select: function (arg) {
-                formatArgs(arg);
-                // handleNewEvent();
-            },
+    // Init calendar --- more info: https://fullcalendar.io/docs/initialize-globals
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        // Add eventMouseEnter to handle hover event
+        eventMouseEnter: function(info) {
+            var eventObj = info.event.extendedProps;
 
-            // Click event --- more info: https://fullcalendar.io/docs/eventClick
-            eventClick: function (arg) {
-                formatArgs({
-                    id: arg.event.id,
-                    title: arg.event.title,
-                    description: arg.event.extendedProps.description,
-                    location: arg.event.extendedProps.location,
-                    startStr: arg.event.startStr,
-                    endStr: arg.event.endStr,
-                    allDay: arg.event.allDay
-                });
-                
-                handleViewEvent();
-            },
+            // Create a tooltip element
+            var tooltip = document.createElement('div');
+            tooltip.classList.add('fc-tooltip');
+            tooltip.innerHTML = `
+                <strong>Lead:</strong> ${info.event.title}<br>
+                <strong>Created By:</strong> ${eventObj.created_by}
+                ${eventObj.has_new_comments == 1 ? "<br><span class='badge badge-sm badge-danger'>New Updates Available</span>" : ""}
+            `;
 
-            editable: true,
-            dayMaxEvents: true, // allow "more" link when too many events
-            events: calendar_data,
+            // Apply styling to the tooltip
+            tooltip.style.position = 'absolute';
+            tooltip.style.zIndex = '10001';
+            tooltip.style.background = '#fff';
+            tooltip.style.border = '1px solid #ccc';
+            tooltip.style.padding = '10px';
+            tooltip.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
 
-            // Handle changing calendar views --- more info: https://fullcalendar.io/docs/datesSet
-            datesSet: function(){
-                // do some stuff
+            document.body.appendChild(tooltip);
+
+            // Position the tooltip
+            info.el.addEventListener('mousemove', function(e) {
+                tooltip.style.left = e.pageX + 10 + 'px';
+                tooltip.style.top = e.pageY + 10 + 'px';
+            });
+        },
+
+        // Remove tooltip when mouse leaves the event
+        eventMouseLeave: function(info) {
+            var tooltips = document.querySelectorAll('.fc-tooltip');
+            tooltips.forEach(function(tooltip) {
+                tooltip.remove();
+            });
+        },
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        initialDate: TODAY,
+        navLinks: true,
+        selectable: true,
+        selectMirror: true,
+
+        // Select dates action
+        select: function (arg) {
+            formatArgs(arg);
+        },
+        // Click event
+        eventClick: function (arg) {
+            formatArgs({
+                id: arg.event.id,
+                leadId: arg.event.extendedProps.leadId,
+                title: arg.event.title,
+                description: arg.event.extendedProps.description,
+                location: arg.event.extendedProps.location,
+                startStr: arg.event.startStr,
+                endStr: arg.event.endStr,
+                allDay: arg.event.allDay
+            });
+
+            handleViewEvent();
+        },
+
+        editable: true,
+        dayMaxEvents: true,
+        events: calendar_data,
+
+        // Handle changing calendar views
+        datesSet: function() {
+            // do some stuff
+        },
+
+        // Apply custom styles to events
+        eventDidMount: function(info) {
+            var eventObj = info.event.extendedProps;
+            if (eventObj.colorCode) {
+                info.el.style.backgroundColor = eventObj.colorCode;  // Set background color from colorCode
+                info.el.style.borderColor = eventObj.colorCode;      // Set border color from colorCode
+            } else {
+                // Optionally, set a default color if colorCode is not provided
+                info.el.style.backgroundColor = '#ccc';  // Default background color
+                info.el.style.borderColor = '#ccc';      // Default border color
             }
-        });
+        }
+    });
 
-        calendar.render();
-    }
+    calendar.render();
+}
+
 
     // Init validator
     const initValidator = () => {
@@ -494,6 +508,21 @@ var KTAppCalendar = function () {
         viewEventLocation.innerText = data.eventLocation ? data.eventLocation : '--';
         viewStartDate.innerText = startDateMod;
         viewEndDate.innerText = endDateMod;
+        
+        // Attach event listeners for redirecting to lead details
+        document.getElementById('viewDetailsBtn').onclick = function() {
+            if (data.leadId) {
+                // Replace :id with the actual leadId in the route URL
+                window.open("../leads/" + data.leadId, '_blank');
+            }
+        };
+
+        document.getElementById('eventName').onclick = function() {
+            if (data.leadId) {
+                // Replace :id with the actual leadId in the route URL
+                window.open("../leads/" + data.leadId, '_blank');
+            }
+        };
     }
 
     // Handle delete event
@@ -670,6 +699,7 @@ var KTAppCalendar = function () {
     // Format FullCalendar reponses
     const formatArgs = (res) => {
         data.id = res.id;
+        data.leadId = res.leadId; // Make sure to capture leadId
         data.eventName = res.title;
         data.eventDescription = res.description;
         data.eventLocation = res.location;

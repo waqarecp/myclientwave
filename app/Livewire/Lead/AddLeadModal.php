@@ -9,6 +9,9 @@ use App\Models\Company;
 use App\Models\LeadSource;
 use App\Models\Appointment;
 use App\Models\Note;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,13 +31,15 @@ class AddLeadModal extends Component
     public $lead_source_id;
     public $appointment_sat = 0;
     public $street;
-    public $city;
-    public $state;
+    public $country_id;
+    public $state_id;
+    public $city_id;
     public $zip;
-    public $country;
     public $notes;
     public $address_1;
     public $address_2;
+    public $states = [];
+    public $cities = [];
     
     public $edit_mode = false;
 
@@ -43,18 +48,18 @@ class AddLeadModal extends Component
         'sale_representative' => 'nullable|integer',
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
-        'mobile' => 'required|string|max:15',
-        'phone' => 'nullable|string|max:15',
+        'mobile' => 'nullable',
+        'phone' => 'required|string|max:25',
         'email' => 'required|email|max:255',
         'utility_company_id' => 'nullable|integer',
         'call_center_representative' => 'nullable|integer',
         'lead_source_id' => 'nullable|integer',
         'appointment_sat' => 'nullable|boolean',
         'street' => 'nullable|string|max:255',
-        'city' => 'nullable|string|max:100',
-        'state' => 'nullable|string|max:100',
+        'country_id' => 'required|int',
+        'state_id' => 'required|int',
+        'city_id' => 'nullable|int',
         'zip' => 'nullable|string|max:20',
-        'country' => 'required|string',
         'notes' => 'nullable|string',
         'address_1' => 'required|string',
         'address_2' => 'nullable|string',
@@ -75,7 +80,19 @@ class AddLeadModal extends Component
         $sources = LeadSource::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $appointment = Appointment::where('deleted_at', null)->with('lead')->get();
         $note = Note::where('deleted_at', null)->get();
-        return view('livewire.lead.add-lead-modal',compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note'));
+        $countries = Country::active()->pluck('name', 'id');
+        // Check if country_id is set and fetch states accordingly
+        if ($this->country_id) {
+            $this->states = State::where('country_id', $this->country_id)
+            ->leftJoin('state_colours', 'states.id', '=', 'state_colours.state_id')
+            ->get(['states.id', 'states.name', 'state_colours.color_code']);
+        }
+
+        // Check if state_id is set and fetch cities accordingly
+        if ($this->state_id) {
+            $this->cities = City::where('state_id', $this->state_id)->pluck('name', 'id')->toArray();
+        }
+        return view('livewire.lead.add-lead-modal', compact('users', 'utilitycompanies', 'companies', 'sources', 'appointment', 'note', 'countries'));
     }
 
     public function createLead()
@@ -100,10 +117,10 @@ class AddLeadModal extends Component
             $lead->call_center_representative = $this->call_center_representative;
             $lead->lead_source_id = $this->lead_source_id;
             $lead->street = $this->street;
-            $lead->city = $this->city;
-            $lead->state = $this->state;
+            $lead->country_id = $this->country_id;
+            $lead->state_id = $this->state_id;
+            $lead->city_id = $this->city_id;
             $lead->zip = $this->zip;
-            $lead->country = $this->country;
             $lead->address_1 = $this->address_1;
             $lead->address_2 = $this->address_2;
 
@@ -146,10 +163,10 @@ class AddLeadModal extends Component
         $this->lead_source_id = $lead->lead_source_id;
         $this->appointment_sat = $lead->appointment_sat == 1 ?: 0;
         $this->street = $lead->street;
-        $this->city = $lead->city;
-        $this->state = $lead->state;
+        $this->country_id = $lead->country_id;
+        $this->state_id = $lead->state_id;
+        $this->city_id = $lead->city_id;
         $this->zip = $lead->zip;
-        $this->country = $lead->country;
         $this->address_1 = $lead->address_1;
         $this->address_2 = $lead->address_2;
     }

@@ -9,6 +9,11 @@ use App\Models\AppointmentNote;
 use App\Models\Timeline;
 use App\Models\TimelineDocs;
 use App\Models\User;
+use App\Models\Lead;
+use App\Models\Role;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +25,11 @@ class AppointmentController extends Controller
      */
     public function index(AppointmentDataTable $dataTable)
     {
-        return $dataTable->render('pages/appointment/list');
+        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $leads = Lead::where('deleted_at', null)->get();
+        $roles = Role::all();
+        $countries = Country::active()->pluck('name', 'id');
+        return $dataTable->render('pages/appointment/list', compact('users', 'leads', 'roles', 'countries'));
     }
 
     /**
@@ -36,9 +45,79 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        $request->validate([
+            'lead_id' => 'integer|required',
+            'representative_user' => 'integer|required',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|string',
+            'appointment_street' => 'nullable|string|max:255',
+            'appointment_country_id' => 'required|int',
+            'appointment_state_id' => 'required|int',
+            'appointment_city_id' => 'int',
+            'appointment_zip' => 'nullable|string|max:20',
+            'appointment_address_1' => 'required|string',
+            'appointment_address_2' => 'nullable|string',
+        ]);
+        $data = [
+            'lead_id' => $request->lead_id,
+            'company_id' => Auth::user()->company_id,
+            'representative_user' => $request->representative_user,
+            'appointment_date' => $request->appointment_date,
+            'appointment_time' => $request->appointment_time,
+            'appointment_street' => $request->appointment_street,
+            'appointment_country_id' => $request->appointment_country_id,
+            'appointment_state_id' => $request->appointment_state_id,
+            'appointment_city_id' => $request->appointment_city_id,
+            'appointment_zip' => $request->appointment_zip,
+            'appointment_address_1' => $request->appointment_address_1,
+            'appointment_address_2' => $request->appointment_address_2,
+            'status_id' => '1',
+            'timeline_date' => date('Y-m-d'),
+            'created_by' => Auth::user()->id,
+        ];
+        $appointment = Appointment::create($data);
+        if ($appointment) {
+            return response()->json(['success' => 'New Appointment created']);
+        } else {
+            return response()->json(['error' => 'Failed to create new Appointment'], 500);
+        }
     }
 
+    public function updateAppointment(Request $request)
+    {
+
+        $request->validate([
+            'lead_id' => 'integer|required',
+            'representative_user' => 'integer|required',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|string',
+            'appointment_street' => 'nullable|string|max:255',
+            'appointment_country_id' => 'required|int',
+            'appointment_state_id' => 'required|int',
+            'appointment_city_id' => 'int',
+            'appointment_zip' => 'nullable|string|max:20',
+            'appointment_address_1' => 'required|string',
+            'appointment_address_2' => 'nullable|string',
+        ]);
+        if ($request->appointment_id) {
+            $appointment = Appointment::findOrFail($request->appointment_id);
+            $appointment->representative_user = $request->representative_user;
+            $appointment->appointment_date = $request->appointment_date;
+            $appointment->appointment_time = $request->appointment_time;
+            $appointment->appointment_country_id = $request->appointment_country_id;
+            $appointment->appointment_state_id = $request->appointment_state_id;
+            $appointment->appointment_city_id = $request->appointment_city_id;
+            $appointment->appointment_street = $request->appointment_street;
+            $appointment->appointment_zip = $request->appointment_zip;
+            $appointment->appointment_address_1 = $request->appointment_address_1;
+            $appointment->appointment_address_2 = $request->appointment_address_2;
+            if ($appointment->save()) {
+                return response()->json(['success' => 'Appointment updated successfully']);
+            }else {
+                return response()->json(['error' => 'Failed to update Appointment'], 500);
+            }
+        }
+    }
     /**
      * Display the specified resource.
      */
@@ -220,5 +299,24 @@ class AppointmentController extends Controller
                 ->get();
             return view('pages.appointment.status-comment', compact('users', 'appointmentNotes', 'statusName'))->render();
         }
+    }
+
+    public function getLeadAddress(Request $request)
+    {
+        if ($request->leadId) {
+            $lead = Lead::find($request->leadId);
+             
+                // Retrieve state color
+                $state = State::leftJoin('state_colours', 'states.id', '=', 'state_colours.state_id')
+                ->where('states.id', $lead->state_id)
+                ->select('states.id', 'states.name', 'state_colours.color_code')
+                ->first();
+
+            return response()->json([
+                'lead' => $lead,
+                'state_color' => $state ? $state->color_code : null
+            ]);
+        }
+        return response()->json(['lead' => '']);
     }
 }

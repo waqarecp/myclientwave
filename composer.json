@@ -6,6 +6,7 @@
     "version": "8.2.4",
     "require": {
         "php": "^8.0.2",
+        "altwaireb/laravel-world": "^1.0",
         "diglactic/laravel-breadcrumbs": "^8.1",
         "googleads/google-ads-php": ">=13.0",
         "guzzlehttp/guzzle": "^7.2",

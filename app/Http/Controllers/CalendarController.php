@@ -5,8 +5,15 @@ namespace App\Http\Controllers;
 use App\DataTables\AppointmentDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\User;
+use App\Models\Lead;
+use App\Models\Role;
+use App\Models\Country;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
 {
@@ -15,40 +22,47 @@ class CalendarController extends Controller
      */
     public function index(AppointmentDataTable $dataTable)
     {
-        $appointments = Appointment::whereNull('deleted_at')->with('lead')->with('user')->get();
+        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $leads = Lead::where('deleted_at', null)->get();
+        $roles = Role::all();
+        $countries = Country::active()->pluck('name', 'id');
+        // Fetch appointments with eager loading
+        $appointments = Appointment::with(['lead', 'user', 'country', 'state', 'city'])
+            ->whereNull('appointments.deleted_at')
+            ->get();
+
+        // Load state colours for each appointment
+        foreach ($appointments as $appointment) {
+            $appointment->stateColour = DB::table('state_colours')
+                ->where('state_id', $appointment->appointment_state_id)
+                ->where('company_id', Auth::user()->company_id)
+                ->first();
+        }
+
         $calendarData = $appointments->map(function ($appointment) {
-             // Check if there are new comments
-             $description = "";
-            if ($appointment->has_new_comments == 1) {
-                $className = 'border-danger bg-danger text-inverse-danger';
-                $description = 'New updates posted for this appointment';
-            } else {
-                if ($appointment->appointment_date == date('Y-m-d')) {
-                    $className = 'border-success bg-success text-inverse-success';
-                } elseif ($appointment->appointment_date < date('Y-m-d')) {
-                    $className = 'border-warning bg-warning text-inverse-success';
-                } else {
-                    $className = 'border-info bg-info text-inverse-success';
-                }
-            }
+            $description = $appointment->has_new_comments == 1 ? 'New updates posted for this appointment' : '';
 
             return [
                 'id' => $appointment->id,
-                'title' => $appointment->lead->first_name . ' ' . $appointment->lead->last_name,
+                'leadId' => $appointment->id,
+                'title' => optional($appointment->lead)->first_name . ' ' . optional($appointment->lead)->last_name,
                 'start' => $appointment->appointment_date . ' ' . $appointment->appointment_time,
                 'end' => Carbon::parse($appointment->appointment_date)->addDay()->format('d F Y'),
                 'description' => $description,
-                'className' => $className,
-                'location' => "Country: " . $appointment->lead->country . "\n" .
-                "State: " . $appointment->lead->state . "\n" .
-                "City: " . $appointment->lead->city . "\n" .
-                "Street: " . $appointment->lead->street,                
-                'created_by' => $appointment->user->name,
+                'colorCode' => optional($appointment->stateColour)->color_code, // Pass color code to JS
+                'location' => "Country: " . optional($appointment->country)->name . "\n" .
+                            "State: " . optional($appointment->state)->name . "\n" .
+                            "City: " . optional($appointment->city)->name . "\n" .
+                            "Street: " . optional($appointment->lead)->street,
+                'created_by' => optional($appointment->user)->name,
                 'has_new_comments' => $appointment->has_new_comments,
             ];
         });
-        return $dataTable->render('pages/calendar/list', ['calendarData' => $calendarData->toJson(),]);
+
+        return $dataTable->render('pages/calendar/list', ['users' => $users, 'leads' => $leads, 'roles' => $roles, 'countries' => $countries, 'calendarData' => $calendarData->toJson()]);
     }
+
+
 
     /**
      * Show the form for creating a new resource.

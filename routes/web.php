@@ -5,10 +5,10 @@ use App\Http\Controllers\Apps\RoleManagementController;
 use App\Http\Controllers\Apps\UserManagementController;
 use App\Http\Controllers\LeadSourceController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\StatecolourController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\TimelineController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
 
@@ -21,8 +21,6 @@ use App\Http\Controllers\SystemController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ReportsController;
-use App\Models\Appointment;
-use App\Models\UtilityCompany;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,15 +66,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Statuses routes
     Route::resource('statuses', StatusController::class)->middleware('check.dynamic.route.permissions:status');
 
+    // Statuses routes
+    Route::resource('state-colours', StatecolourController::class)->middleware('check.dynamic.route.permissions:state colour');
+    Route::post('/state-colours/get-states', [StatecolourController::class, 'getStates'])->name('stateColours.getStates');
+
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');
     Route::post('/leads/noteStore', [LeadController::class, 'noteStore'])->name('leads.noteStore');
     Route::post('/leads/get-data', [LeadController::class, 'getData'])->name('leads.getData');
     Route::post('/leads/mark-as-read', [LeadController::class, 'markAsRead'])->name('leads.markAsRead');
     Route::post('/leads/view-lead-comments', [LeadController::class, 'viewLeadComments'])->name('leads.viewLeadComments');
+    Route::post('/leads/get-states', [LeadController::class, 'getStates'])->name('leads.getStates');
+    Route::post('/leads/get-cities', [LeadController::class, 'getCities'])->name('leads.getCities');
 
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
+    Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointment.store');
+    Route::post('/appointments/update-appointment', [AppointmentController::class, 'updateAppointment'])->name('appointment.updateAppointment');
+    Route::post('/appointments/get-address', [AppointmentController::class, 'getLeadAddress'])->name('appointment.getLeadAddress');
     Route::post('/appointments/update-timeline', [AppointmentController::class, 'updateTimeline'])->name('appointments.updateTimeline');
     Route::post('/appointments/mark-as-read', [AppointmentController::class, 'markAsRead'])->name('appointments.markAsRead');
     Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');

@@ -46,12 +46,12 @@ class RolesPermissionsSeeder extends Seeder
         $operatorRole = Role::where('name', 'operator')->first();
 
         // Assign the 'admin' role to the first 2 users
-        User::find([2, 3])->each(function ($user) use ($adminRole) {
+        User::find([1, 2, 3, 4])->each(function ($user) use ($adminRole) {
             $user->assignRole($adminRole);
         });
 
         // Assign the 'operator' role to all other users
-        User::whereNotIn('id', [2, 3])->get()->each(function ($user) use ($operatorRole) {
+        User::whereNotIn('id', [1, 2, 3, 4])->get()->each(function ($user) use ($operatorRole) {
             $user->assignRole($operatorRole);
         });
     }

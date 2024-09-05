@@ -9,6 +9,7 @@ use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Appointment;
 use App\Models\Status;
+use App\Models\StateColour;
 
 // Home
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
@@ -151,3 +152,10 @@ Breadcrumbs::for('statuses.show', function (BreadcrumbTrail $trail, Status $stat
     $trail->parent('statuses.index');
     $trail->push(ucwords($status->status_name), route('statuses.show', $status));
 });
+
+// Home > states > index
+Breadcrumbs::for('state-colours.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('states', route('state-colours.index'));
+});
+

@@ -48,6 +48,20 @@
             
             <!--begin:Menu item-->
             @php
+                $hasPermissionState = auth()->user()->can('read state colour') || auth()->user()->can('write state colour') || auth()->user()->can('create state colour');
+            @endphp
+            @if($hasPermissionState)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('state-colours')}}">
+                    <a class="menu-link {{ request()->routeIs('state-colours') ? 'active' : '' }}" href="{{ route('state-colours.index') }}">
+                        <span class="menu-icon">{!! getIcon('setting', 'fs-2') !!}</span>
+                        <span class="menu-title">State Colors</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
+            
+            <!--begin:Menu item-->
+            @php
                 $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
             @endphp
             @if($hasPermissionUtilityCompanies)

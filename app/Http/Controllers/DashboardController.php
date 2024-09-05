@@ -11,7 +11,7 @@ use App\Models\Status;
 use App\Models\Role;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
-use Illuminate\Cache\RateLimiting\Limit;
+use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -84,9 +84,11 @@ class DashboardController extends Controller
         $appointmentData = $appointmentData->toJson();
         $countAppointments = count($appointments);
 
+        $countries = Country::active()->pluck('name', 'id');
+
         return view('pages/dashboards.index', 
                     compact('users', 'companies', 'sources', 'utilitycompanies', 'statuses', 'leadSources', 
-                        'roles', 'leadData', 'countLeads', 'appointmentData', 'countAppointments'
+                        'roles', 'leadData', 'countLeads', 'appointmentData', 'countAppointments', 'countries'
                     )
                 );
     }

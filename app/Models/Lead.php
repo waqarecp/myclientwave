@@ -29,10 +29,10 @@ class Lead extends Model
         'lead_source_id',
         'appointment_sat',
         'street',
-        'city',
-        'state',
+        'country_id',
+        'state_id',
+        'city_id',
         'zip',
-        'country',
         'address_1',
         'address_2',
         'created_by',
@@ -67,5 +67,20 @@ class Lead extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+    
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+    
+    public function state()
+    {
+        return $this->belongsTo(State::class, 'state_id');
+    }
+    
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
 }

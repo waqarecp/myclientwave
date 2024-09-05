@@ -14,6 +14,8 @@ use App\Models\FirebaseToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\FirebaseNotifications;
+use App\Models\State;
+use App\Models\City;
 
 class LeadController extends Controller
 {
@@ -52,10 +54,10 @@ class LeadController extends Controller
             'lead_source_id' => 'required|integer',
             'appointment_sat' => 'nullable|boolean',
             'street' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:100',
-            'state' => 'nullable|string|max:100',
+            'country_id' => 'required|int',
+            'state_id' => 'required|int',
+            'city_id' => 'int',
             'zip' => 'nullable|string|max:20',
-            'country' => 'required|string',
             'address1' => 'required|string',
             'address2' => 'nullable|string',
         ]);
@@ -90,10 +92,10 @@ class LeadController extends Controller
             'lead_source_id' => $request->input('lead_source_id'),
             'appointment_sat' => $request->input('appointment_sat', 0),
             'street' => $request->input('street'),
-            'city' => $request->input('city'),
-            'state' => $request->input('state'),
+            'city_id' => $request->input('city_id'),
+            'state_id' => $request->input('state_id'),
             'zip' => $request->input('zip'),
-            'country' => $request->input('country'),
+            'country_id' => $request->input('country_id'),
             'address_1' => $request->input('address1'),
             'address_2' => $request->input('address2'),
             'note_added' => $note_added,
@@ -110,10 +112,10 @@ class LeadController extends Controller
                     'appointment_date' => $request->input('appointment_date'),
                     'appointment_time' => $request->input('appointment_time'),
                     'appointment_street' => $request->input('street'),
-                    'appointment_city' => $request->input('city'),
-                    'appointment_state' => $request->input('state'),
+                    'appointment_country_id' => $request->input('country_id'),
+                    'appointment_state_id' => $request->input('state_id'),
+                    'appointment_city_id' => $request->input('city_id'),
                     'appointment_zip' => $request->input('zip'),
-                    'appointment_country' => $request->input('country'),
                     'appointment_address_1' => $request->input('address1'),
                     'appointment_address_2' => $request->input('address2'),
                     'timeline_date' => date('Y-m-d'),
@@ -185,6 +187,9 @@ class LeadController extends Controller
         $appointments = Appointment::whereNull('deleted_at')
             ->where('lead_id', $lead->id)
             ->with('status')
+            ->with('country')
+            ->with('state')
+            ->with('city')
             ->get();
         return view('pages/lead/show', compact('lead', 'appointments'));
     }
@@ -267,4 +272,42 @@ class LeadController extends Controller
             return view('pages.lead.comments', compact('users', 'leadNotes'))->render();
         }
     }
+    
+    public function getStates(Request $request)
+    {
+        $countryId = $request->countryId;
+    
+        if ($countryId) {
+            $states = State::where('country_id', $countryId)
+                ->leftJoin('state_colours', 'states.id', '=', 'state_colours.state_id')
+                ->get(['states.id', 'states.name', 'state_colours.color_code']);
+    
+            // Format the states as key-value pairs with color codes
+            $formattedStates = [];
+            foreach ($states as $state) {
+                $formattedStates[] = [
+                    'id' => $state->id,
+                    'name' => $state->name,
+                    'color_code' => $state->color_code,
+                ];
+            }
+    
+            return response()->json(['states' => $formattedStates]);
+        }
+    
+        return response()->json(['states' => []]); // Return empty array if no countryId is provided
+    }
+    
+    public function getCities(Request $request)
+    {
+        $stateId = $request->stateId;
+
+        if ($stateId) {
+            $cities = City::where('state_id', $stateId)->pluck('name', 'id');
+            return response()->json(['states' => $cities]);
+        }
+
+        return response()->json(['cities' => []]); // Return empty array if no stateId is provided
+    }
+
 }

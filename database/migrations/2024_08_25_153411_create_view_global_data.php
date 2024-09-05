@@ -20,17 +20,17 @@ return new class extends Migration
                 appointments.*, 
                 leads.first_name, 
                 leads.last_name, 
-                CONCAT(leads.first_name, '', leads.last_name) as full_name, 
+                CONCAT(leads.first_name, ' ', leads.last_name) as full_name, 
                 leads.phone, 
                 leads.email, 
                 leads.mobile, 
-                status.status_name,
+                status.status_name, 
                 status.color_code, 
-                leads.company_id,
+                leads.company_id, 
                 leads.deleted_at as lead_deleted_at
             FROM appointments 
-            JOIN leads ON appointments.lead_id = leads.id 
-            JOIN status ON appointments.status_id = status.id;
+            LEFT JOIN leads ON appointments.lead_id = leads.id 
+            LEFT JOIN status ON appointments.status_id = status.id;
         ");
     }
 

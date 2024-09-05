@@ -85,11 +85,11 @@
                                 <div class="pb-5 fs-6">
                                     <!--begin::Details item-->
                                     <div class="fw-bold mt-5">Country</div>
-                                    <div class="text-gray-600">{{ $lead->country }}</div>
-                                    <div class="fw-bold mt-5">City</div>
-                                    <div class="text-gray-600">{{ $lead->city }}</div>
+                                    <div class="text-gray-600">{{ $lead->country->name }}</div>
                                     <div class="fw-bold mt-5">State</div>
-                                    <div class="text-gray-600">{{ $lead->state }}</div>
+                                    <div class="text-gray-600">{{ $lead->state->name }}</div>
+                                    <div class="fw-bold mt-5">City</div>
+                                    <div class="text-gray-600">{{ $lead->city?$lead->city->name:'N/A' }}</div>
                                     <div class="fw-bold mt-5">Zip Code</div>
                                     <div class="text-gray-600">{{ $lead->zip }}</div>
                                 </div>
@@ -145,10 +145,10 @@
                                     <td>{{$count++}}</td>
                                     <td>{{\Carbon\Carbon::parse($appointment->appointment_date)->format('d F Y')}}</td>
                                     <td>{{\Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A')}}</td>
-                                    <td>{{$appointment->appointment_street . ", " . $appointment->appointment_city . ", " . $appointment->appointment_state . ", " . $appointment->appointment_zip . ", " . $appointment->appointment_address_1 . ", " . $appointment->appointment_address_2}}</td>
+                                    <td>{{$appointment->appointment_street . ", " . $appointment->city->name . ", " . $appointment->state->name . ", " . $appointment->appointment_zip . ", " . $appointment->appointment_address_1 . ", " . $appointment->appointment_address_2}}</td>
                                     <td>{{\Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i A')}}<br>{{($appointment->created_by ? $appointment->user->name : 'N/A')}}</td>
                                     <td>
-                                        <span class="btn btn-sm btn-success">{{$appointment->status->status_name}}</span>
+                                        <span class="btn btn-sm btn-success">{{$appointment->status?$appointment->status->status_name:'N/A'}}</span>
                                         <button class="btn btn-sm btn-light-primary" data-kt-appointment-id="{{ $appointment->id }}" onclick="updateAppointmentTimeline('{{ $appointment->id }}')">Comments</button>
                                     </td>
                                 </tr>

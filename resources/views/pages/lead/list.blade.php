@@ -93,6 +93,115 @@
             Livewire.dispatch('new_lead');
             Livewire.dispatch('reset_form');
         });
+        function getStates(element) {
+            var countryId = $(element).val();
+            var stateDropdown = $('select[name="state_id"]');
+            var cityDropdown = $('select[name="city_id"]');
+            stateDropdown.empty();
+            cityDropdown.empty();
+            $.ajax({
+                url: "{{ route('leads.getStates') }}", // Make sure this route matches your routes/web.php
+                method: 'post',
+                data: {
+                    countryId: countryId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    stateDropdown.empty(); // Clear existing options
+
+                    stateDropdown.select2({
+                        dropdownParent: $('#kt_modal_add_lead') // Ensure dropdown appends to modal
+                    });
+
+                    // Populate states dropdown with color data attributes
+                    $.each(data.states, function(index, state) {
+                        var option = $('<option></option>')
+                            .val(state.id)
+                            .text(state.name)
+                            .attr('data-color', state.color_code); // Set data-color attribute
+
+                        stateDropdown.append(option);
+                    });
+
+                    // Re-initialize Select2 for #state_id to apply the formatting
+                    stateDropdown.select2({
+                        templateResult: formatStateColour,
+                        templateSelection: formatStateColour,
+                        dropdownParent: $('#kt_modal_add_lead') // Ensure dropdown appends to modal
+                    });
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to get states for this country!',
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
+        // Function to format Select2 options with color
+        function formatStateColour(state) {
+            if (!state.id) {
+                return state.text;
+            }
+
+            var color = $(state.element).data('color'); // Get the color from the data attribute
+
+            // Create the formatted state element with a color badge
+            var $state = $(
+                '<span><span class="badge badge-circle w-15px h-15px me-1" style="background-color:' + color + '"></span>' + state.text + '</span>'
+            );
+
+            return $state;
+        }
+        // Re-initialize Select2 when the modal is shown
+        $('#kt_modal_add_lead').on('shown.bs.modal', function() {
+            // Initialize Select2 for #state_id on page load and when modal is shown
+            $('#state_id').select2({
+                templateResult: formatStateColour,
+                templateSelection: formatStateColour,
+                dropdownParent: $('#kt_modal_add_lead') // Ensure dropdown appends to modal
+            });
+        });
+        function getCities(element) {
+            var stateId = $(element).val();
+            var cityDropdown = $('select[name="city_id"]');
+            $.ajax({
+                url: "{{ route('leads.getCities') }}", // Make sure this route matches your routes/web.php
+                method: 'post',
+                data: {
+                    stateId: stateId
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    cityDropdown.empty(); // Clear existing options
+
+                    // Populate states dropdown
+                    $.each(data.states, function(key, value) {
+                        cityDropdown.append('<option value="' + key + '">' + value + '</option>');
+                    });
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to get cities for this states!',
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
     </script>
 
     @endpush
