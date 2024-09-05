@@ -26,7 +26,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
           cd /var/www/html/myclientwave
           git pull origin main
-          composer install --no-dev --optimize-autoloader
-          php artisan migrate
           php artisan cache:clear
         EOF
