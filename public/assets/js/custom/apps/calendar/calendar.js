@@ -147,8 +147,8 @@ var initCalendarApp = function () {
                 info.el.style.borderColor = eventObj.colorCode;      // Set border color from colorCode
             } else {
                 // Optionally, set a default color if colorCode is not provided
-                info.el.style.backgroundColor = '#ccc';  // Default background color
-                info.el.style.borderColor = '#ccc';      // Default border color
+                info.el.style.backgroundColor = '#fff';  // Default background color
+                info.el.style.border = '1px solid #ccc';      // Default border color
             }
         }
     });
@@ -562,14 +562,14 @@ var initCalendarApp = function () {
     }
 
     // Handle edit button
-    const handleEditButton = () => {
-        viewEditButton.addEventListener('click', e => {
-            e.preventDefault();
+    // const handleEditButton = () => {
+    //     viewEditButton.addEventListener('click', e => {
+    //         e.preventDefault();
 
-            viewModal.hide();
-            handleEditEvent();
-        });
-    }
+    //         viewModal.hide();
+    //         handleEditEvent();
+    //     });
+    // }
 
     // Handle cancel button
     const handleCancelButton = () => {
@@ -749,7 +749,7 @@ var initCalendarApp = function () {
             initCalendarApp();
             initValidator();
             initDatepickers();
-            handleEditButton();
+            // handleEditButton();
             handleAddButton();
             handleDeleteEvent();
             handleCancelButton();

@@ -46,10 +46,8 @@
                     <thead>
                         <tr class="bg-light-primary">
                             <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
+                            <th>Lead Name</th>
+                            <th>Appointment Info</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -59,10 +57,17 @@
                             @foreach($rows as $row)
                             <tr>
                                 <td>{{ $row->id }}</td>
-                                <td>{{ $row->first_name }}</td>
-                                <td>{{ $row->last_name }}</td>
-                                <td>{{ $row->phone }}</td>
-                                <td>{{ $row->email }}</td>
+                                <td>{{ $row->first_name . ' ' . $row->last_name }}<br><small class="badge badge-secondary"><i class="fa fa-phone"></i>&nbsp;{{ $row->phone}}</small></td>
+                                <td><b>{{\Carbon\Carbon::parse($row->appointment_date . ' ' . $row->appointment_time)->format('d F Y H:i')}}</b>
+                                    <br><small>{{(implode(', ', array_filter([
+                                            optional($row->country)->name,
+                                            optional($row->state)->name,
+                                            optional($row->city)->name,
+                                            $row->appointment_address_1,
+                                            $row->appointment_address_2,
+                                            $row->appointment_street,
+                                            $row->appointment_zip
+                                        ])))}}</small></td>
                                 <td>
                                     <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $row->color_code }};"></span>
                                     {{ $row->status_name }}

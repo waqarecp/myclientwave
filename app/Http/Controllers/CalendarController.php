@@ -40,20 +40,26 @@ class CalendarController extends Controller
         }
 
         $calendarData = $appointments->map(function ($appointment) {
-            $description = $appointment->has_new_comments == 1 ? 'New updates posted for this appointment' : '';
+            $description = $appointment->has_new_comments == 1 ? 'New updates posted for this appointment' : 'No new updates';
 
             return [
                 'id' => $appointment->id,
-                'leadId' => $appointment->id,
+                'leadId' => $appointment->lead_id,
                 'title' => optional($appointment->lead)->first_name . ' ' . optional($appointment->lead)->last_name,
                 'start' => $appointment->appointment_date . ' ' . $appointment->appointment_time,
                 'end' => Carbon::parse($appointment->appointment_date)->addDay()->format('d F Y'),
                 'description' => $description,
                 'colorCode' => optional($appointment->stateColour)->color_code, // Pass color code to JS
-                'location' => "Country: " . optional($appointment->country)->name . "\n" .
-                            "State: " . optional($appointment->state)->name . "\n" .
-                            "City: " . optional($appointment->city)->name . "\n" .
-                            "Street: " . optional($appointment->lead)->street,
+                'location' => 
+                    (implode(', ', array_filter([
+                        optional($appointment->country)->name,
+                        optional($appointment->state)->name,
+                        optional($appointment->city)->name,
+                        $appointment->appointment_address_1,
+                        $appointment->appointment_address_2,
+                        $appointment->appointment_street,
+                        $appointment->appointment_zip
+                    ]))),
                 'created_by' => optional($appointment->user)->name,
                 'has_new_comments' => $appointment->has_new_comments,
             ];

@@ -80,34 +80,22 @@
 
                         <div class="row">
                             <!--begin::Details content-->
-                            <div id="kt_dealer_view_details" class="collapse show col-md-6">
+                            <div id="kt_dealer_view_details" class="collapse show col-md-12">
                                 <h3>Address information</h3>
                                 <div class="pb-5 fs-6">
-                                    <!--begin::Details item-->
-                                    <div class="fw-bold mt-5">Country</div>
-                                    <div class="text-gray-600">{{ $lead->country->name }}</div>
-                                    <div class="fw-bold mt-5">State</div>
-                                    <div class="text-gray-600">{{ $lead->state->name }}</div>
-                                    <div class="fw-bold mt-5">City</div>
-                                    <div class="text-gray-600">{{ $lead->city?$lead->city->name:'N/A' }}</div>
-                                    <div class="fw-bold mt-5">Zip Code</div>
-                                    <div class="text-gray-600">{{ $lead->zip }}</div>
+                                    <div class="text-gray-600">
+                                        {{(implode(', ', array_filter([
+                                            optional($lead->country)->name,
+                                            optional($lead->state)->name,
+                                            optional($lead->city)->name,
+                                            $lead->address_1,
+                                            $lead->address_2,
+                                            $lead->street,
+                                            $lead->zip
+                                        ])))}}
+                                    </div>
                                 </div>
                             </div>
-                            <!--end::Details content-->
-                            <!--begin::Details content-->
-                            <div id="kt_dealer_view_details" class="collapse show col-md-6 mt-2">
-                                <div class="pb-5 fs-6 ">
-                                    <!--begin::Details item-->
-                                    <div class="fw-bold mt-5">Street</div>
-                                    <div class="text-gray-600">{{ $lead->street }}</div>
-                                    <div class="fw-bold mt-5">Address Line 1</div>
-                                    <div class="text-gray-600">{{ $lead->address_1 }}</div>
-                                    <div class="fw-bold mt-5">Address Line 2</div>
-                                    <div class="text-gray-600">{{ $lead->address_2 }}</div>
-                                </div>
-                            </div>
-                            <!--end::Details content-->
                         </div>
                     </div>
                 </div>
@@ -127,12 +115,12 @@
                         <!--end::Card title-->
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered">
+                        <table class="table">
                             <thead>
-                                <tr>
+                                <tr class="bg-light-primary">
                                     <th>S.No</th>
-                                    <th>Appointment Date</th>
-                                    <th>Appointment Time</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
                                     <th>Address</th>
                                     <th>Created By</th>
                                     <th>Status</th>
@@ -144,12 +132,24 @@
                                 <tr>
                                     <td>{{$count++}}</td>
                                     <td>{{\Carbon\Carbon::parse($appointment->appointment_date)->format('d F Y')}}</td>
-                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A')}}</td>
-                                    <td>{{$appointment->appointment_street . ", " . $appointment->city->name . ", " . $appointment->state->name . ", " . $appointment->appointment_zip . ", " . $appointment->appointment_address_1 . ", " . $appointment->appointment_address_2}}</td>
-                                    <td>{{\Carbon\Carbon::parse($appointment->created_at)->format('d F Y, g:i A')}}<br>{{($appointment->created_by ? $appointment->user->name : 'N/A')}}</td>
+                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_time)->format('H:i')}}</td>
+                                    <td><small>{{(implode(', ', array_filter([
+                                            optional($appointment->country)->name,
+                                            optional($appointment->state)->name,
+                                            optional($appointment->city)->name,
+                                            $appointment->appointment_address_1,
+                                            $appointment->appointment_address_2,
+                                            $appointment->appointment_street,
+                                            $appointment->appointment_zip
+                                        ])))}}</small></td>
                                     <td>
-                                        <span class="btn btn-sm btn-success">{{$appointment->status?$appointment->status->status_name:'N/A'}}</span>
-                                        <button class="btn btn-sm btn-light-primary" data-kt-appointment-id="{{ $appointment->id }}" onclick="updateAppointmentTimeline('{{ $appointment->id }}')">Comments</button>
+                                        {{\Carbon\Carbon::parse($appointment->created_at)->format('d F Y, H:i')}}
+                                        <br><span class="badge badge-secondary">{{($appointment->created_by ? $appointment->user->name : 'N/A')}}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $appointment->status->color_code }};"></span>
+                                        {{$appointment->status?$appointment->status->status_name:'N/A'}}
+                                        <button class="btn btn-sm btn-light-primary p-2 flaot-end" title="View Comments" data-kt-appointment-id="{{ $appointment->id }}" onclick="updateAppointmentTimeline('{{ $appointment->id }}')"><i class="fa fa-comments"></i></button>
                                     </td>
                                 </tr>
                                 @endforeach
