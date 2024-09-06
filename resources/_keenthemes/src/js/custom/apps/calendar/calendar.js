@@ -3,10 +3,12 @@
 // Class definition
 var KTAppCalendar = function () {
     // Shared variables
+    var calendar_data = JSON.parse($('#calendar_data').val());
     // Calendar variables
     var calendar;
     var data = {
         id: '',
+        leadId: '',
         eventName: '',
         eventDescription: '',
         eventLocation: '',
@@ -48,195 +50,112 @@ var KTAppCalendar = function () {
     var viewDeleteButton;
 
 
-    // Private functions
-    var initCalendarApp = function () {
-        // Define variables
-        var calendarEl = document.getElementById('kt_calendar_app');
-        var todayDate = moment().startOf('day');
-        var YM = todayDate.format('YYYY-MM');
-        var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
-        var TODAY = todayDate.format('YYYY-MM-DD');
-        var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
-        // Init calendar --- more info: https://fullcalendar.io/docs/initialize-globals
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            //locale: 'es', // Set local --- more info: https://fullcalendar.io/docs/locale
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            initialDate: TODAY,
-            navLinks: true, // can click day/week names to navigate views
-            selectable: true,
-            selectMirror: true,
+// Private functions
+var initCalendarApp = function () {
+    // Define variables
+    var calendarEl = document.getElementById('kt_calendar_app');
+    var todayDate = moment().startOf('day');
+    var YM = todayDate.format('YYYY-MM');
+    var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
+    var TODAY = todayDate.format('YYYY-MM-DD');
+    var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');
 
-            // Select dates action --- more info: https://fullcalendar.io/docs/select-callback
-            select: function (arg) {
-                formatArgs(arg);
-                handleNewEvent();
-            },
+    // Init calendar --- more info: https://fullcalendar.io/docs/initialize-globals
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        // Add eventMouseEnter to handle hover event
+        eventMouseEnter: function(info) {
+            var eventObj = info.event.extendedProps;
 
-            // Click event --- more info: https://fullcalendar.io/docs/eventClick
-            eventClick: function (arg) {
-                formatArgs({
-                    id: arg.event.id,
-                    title: arg.event.title,
-                    description: arg.event.extendedProps.description,
-                    location: arg.event.extendedProps.location,
-                    startStr: arg.event.startStr,
-                    endStr: arg.event.endStr,
-                    allDay: arg.event.allDay
-                });
-                
-                handleViewEvent();
-            },
+            // Create a tooltip element
+            var tooltip = document.createElement('div');
+            tooltip.classList.add('fc-tooltip');
+            tooltip.innerHTML = `
+                <strong>Lead:</strong> ${info.event.title}<br>
+                <strong>Created By:</strong> ${eventObj.created_by}
+                ${eventObj.has_new_comments == 1 ? "<br><span class='badge badge-sm badge-danger'>New Updates Available</span>" : ""}
+            `;
 
-            editable: true,
-            dayMaxEvents: true, // allow "more" link when too many events
-            events: [
-                {
-                    id: uid(),
-                    title: 'All Day Event',
-                    start: YM + '-01',
-                    end: YM + '-02',
-                    description: 'Toto lorem ipsum dolor sit incid idunt ut',
-                    className: "border-success bg-success text-inverse-success",
-                    location: 'Federation Square'
-                },
-                {
-                    id: uid(),
-                    title: 'Reporting',
-                    start: YM + '-14T13:30:00',
-                    description: 'Lorem ipsum dolor incid idunt ut labore',
-                    end: YM + '-14T14:30:00',
-                    className: "border-warning bg-warning text-inverse-success",
-                    location: 'Meeting Room 7.03'
-                },
-                {
-                    id: uid(),
-                    title: 'Company Trip',
-                    start: YM + '-02',
-                    description: 'Lorem ipsum dolor sit tempor incid',
-                    end: YM + '-03',
-                    className: "border-info bg-info text-info-success",
-                    location: 'Seoul, Korea'
-                },
-                {
-                    id: uid(),
-                    title: 'ICT Expo 2021 - Product Release',
-                    start: YM + '-03',
-                    description: 'Lorem ipsum dolor sit tempor inci',
-                    end: YM + '-05',
-                    className: "fc-event-light fc-event-solid-primary",
-                    location: 'Melbourne Exhibition Hall'
-                },
-                {
-                    id: uid(),
-                    title: 'Dinner',
-                    start: YM + '-12',
-                    description: 'Lorem ipsum dolor sit amet, conse ctetur',
-                    end: YM + '-13',
-                    location: 'Squire\'s Loft'
-                },
-                {
-                    id: uid(),
-                    title: 'Repeating Event',
-                    start: YM + '-09T16:00:00',
-                    end: YM + '-09T17:00:00',
-                    description: 'Lorem ipsum dolor sit ncididunt ut labore',
-                    className: "fc-event-danger",
-                    location: 'General Area'
-                },
-                {
-                    id: uid(),
-                    title: 'Repeating Event',
-                    description: 'Lorem ipsum dolor sit amet, labore',
-                    start: YM + '-16T16:00:00',
-                    end: YM + '-16T17:00:00',
-                    location: 'General Area'
-                },
-                {
-                    id: uid(),
-                    title: 'Conference',
-                    start: YESTERDAY,
-                    end: TOMORROW,
-                    description: 'Lorem ipsum dolor eius mod tempor labore',
-                    className: "fc-event-primary",
-                    location: 'Conference Hall A'
-                },
-                {
-                    id: uid(),
-                    title: 'Meeting',
-                    start: TODAY + 'T10:30:00',
-                    end: TODAY + 'T12:30:00',
-                    description: 'Lorem ipsum dolor eiu idunt ut labore',
-                    location: 'Meeting Room 11.06'
-                },
-                {
-                    id: uid(),
-                    title: 'Lunch',
-                    start: TODAY + 'T12:00:00',
-                    end: TODAY + 'T14:00:00',
-                    className: "fc-event-info",
-                    description: 'Lorem ipsum dolor sit amet, ut labore',
-                    location: 'Cafeteria'
-                },
-                {
-                    id: uid(),
-                    title: 'Meeting',
-                    start: TODAY + 'T14:30:00',
-                    end: TODAY + 'T15:30:00',
-                    className: "fc-event-warning",
-                    description: 'Lorem ipsum conse ctetur adipi scing',
-                    location: 'Meeting Room 11.10'
-                },
-                {
-                    id: uid(),
-                    title: 'Happy Hour',
-                    start: TODAY + 'T17:30:00',
-                    end: TODAY + 'T21:30:00',
-                    className: "fc-event-info",
-                    description: 'Lorem ipsum dolor sit amet, conse ctetur',
-                    location: 'The English Pub'
-                },
-                {
-                    id: uid(),
-                    title: 'Dinner',
-                    start: TOMORROW + 'T18:00:00',
-                    end: TOMORROW + 'T21:00:00',
-                    className: "fc-event-solid-danger fc-event-light",
-                    description: 'Lorem ipsum dolor sit ctetur adipi scing',
-                    location: 'New York Steakhouse'
-                },
-                {
-                    id: uid(),
-                    title: 'Birthday Party',
-                    start: TOMORROW + 'T12:00:00',
-                    end: TOMORROW + 'T14:00:00',
-                    className: "fc-event-primary",
-                    description: 'Lorem ipsum dolor sit amet, scing',
-                    location: 'The English Pub'
-                },
-                {
-                    id: uid(),
-                    title: 'Site visit',
-                    start: YM + '-28',
-                    end: YM + '-29',
-                    className: "fc-event-solid-info fc-event-light",
-                    description: 'Lorem ipsum dolor sit amet, labore',
-                    location: '271, Spring Street'
-                }
-            ],
+            // Apply styling to the tooltip
+            tooltip.style.position = 'absolute';
+            tooltip.style.zIndex = '10001';
+            tooltip.style.background = '#fff';
+            tooltip.style.border = '1px solid #ccc';
+            tooltip.style.padding = '10px';
+            tooltip.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
 
-            // Handle changing calendar views --- more info: https://fullcalendar.io/docs/datesSet
-            datesSet: function(){
-                // do some stuff
+            document.body.appendChild(tooltip);
+
+            // Position the tooltip
+            info.el.addEventListener('mousemove', function(e) {
+                tooltip.style.left = e.pageX + 10 + 'px';
+                tooltip.style.top = e.pageY + 10 + 'px';
+            });
+        },
+
+        // Remove tooltip when mouse leaves the event
+        eventMouseLeave: function(info) {
+            var tooltips = document.querySelectorAll('.fc-tooltip');
+            tooltips.forEach(function(tooltip) {
+                tooltip.remove();
+            });
+        },
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        initialDate: TODAY,
+        navLinks: true,
+        selectable: true,
+        selectMirror: true,
+
+        // Select dates action
+        select: function (arg) {
+            formatArgs(arg);
+        },
+        // Click event
+        eventClick: function (arg) {
+            formatArgs({
+                id: arg.event.id,
+                leadId: arg.event.extendedProps.leadId,
+                title: arg.event.title,
+                description: arg.event.extendedProps.description,
+                location: arg.event.extendedProps.location,
+                startStr: arg.event.startStr,
+                endStr: arg.event.endStr,
+                allDay: arg.event.allDay
+            });
+
+            handleViewEvent();
+        },
+
+        editable: true,
+        dayMaxEvents: true,
+        events: calendar_data,
+
+        // Handle changing calendar views
+        datesSet: function() {
+            // do some stuff
+        },
+
+        // Apply custom styles to events
+        eventDidMount: function(info) {
+            var eventObj = info.event.extendedProps;
+            if (eventObj.colorCode) {
+                info.el.style.backgroundColor = eventObj.colorCode;  // Set background color from colorCode
+                info.el.style.borderColor = eventObj.colorCode;      // Set border color from colorCode
+            } else {
+                // Optionally, set a default color if colorCode is not provided
+                info.el.style.backgroundColor = '#ccc';  // Default background color
+                info.el.style.borderColor = '#ccc';      // Default border color
             }
-        });
+        }
+    });
 
-        calendar.render();
-    }
+    calendar.render();
+}
+
 
     // Init validator
     const initValidator = () => {
@@ -589,6 +508,21 @@ var KTAppCalendar = function () {
         viewEventLocation.innerText = data.eventLocation ? data.eventLocation : '--';
         viewStartDate.innerText = startDateMod;
         viewEndDate.innerText = endDateMod;
+        
+        // Attach event listeners for redirecting to lead details
+        document.getElementById('viewDetailsBtn').onclick = function() {
+            if (data.leadId) {
+                // Replace :id with the actual leadId in the route URL
+                window.open("../leads/" + data.leadId, '_blank');
+            }
+        };
+
+        document.getElementById('eventName').onclick = function() {
+            if (data.leadId) {
+                // Replace :id with the actual leadId in the route URL
+                window.open("../leads/" + data.leadId, '_blank');
+            }
+        };
     }
 
     // Handle delete event
@@ -765,6 +699,7 @@ var KTAppCalendar = function () {
     // Format FullCalendar reponses
     const formatArgs = (res) => {
         data.id = res.id;
+        data.leadId = res.leadId; // Make sure to capture leadId
         data.eventName = res.title;
         data.eventDescription = res.description;
         data.eventLocation = res.location;

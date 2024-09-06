@@ -3544,21 +3544,13 @@ var KTWidgets = function () {
             initDaterangepicker();
             
             // Dark Mode
-            initDarkModeToggle();
-
-            // Statistics widgets
-            initStatisticsWidget3();
-            initStatisticsWidget4();            
+            initDarkModeToggle();         
 
             // Charts widgets
             initChartsWidget1();
             initChartsWidget2();
             initChartsWidget3();
             initChartsWidget4();
-            initChartsWidget5();
-            initChartsWidget6();
-            initChartsWidget7();
-            initChartsWidget8();
 
             // Mixed widgets
             initMixedWidget2();
@@ -3567,18 +3559,6 @@ var KTWidgets = function () {
             initMixedWidget5();
             initMixedWidget6();
             initMixedWidget7();
-            initMixedWidget10();            
-            initMixedWidget12();
-            initMixedWidget13(); 
-            initMixedWidget14();
-            initMixedWidget16();
-            initMixedWidget17();
-            initMixedWidget18();
-            initMixedWidget19();
-
-            // Feeds
-            initFeedWidget1();
-            initFeedsWidget4();
 
             // Calendar
             initCalendarWidget1();           

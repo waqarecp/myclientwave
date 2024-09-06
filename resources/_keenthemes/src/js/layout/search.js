@@ -169,8 +169,3 @@ var KTLayoutSearch = function() {
 		}
 	};
 }();
-
-// On document ready
-KTUtil.onDOMContentLoaded(function() {
-    KTLayoutSearch.init();
-});

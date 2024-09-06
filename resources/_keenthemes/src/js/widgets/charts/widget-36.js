@@ -166,15 +166,3 @@ var KTChartsWidget36 = (function () {
 		}
 	}
 })();
-
-KTChartsWidget36.init(chartDataArray);
-
-// Webpack support
-if (typeof module !== 'undefined') {
-    module.exports = KTChartsWidget36;
-}
-
-// On document ready
-KTUtil.onDOMContentLoaded(function() {
-    KTChartsWidget36.init();
-});

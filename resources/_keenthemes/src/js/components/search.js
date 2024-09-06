@@ -422,17 +422,3 @@ var KTSearch = function(element, options) {
         return KTEventHandler.off(the.element, name, handlerId);
     }
 };
-
-// Static methods
-KTSearch.getInstance = function(element) {
-    if ( element !== null && KTUtil.data(element).has('search') ) {
-        return KTUtil.data(element).get('search');
-    } else {
-        return null;
-    }
-}
-
-// Webpack support
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    module.exports = KTSearch;
-}

@@ -70,8 +70,3 @@ var KTModalUserSearch = function () {
         }
     };
 }();
-
-// On document ready
-KTUtil.onDOMContentLoaded(function () {
-    KTModalUserSearch.init();
-});
