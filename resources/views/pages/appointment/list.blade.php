@@ -5,19 +5,18 @@
     @endsection
 
     @section('breadcrumbs')
-    {{ Breadcrumbs::render('appointments.index') }}
+    {{ Breadcrumbs::render('appointments') }}
     @endsection
     <div class="card">
         <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <!--begin::Search-->
-                <div class="d-flex align-items-center position-relative my-1">
-                    {!! getIcon('magnifier', 'fs-3 position-absolute ms-5') !!}
-                    <input type="text" data-kt-appointment-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Appointment" id="mySearchInput" />
-                </div>
-                <!--end::Search-->
+                <form method="GET" action="{{ route('appointments') }}" class="d-flex align-items-center">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="form-control form-control-sm me-3">
+                    <button type="submit" class="btn btn-primary btn-sm me-1">Search</button>
+                    <a href="/appointments" class="btn btn-secondary btn-sm me-1">Clear</a>
+                </form>
             </div>
             <!--begin::Card title-->
 
@@ -43,7 +42,42 @@
         <div class="card-body py-4">
             <!--begin::Table-->
             <div class="table-responsive">
-                {{ $dataTable->table() }}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="bg-light-primary">
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rows as $row)
+                        <tr>
+                            <td>{{ $row->id }}</td>
+                            <td>{{ $row->first_name }}</td>
+                            <td>{{ $row->last_name }}</td>
+                            <td>{{ $row->phone }}</td>
+                            <td>{{ $row->email }}</td>
+                            <td>
+                                <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $row->color_code }};"></span>
+                                {{ $row->status_name }}
+                            </td>
+
+                            <td>
+                                <!-- Include action buttons -->
+                                @include('pages.appointment.columns._actions', ['appointment' => $row])
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Pagination Links -->
+                 {{ $rows->links('pagination::bootstrap-5') }}
             </div>
             <!--end::Table-->
         </div>
@@ -198,15 +232,17 @@
     </div>
     <!--end::Modal - View Appointment Details-->
     @push('scripts')
-    {{ $dataTable->scripts() }}
     <script>
-        document.getElementById('mySearchInput').addEventListener('keyup', function() {
-            window.LaravelDataTables['appointment-table'].search(this.value).draw();
+        $(document).ready(function() {
+            $('#mySearchInput').on('keyup', function() {
+                table.search($(this).val()).draw();
+            });
         });
+
         document.addEventListener('livewire:init', function() {
             Livewire.on('success', function() {
                 $('#kt_modal_appointment').modal('hide');
-                window.LaravelDataTables['appointment-table'].ajax.reload();
+                location.reload();
             });
         });
         $('#kt_modal_appointment').on('hidden.bs.modal', function() {
@@ -223,14 +259,18 @@
                 type: 'POST',
                 url: url,
                 data: formData,
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 success: function(response) {
                     $('#kt_modal_appointment').modal('hide');
                     Swal.fire({
                         text: response.success,
                         icon: 'success',
                         confirmButtonText: 'Close',
-                        customClass: { confirmButton: 'btn btn-light-success' }
+                        customClass: {
+                            confirmButton: 'btn btn-light-success'
+                        }
                     });
                     // Reload or update your appointments list here
                     window.LaravelDataTables['appointment-table'].ajax.reload();
@@ -243,20 +283,26 @@
                         text: errorMessage,
                         icon: 'error',
                         confirmButtonText: 'Close',
-                        customClass: { confirmButton: 'btn btn-light-danger' }
+                        customClass: {
+                            confirmButton: 'btn btn-light-danger'
+                        }
                     });
                 }
             });
         });
 
         // Function to get Lead address and set country, state, and city
-        function getLeadAddress(element){
+        function getLeadAddress(element) {
             var leadId = $(element).val();
             $.ajax({
                 url: "{{ route('appointment.getLeadAddress') }}",
                 method: 'post',
-                data: { leadId: leadId },
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                data: {
+                    leadId: leadId
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 success: function(data) {
                     if (data.lead) {
                         // Set the country, state, and city values
@@ -282,7 +328,9 @@
                         text: 'Failed to get lead address!',
                         icon: 'error',
                         confirmButtonText: "Close",
-                        customClass: { confirmButton: "btn btn-light-danger" }
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
                     });
                 }
             });
@@ -309,7 +357,7 @@
                 $('#lead_id').val(appointmentLeadId);
                 $('#representative_user').val(appointmentRepresentativeUser);
                 $('#appointment_date').val(appointmentDate);
-                $('#appointment_time').val(appointmentTime);              
+                $('#appointment_time').val(appointmentTime);
                 $('#appointment_country_id').val(appointmentCountryId).trigger('change');
                 getStates(appointmentStateId);
                 $('#appointment_state_id').on('change', function() {
@@ -318,7 +366,7 @@
                 $('#appointment_street').val(appointmentStreet);
                 $('#appointment_zip').val(appointmentZip);
                 $('#appointment_address_1').val(appointmentAddress1);
-                $('#appointment_address_2').val(appointmentAddress2); 
+                $('#appointment_address_2').val(appointmentAddress2);
                 $('#kt_modal_appointment').modal('show');
             } else {
                 $('#kt_modal_appointment_header h2').text('Add New Appointment');
@@ -328,7 +376,7 @@
 
             }
         }
-        
+
         // Function to get states based on selected country
         function getStates(selectedStateId = null) {
             var countryId = $('#appointment_country_id').val();
@@ -336,12 +384,16 @@
             var cityDropdown = $('#appointment_city_id');
             stateDropdown.empty();
             cityDropdown.empty();
-            
+
             $.ajax({
                 url: "{{ route('leads.getStates') }}",
                 method: 'post',
-                data: { countryId: countryId },
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                data: {
+                    countryId: countryId
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 success: function(data) {
                     stateDropdown.select2({
                         dropdownParent: $('#kt_modal_appointment'),
@@ -366,7 +418,9 @@
                         text: 'Failed to get states for this country!',
                         icon: 'error',
                         confirmButtonText: "Close",
-                        customClass: { confirmButton: "btn btn-light-danger" }
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
                     });
                 }
             });
@@ -374,7 +428,9 @@
 
         // Function to format state options with color
         function formatStateColour(state) {
-            if (!state.id) { return state.text; }
+            if (!state.id) {
+                return state.text;
+            }
 
             var color = $(state.element).data('color'); // Get color from option data
             var $state = $(
@@ -393,8 +449,12 @@
             $.ajax({
                 url: "{{ route('leads.getCities') }}",
                 method: 'post',
-                data: { stateId: stateId },
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                data: {
+                    stateId: stateId
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 success: function(data) {
                     $.each(data.states, function(key, value) {
                         cityDropdown.append('<option value="' + key + '">' + value + '</option>');
@@ -409,7 +469,9 @@
                         text: 'Failed to get cities for this state!',
                         icon: 'error',
                         confirmButtonText: "Close",
-                        customClass: { confirmButton: "btn btn-light-danger" }
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
                     });
                 }
             });
@@ -420,6 +482,39 @@
             dropdownParent: $('#kt_modal_appointment')
         });
 
+        function updateAppointmentTimeline(appointment_id, activeCommentsTab = false) {
+            $.ajax({
+                url: "{{ route('appointments.updateTimeline') }}", // Use the URL from the data attribute
+                method: 'post',
+                data: {
+                    appointment_id: appointment_id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                },
+                success: function(data) {
+                    $('.kt_modal_attach_appointment_notes').html(data);
+                    $('#kt_modal_update_appointment_timeline').modal('show');
+                    if (activeCommentsTab) {
+                        $('#update_followup .nav-item a').removeClass('active');
+                        $('#update_followup .nav-item a').eq(1).addClass('active');
+                        $('#appointment-note-content .tab-pane').removeClass('active show');
+                        $('#appointment-note-content .tab-pane').eq(1).addClass('active show');
+                    }
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to view timeline for this appointment!',
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
     </script>
     @endpush
 </x-default-layout>

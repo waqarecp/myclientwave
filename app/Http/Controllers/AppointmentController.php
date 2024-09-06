@@ -17,19 +17,55 @@ use App\Models\City;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(AppointmentDataTable $dataTable)
+    public function index(Request $request)
     {
         $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $leads = Lead::where('deleted_at', null)->get();
         $roles = Role::all();
         $countries = Country::active()->pluck('name', 'id');
-        return $dataTable->render('pages/appointment/list', compact('users', 'leads', 'roles', 'countries'));
+
+        $searchTerm = $request->input('search', '');
+        $query = Appointment::join('leads', 'appointments.lead_id', '=', 'leads.id')
+            ->join('status', 'appointments.status_id', '=', 'status.id')
+            ->select(
+                'appointments.*',
+                'leads.first_name',
+                'leads.last_name',
+                DB::raw("CONCAT(leads.first_name, ' ', leads.last_name) as full_name"),
+                'leads.phone',
+                'leads.email',
+                'leads.mobile',
+                'status.status_name',
+                'status.color_code',
+                'leads.company_id',
+                'leads.deleted_at as lead_deleted_at'
+            )
+            ->latest();
+
+        // Apply search filter only if searchTerm is provided
+        if (!empty($searchTerm)) {
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('appointments.id', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('leads.first_name', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('leads.last_name', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('leads.phone', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('leads.email', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('status.status_name', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        // Paginate the results
+        $rows = $query->paginate(15)->withQueryString();
+
+        // Return the view with paginated data
+        return view('pages.appointment.list', compact('users', 'leads', 'roles', 'countries', 'rows'));
     }
 
     /**

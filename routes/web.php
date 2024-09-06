@@ -88,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/mark-as-read', [AppointmentController::class, 'markAsRead'])->name('appointments.markAsRead');
     Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');
     Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
 
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');

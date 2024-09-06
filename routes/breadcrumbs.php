@@ -124,14 +124,14 @@ Breadcrumbs::for('utility-companies.show', function (BreadcrumbTrail $trail, Uti
 });
 
 // Home > Appointment > index
-Breadcrumbs::for('appointments.index', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('appointments', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Appointment', route('appointments.index'));
+    $trail->push('Appointment', route('appointments'));
 });
 
 // Home > Appointment > [Appointment]
 Breadcrumbs::for('appointments.show', function (BreadcrumbTrail $trail, Appointment $appointment) {
-    $trail->parent('appointments.index');
+    $trail->parent('appointments');
     $trail->push(ucwords($appointment->id), route('appointments.show', $appointment));
 });
 

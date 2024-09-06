@@ -94,7 +94,7 @@
             @endphp
             @if($hasPermissionAppointment)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('appointments')}}">
-                    <a class="menu-link {{ request()->routeIs('appointments') ? 'active' : '' }}" href="{{ route('appointments.index') }}">
+                    <a class="menu-link {{ request()->routeIs('appointments') ? 'active' : '' }}" href="{{ route('appointments') }}">
                         <span class="menu-icon">{!! getIcon('profile-user', 'fs-3') !!}</span>
                         <span class="menu-title">Appointments</span>
                     </a>
