@@ -55,24 +55,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($rows as $row)
-                        <tr>
-                            <td>{{ $row->id }}</td>
-                            <td>{{ $row->first_name }}</td>
-                            <td>{{ $row->last_name }}</td>
-                            <td>{{ $row->phone }}</td>
-                            <td>{{ $row->email }}</td>
-                            <td>
-                                <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $row->color_code }};"></span>
-                                {{ $row->status_name }}
-                            </td>
+                        @if (count($rows))
+                            @foreach($rows as $row)
+                            <tr>
+                                <td>{{ $row->id }}</td>
+                                <td>{{ $row->first_name }}</td>
+                                <td>{{ $row->last_name }}</td>
+                                <td>{{ $row->phone }}</td>
+                                <td>{{ $row->email }}</td>
+                                <td>
+                                    <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $row->color_code }};"></span>
+                                    {{ $row->status_name }}
+                                </td>
 
-                            <td>
-                                <!-- Include action buttons -->
-                                @include('pages.appointment.columns._actions', ['appointment' => $row])
-                            </td>
-                        </tr>
-                        @endforeach
+                                <td>
+                                    <!-- Include action buttons -->
+                                    @include('pages.appointment.columns._actions', ['appointment' => $row])
+                                </td>
+                            </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td align="center" colspan="7">There are no records in this list currently! Thank you</td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
 
