@@ -1,9 +1,6 @@
 <!--begin::Navbar-->
 <div class="app-navbar flex-shrink-0">
     <!--begin::Search-->
-    <div class="app-navbar-item align-items-stretch ms-1 ms-md-3">
-        @include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/_dropdown')
-    </div>
     <!--end::Search-->
     <!--begin::Activities-->
     <div class="app-navbar-item ms-1 ms-md-3">
