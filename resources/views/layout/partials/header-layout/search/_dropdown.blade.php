@@ -16,17 +16,8 @@
 		<!--begin::Wrapper-->
 		<div data-kt-search-element="wrapper">
 			@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_form-dropdown')
-
-			@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_results')
-
-			@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_main')
-
-			@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_empty')
 		</div>
 		<!--end::Wrapper-->
-		@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_advanced-options')
-
-		@include(config('settings.KT_THEME_LAYOUT_DIR').'/partials/header-layout/search/partials/_preferences')
 	</div>
 	<!--end::Menu-->
 </div>

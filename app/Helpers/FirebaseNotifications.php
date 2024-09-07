@@ -31,6 +31,9 @@ class FirebaseNotifications
         ])->post('https://fcm.googleapis.com/fcm/send', $data);
     
         // Log response status and body
+        Log::info('FCM Tokens: ', $fcmTokens);
+        Log::info('FCM Response:', ['response' => $response->json()]);
+
         Log::info('FCM Response Status:', ['status' => $response->status()]);
         Log::info('FCM Response Body:', ['body' => $response->body()]);
         return $response->json();

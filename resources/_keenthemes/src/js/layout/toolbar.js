@@ -1,45 +1,5 @@
 "use strict";
 
-// Define a function to handle the AJAX request
-var updateDateRange = function(startDate, endDate) {
-    var currentUrl = window.location.pathname;
-    var ajaxRoute;
-      // Determine the appropriate controller route based on the current URL
-      if (currentUrl.includes('performance-analytics')) {
-        ajaxRoute = '/performance-analytics';
-    } else if (currentUrl.includes('google-analytics')) {
-        ajaxRoute = '/google-analytics';
-    } else if (currentUrl.includes('facebook-analytics')) {
-        ajaxRoute = '/facebook-analytics';
-    } else {
-        ajaxRoute = '/dashboard';
-    }
-
-    $.ajax({
-        url: ajaxRoute,
-        type: 'GET',
-        data: {
-            start_date: startDate,
-            end_date: endDate
-        },
-        success: function(response) {
-            // Update UI with fetched data
-            $('.data-container').html(response);
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-};
-
-// Bind an event listener to the date picker
-$('[data-kt-daterangepicker="true"]').on('apply.daterangepicker', function(ev, picker) {
-    var startDate = picker.startDate.format('YYYY-MM-DD');
-    var endDate = picker.endDate.format('YYYY-MM-DD');
-
-    // Trigger the AJAX request to update the date range
-    updateDateRange(startDate, endDate);
-});
 // Class definition
 var KTLayoutToolbar = function () {
     // Private variables

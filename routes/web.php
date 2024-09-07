@@ -11,16 +11,10 @@ use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
-
 use App\Http\Controllers\DashboardController;
-
-use App\Http\Controllers\SettingsController;
-
-use App\Http\Controllers\SystemController;
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,19 +34,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard', [DashboardController::class, 'handlePostRequest'])->name('dashboard');
-    Route::post('/performance-analytics', [DashboardController::class, 'handlePostRequest'])->name('dashboard.performance.analytics.post');
-    Route::post('/google-campaigns', [DashboardController::class, 'handlePostRequest'])->name('dashboard.google.campaigns.post');
-    Route::post('/facebook-analytics', [DashboardController::class, 'handlePostRequest'])->name('dashboard.facebook.analytics.post');
-    Route::get('/analytics-accounts', [DashboardController::class,'getAnalyticsAccounts'])->name('dashboard.analytics.account');
     Route::post('/switch-dealer', [DashboardController::class, 'switchDealerAccount'])->name('dashboard.switch.dealer');
 
     Route::name('dashboard.')->group(function () {
 
     });
-
-    // System Routes
-    Route::get('/logs', [SystemController::class, 'index'])->name('system.logs')->middleware('check.dynamic.route.permissions:logs');
-
     // User Management routes
     Route::name('user-management.')->group(function () {
         Route::resource('/user-management/users', UserManagementController::class)->middleware('check.dynamic.route.permissions:user');
@@ -95,28 +81,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Utility Company routes
     Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
-
-    // Reports routes
-    Route::name('reports.')->group(function () {
-        Route::get('/reports/dsm-market-report', [ReportsController::class, 'index'])->name('dsm-market-report.index');
-    });
-    
-    // Reports audience-manager
-    Route::name('audience-manager.')->group(function () {
-        Route::get('/audience-manager/campaigns', [ReportsController::class, 'list'])->name('campaigns.list');
-    });
-
-    // Define routes for integrations
-    Route::name('integrations.')->group(function () {
-        Route::resource('/integrations/settings', SettingsController::class)->middleware('check.dynamic.route.permissions:settings');
-    });
-
-    Route::get('/get-providers',[\App\Http\Controllers\ProviderController::class, 'getProviders'])->name('inventory-setup.getProvider');
-
-    Route::name('legal.')->group(function () {
-
-    });
-
 });
 
 Route::get('/error', function () {
