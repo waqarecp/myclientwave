@@ -70,43 +70,6 @@
             Livewire.dispatch('new_statecolour');
             Livewire.dispatch('reset_form');
         });
-
-        function getStates(element) {
-            var countryId = $(element).val();
-            var stateDropdown = $('select[name="state_id"]');
-            var cityDropdown = $('select[name="city_id"]');
-            stateDropdown.empty();
-            cityDropdown.empty();
-            $.ajax({
-                url: "{{ route('stateColours.getStates') }}", // Make sure this route matches your routes/web.php
-                method: 'post',
-                data: {
-                    countryId: countryId,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(data) {
-                    stateDropdown.empty(); // Clear existing options
-
-                    // Populate states dropdown
-                    $.each(data.states, function(key, value) {
-                        stateDropdown.append('<option value="' + key + '">' + value + '</option>');
-                    });
-                },
-                error: function(data) {
-                    Swal.fire({
-                        text: 'Failed to get states for this country!',
-                        icon: 'error',
-                        confirmButtonText: "Close",
-                        buttonsStyling: false,
-                        customClass: {
-                            confirmButton: "btn btn-light-danger"
-                        }
-                    });
-                }
-            });
-        }
     </script>
     @endpush
 

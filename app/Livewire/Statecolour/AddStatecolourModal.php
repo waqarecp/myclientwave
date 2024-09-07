@@ -49,14 +49,6 @@ class AddStatecolourModal extends Component
         return [];
     }
 
-    public function updatedCountryId()
-    {
-        // Fetch states whenever the country_id is updated
-        $this->states = $this->getStates($this->country_id);
-        // Reset state_id if the country_id changes
-        $this->state_id = null;
-    }
-
     public function createStateColour()
     {
         $errorMessage = null;

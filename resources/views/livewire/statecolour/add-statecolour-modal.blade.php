@@ -21,8 +21,7 @@
                         <div class="row">
                             <div class="fv-row mb-7 col-md-12">
                                 <label class="required fw-semibold fs-6 mb-2">Country</label>
-                                <select id="country_id" name="country_id" onchange="getStates(this)" wire:model="country_id" class="form-select" data-dropdown-parent="#kt_modal_add_state_colour" data-placeholder="Select a Country...">
-                                    <option value="">Select a Country...</option>
+                                <select id="country_id" name="country_id" onchange="getStates(this)" wire:model="country_id" class="form-select" data-control="select2" data-dropdown-parent="#kt_modal_add_state_colour" data-placeholder="Select a Country...">
                                     @foreach($countries as $id => $name)
                                     <option {{ $this->country_id==$id ? 'selected' : '' }} value="{{ $id }}">{{ $name }}</option>
                                     @endforeach
@@ -34,8 +33,7 @@
                         <div class="row">
                             <div class="fv-row mb-7 col-md-12">
                                 <label class="required fw-semibold fs-6 mb-2">State</label>
-                                <select id="state_id" name="state_id" wire:model="state_id" class="form-select" data-dropdown-parent="#kt_modal_add_state_colour" data-placeholder="Select a State...">
-                                    <option value="">Select a State...</option>
+                                <select id="state_id" name="state_id" wire:model="state_id" class="form-select" data-control="select2" data-dropdown-parent="#kt_modal_add_state_colour" data-placeholder="Select a State...">
                                     @if ($states)
                                         @foreach($states as $sId => $sName)
                                         <option value="{{ $sId }}" @if($sId == $state_id) selected @endif>{{ $sName }}</option>
@@ -73,3 +71,55 @@
         </div>
     </div>
 </div>
+<script>
+        // Re-initialize Select2 when the modal is shown
+        $('#kt_modal_add_state_colour').on('shown.bs.modal', function() {
+            // Initialize Select2 for #state_id on page load and when modal is shown
+            $('#country_id').select2({
+                dropdownParent: $('#kt_modal_add_state_colour'),
+                placeholder: 'Select a Country...'
+            });
+            $('#state_id').select2({
+                dropdownParent: $('#kt_modal_add_state_colour'),
+                placeholder: 'Select a State...'
+            });
+        });
+        function getStates(element) {
+            var countryId = $(element).val();
+            var stateDropdown = $('select[name="state_id"]');
+            stateDropdown.empty();
+            $.ajax({
+                url: "{{ route('stateColours.getStates') }}", // Make sure this route matches your routes/web.php
+                method: 'post',
+                data: {
+                    countryId: countryId,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    stateDropdown.empty(); // Clear existing options
+                    
+                    $('#state_id').select2({
+                        dropdownParent: $('#kt_modal_add_state_colour'),
+                        placeholder: 'Select a State...'
+                    });
+                    // Populate states dropdown
+                    $.each(data.states, function(key, value) {
+                        stateDropdown.append('<option value="' + key + '">' + value + '</option>');
+                    });
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to get states for this country!',
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
+</script>
