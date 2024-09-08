@@ -76,8 +76,8 @@ let plugins = [
                     replace: 'url(./fonts/fonticon/$1)',
                 },
                 {
-                    search: /url\(.*?((keenicons-.*?)\..*?)'?\)/g,
-                    replace: 'url(./fonts/$2/$1)',
+                    search: /url\(['"]?fonts\/(keenicons-.*?)\.(.*?)(\?[^'"]*)?['"]?\)/g,
+		    replace: "url(./fonts/$1/$1.$2)",
                 },
             ],
         },
