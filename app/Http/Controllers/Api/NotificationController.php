@@ -23,11 +23,19 @@ class NotificationController extends Controller
 
         // Check if there are any tokens to send notifications to
         if (!empty($fcmTokens)) {
-            FirebaseNotifications::sendNotification(
-                'New Lead Created',
-                'A new lead has been assigned to you.',
-                $fcmTokens
-            );
+            foreach ($fcmTokens as $token) {
+                if ($token) {
+                    FirebaseNotifications::sendNotification(
+                        $token,
+                        array(
+                            'title' => 'New Lead Created',
+                            'body' => 'A new lead has been assigned to you.',
+                            'click_action' => 'http://127.0.0.1:8000/statuses'
+                        )
+                    );
+                }
+            }
+
             return response()->json(['status' => 'Notification sent successfully'], 200);
         } else {
             return response()->json(['status' => 'No tokens found'], 404);

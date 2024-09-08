@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "altwaireb/laravel-world": "^1.0",
         "diglactic/laravel-breadcrumbs": "^8.1",
+        "google/auth": "*",
         "googleads/google-ads-php": ">=13.0",
         "guzzlehttp/guzzle": "^7.2",
         "guzzlehttp/promises": "1.5",

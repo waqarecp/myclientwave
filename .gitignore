@@ -54,3 +54,5 @@ package-lock.json
 /public/assets/*
 /public/assets/js/*
 /public/assets/css/*
+
+/storage/app/firebase/crmanagement-7a4dc-1b8e1315ccb9.json

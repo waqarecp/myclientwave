@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7235e410e3a91d33738d1a9dc451034",
+    "content-hash": "de5e12e1a1886d13c1d7b507c25ccd8e",
     "packages": [
         {
             "name": "altwaireb/laravel-world",
@@ -1262,20 +1262,20 @@
         },
         {
             "name": "google/common-protos",
-            "version": "4.8.2",
+            "version": "4.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "6f7f8e2f84b65a7d657970ab4727277400efa514"
+                "reference": "38a9a8bb459fa618da797d25d7bf36bb21d1103d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/6f7f8e2f84b65a7d657970ab4727277400efa514",
-                "reference": "6f7f8e2f84b65a7d657970ab4727277400efa514",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/38a9a8bb459fa618da797d25d7bf36bb21d1103d",
+                "reference": "38a9a8bb459fa618da797d25d7bf36bb21d1103d",
                 "shasum": ""
             },
             "require": {
-                "google/protobuf": "^3.6.1",
+                "google/protobuf": "^v3.25.3||^4.26.1",
                 "php": "^8.0"
             },
             "require-dev": {
@@ -1315,10 +1315,9 @@
                 "google"
             ],
             "support": {
-                "issues": "https://github.com/googleapis/common-protos-php/issues",
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.8.2"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.8.3"
             },
-            "time": "2024-08-19T16:20:29+00:00"
+            "time": "2024-09-07T01:37:15+00:00"
         },
         {
             "name": "google/gax",

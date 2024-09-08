@@ -164,17 +164,21 @@ class LeadController extends Controller
             }
         }
         // Retrieve FCM tokens for the sales representative
-        $fcmTokens = FirebaseToken::where('user_id', $request->input('sale_representative'))
-        ->pluck('fcm_token')
-        ->toArray();
+        $fcmTokens = FirebaseToken::where('user_id', $request->input('sale_representative'))->pluck('fcm_token')->toArray();
 
         // Check if there are any tokens to send notifications to
         if (!empty($fcmTokens)) {
-            FirebaseNotifications::sendNotification(
-                'New Lead Created',
-                'A new lead has been assigned to you.',
-                $fcmTokens
-            );
+            foreach ($fcmTokens as $token) {
+                if ($token) {
+                    FirebaseNotifications::sendNotification(
+                        $token,
+                        array(
+                            'title' => 'New Lead Created',
+                            'body' => 'A new lead has been assigned to you.'
+                        )
+                    );
+                }
+            }
         }
         return redirect()->back()->with('success', 'Lead has been created successfully.');
     }

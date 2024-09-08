@@ -5,21 +5,10 @@ const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const rimraf = require('rimraf');
 const WebpackRTLPlugin = require('webpack-rtl-plugin');
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel applications. By default, we are compiling the CSS
- | file for the application as well as bundling up all the JS files.
- |
- */
-
-// arguments/params from the line command
+// Arguments from the command line
 const args = getParameters();
 
-// get selected demo
+// Get selected demo
 let demo = getDemos()[0];
 
 const dir = 'resources/_keenthemes/src';
@@ -30,22 +19,20 @@ mix.options({
     }
 });
 
-// Build 3rd party plugins css/js
+// Build 3rd party plugins CSS/JS
 mix.sass('resources/mix/plugins.scss', `public/assets/plugins/global/plugins.bundle.css`).then(() => {
-    // remove unused preprocessed fonts folder
-    rimraf(path.resolve('public/fonts'), () => {
-    });
-    rimraf(path.resolve('public/images'), () => {
-    });
+    rimraf(path.resolve('public/fonts'), () => {});
+    rimraf(path.resolve('public/images'), () => {});
 }).sourceMaps(!mix.inProduction())
-    // .setResourceRoot('./')
     .options({processCssUrls: false})
     .scripts(require('./resources/mix/plugins.js'), `public/assets/plugins/global/plugins.bundle.js`);
 
-// Build theme css/js
+// Build theme CSS/JS
 mix.sass(`${dir}/sass/style.scss`, `public/assets/css/style.bundle.css`, {sassOptions: {includePaths: ['node_modules']}})
-    // .options({processCssUrls: false})
     .scripts(require(`./resources/mix/scripts.js`), `public/assets/js/scripts.bundle.js`);
+
+// Compile app.js
+mix.js('resources/js/app.js', 'public/js');
 
 // Build custom 3rd party plugins
 (glob.sync(`resources/mix/vendors/**/*.js`) || []).forEach(file => {
@@ -64,35 +51,31 @@ mix.sass(`${dir}/sass/style.scss`, `public/assets/css/style.bundle.css`, {sassOp
 // Build media
 mix.copyDirectory(`${dir}/media`, `public/assets/media`);
 
+// Add plugins
 let plugins = [
     new ReplaceInFileWebpackPlugin([
         {
-            // rewrite font paths
             dir: path.resolve(`public/assets/plugins/global`),
             test: /\.css$/,
             rules: [
+                // Font replacements
                 {
-                    // fontawesome
                     search: /url\((\.\.\/)?webfonts\/(fa-.*?)"?\)/g,
                     replace: 'url(./fonts/@fortawesome/$2)',
                 },
                 {
-                    // lineawesome fonts
                     search: /url\(("?\.\.\/)?fonts\/(la-.*?)"?\)/g,
                     replace: 'url(./fonts/line-awesome/$2)',
                 },
                 {
-                    // bootstrap-icons
                     search: /url\(.*?(bootstrap-icons\..*?)"?\)/g,
                     replace: 'url(./fonts/bootstrap-icons/$1)',
                 },
                 {
-                    // fonticon
                     search: /url\(.*?(fonticon\..*?)"?\)/g,
                     replace: 'url(./fonts/fonticon/$1)',
                 },
                 {
-                    // keenicons
                     search: /url\(.*?((keenicons-.*?)\..*?)'?\)/g,
                     replace: 'url(./fonts/$2/$1)',
                 },
@@ -100,6 +83,7 @@ let plugins = [
         },
     ]),
 ];
+
 if (args.indexOf('rtl') !== -1) {
     plugins.push(new WebpackRTLPlugin({
         filename: '[name].rtl.css',
@@ -120,7 +104,7 @@ mix.webpackConfig({
     }
 });
 
-// Webpack.mix does not copy fonts, manually copy
+// Manually copy fonts
 (glob.sync(`${dir}/plugins/**/*.+(woff|woff2|eot|ttf|svg)`) || []).forEach(file => {
     mix.copy(file, `public/assets/plugins/global/fonts/${path.parse(file).name}/${path.basename(file)}`);
 });
@@ -136,7 +120,6 @@ glob.sync('node_modules/+(@fortawesome|socicon|line-awesome|bootstrap-icons)/**/
 mix.scripts((glob.sync(`${dir}/js/widgets/**/*.js`) || []), `public/assets/js/widgets.bundle.js`);
 
 function getDemos() {
-    // get possible demo from parameter command
     let demos = [];
     args.forEach((arg) => {
         const demo = arg.match(/^demo.*/g);

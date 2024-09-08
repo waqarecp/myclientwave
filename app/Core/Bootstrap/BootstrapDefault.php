@@ -29,6 +29,9 @@ class BootstrapDefault
 
         # Include global javascript files
         addJavascriptFile('assets/js/custom/widgets.js');
+
+        # Include app.js file from 'public/js/app.js'
+        addJavascriptFile('js/app.js');
     }
 
     public function initDarkSidebarLayout()
