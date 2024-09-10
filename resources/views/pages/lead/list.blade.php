@@ -91,7 +91,7 @@
                             <td>{{ $row->phone}}</td>
                             <td>{{ $row->state_name}}</td>
                             <td>{{ $row->leadSource->source_name}}</td>
-                            <td>{{ $row->utilityCompany->utility_company_name}}</td>
+                            <td>{{ isset($row->utilityCompany->utility_company_name) ? $row->utilityCompany->utility_company_name : 'Nil'}}</td>
                             <td>
                                 {{ $row->user->name }}&nbsp;<small>{{\Carbon\Carbon::parse($row->created_at)->format('d F Y H:i')}}</small>
                             </td>
