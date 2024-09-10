@@ -10,6 +10,7 @@ use App\Models\Lead;
 use App\Models\Role;
 use App\Models\Country;
 use App\Models\State;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +23,22 @@ class CalendarController extends Controller
      */
     public function index(AppointmentDataTable $dataTable)
     {
-        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $companyId = Auth::user()->company_id;
+        $users = User::where('deleted_at', null)->where('company_id', $companyId)->get();
         $leads = Lead::where('deleted_at', null)->get();
         $roles = Role::all();
-        $countries = Country::active()->pluck('name', 'id');
+        // Get assigned countries for the company
+        $assignedCountryIds = Setting::where('company_id', $companyId)
+            ->pluck('country_id')
+            ->toArray();
+
+        // If no countries are assigned, use United States (id=233)
+        if (empty($assignedCountryIds)) {
+            $assignedCountryIds = [233];
+        }
+
+        // Fetch country names from the Country model
+        $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id');
         // Fetch appointments with eager loading
         $appointments = Appointment::with(['lead', 'user', 'country', 'state', 'city'])
             ->whereNull('appointments.deleted_at')
@@ -35,7 +48,7 @@ class CalendarController extends Controller
         foreach ($appointments as $appointment) {
             $appointment->stateColour = DB::table('state_colours')
                 ->where('state_id', $appointment->appointment_state_id)
-                ->where('company_id', Auth::user()->company_id)
+                ->where('company_id', $companyId)
                 ->first();
         }
 

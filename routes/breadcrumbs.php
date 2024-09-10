@@ -8,6 +8,7 @@ use App\Models\LeadSource;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Appointment;
+use App\Models\Setting;
 use App\Models\Status;
 use App\Models\StateColour;
 
@@ -159,3 +160,9 @@ Breadcrumbs::for('state-colours.index', function (BreadcrumbTrail $trail) {
     $trail->push('states', route('state-colours.index'));
 });
 
+
+// Home > Setting > index
+Breadcrumbs::for('settings', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('setting', route('settings.index'));
+});

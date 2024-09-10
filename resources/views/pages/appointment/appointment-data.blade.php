@@ -118,7 +118,9 @@
                                         <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
                                             <option value="all">Tag All Users</option>
                                             @foreach($users as $userId => $userName)
-                                            <option value="{{$userId}}">{{ucwords($userName)}}</option>
+                                                @if ($userId != auth()->id())
+                                                    <option value="{{$userId}}">{{ucwords($userName)}}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                         @error('user_ids')
@@ -137,49 +139,42 @@
                     </div>
                 </div>
                 <!-- Comments -->
-                <div class="accordion mt-2" id="accordion_view_comments">
+                <div class="mt-2" id="accordion_view_comments">
                     @foreach ($appointment->timeline as $timeline)
-                    <div class="accordion-item mt-2 border border-dark border-dashed">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button fs-4 fw-semibold collapsed {{ $timeline->status_id == $appointment->status_id ? 'bg-light-success' : 'bg-light-primary' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseViewComment{{ $timeline->id }}" aria-expanded="false" aria-controls="collapseViewComment{{ $timeline->id }}">
-                                {{ isset($statuses[$timeline->status_id]) ? $statuses[$timeline->status_id]['status_name'] : 'Unknown Status' }}
-                            </button>
-                        </h2>
-                        <div id="collapseViewComment{{ $timeline->id }}" class="collapse {{ $timeline->status_id == $appointment->status_id ? 'show' : '' }}" data-bs-parent="#accordion_view_comments">
-                            <div class="card-body p-2">
+                    <div>
+                        <div id="collapseViewComment{{ $timeline->id }}" class="show {{ $timeline->status_id == $appointment->status_id ? 'active-timeline-comments' : '' }}" data-bs-parent="#accordion_view_comments">
+                            <div class="">
                                 @if (isset($allAppointmentNotes[$timeline->status_id]))
-                                @foreach ($allAppointmentNotes[$timeline->status_id] as $comment)
-                                <?php
-                                $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
-                                $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
-                                ?>
-                                <div class="ms-3">
-                                    <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><b>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</b></a>
-                                    <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
-                                </div>
-                                <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
-                                    <div class="d-inline-block">{!! $comment->notes !!}</div>
-                                    @if (in_array(Auth::user()->id, $unreadUsers))
-                                    <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
-                                    @endif
-                                </div>
-                                <div class="ms-3 mt-2">
-                                    @if (in_array(Auth::user()->id, $unreadUsers))
-                                    <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
-                                        <i class="ki-duotone ki-check fs-3"></i> Mark as read
-                                    </a>
-                                    @endif
-                                    <div class="float-end">
-                                        <small class="text-muted">Tagged Users </small>
-                                        @foreach ($taggedUsers as $taggedUser)
-                                        <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
-                                        @endforeach
+                                    @foreach ($allAppointmentNotes[$timeline->status_id] as $comment)
+                                    <?php
+                                    $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
+                                    $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
+                                    ?>
+                                    <div class="ms-3">
+                                        <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><i>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</i></a>
+                                        <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
                                     </div>
-                                </div>
-                                <br><br>
-                                @endforeach
-                                @else
-                                <div class="ms-3 text-muted">There were no comments found for this appointment while at <b>{{ isset($statuses[$timeline->status_id]) ? $statuses[$timeline->status_id]['status_name'] : 'Unknown Status' }}</b></div>
+                                    <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
+                                        <div class="d-inline-block">{!! $comment->notes !!}</div>
+                                        @if (in_array(Auth::user()->id, $unreadUsers))
+                                        <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
+                                        @endif
+                                    </div>
+                                    <div class="ms-3 mt-2">
+                                        @if (in_array(Auth::user()->id, $unreadUsers))
+                                        <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
+                                            <i class="ki-duotone ki-check fs-3"></i> Mark as read
+                                        </a>
+                                        @endif
+                                        <div class="float-end">
+                                            <small class="text-muted">Tagged Users </small>
+                                            @foreach ($taggedUsers as $taggedUser)
+                                            <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                    @endforeach
                                 @endif
                             </div>
                         </div>

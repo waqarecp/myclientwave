@@ -14,6 +14,7 @@ use App\Models\Role;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use App\Models\Setting;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +27,23 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $companyId = Auth::user()->company_id;
+        $users = User::where('deleted_at', null)->where('company_id', $companyId)->get();
         $leads = Lead::where('deleted_at', null)->get();
         $roles = Role::all();
-        $countries = Country::active()->pluck('name', 'id');
+
+        // Get assigned countries for the company
+        $assignedCountryIds = Setting::where('company_id', $companyId)
+            ->pluck('country_id')
+            ->toArray();
+
+        // If no countries are assigned, use United States (id=233)
+        if (empty($assignedCountryIds)) {
+            $assignedCountryIds = [233];
+        }
+
+        // Fetch country names from the Country model
+        $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id');
 
         $searchTerm = $request->input('search', '');
         $query = Appointment::join('leads', 'appointments.lead_id', '=', 'leads.id')
@@ -123,30 +137,30 @@ class AppointmentController extends Controller
     {
 
         $request->validate([
-            'lead_id' => 'integer|required',
-            'representative_user' => 'integer|required',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required|string',
-            'appointment_street' => 'nullable|string|max:255',
-            'appointment_country_id' => 'required|int',
-            'appointment_state_id' => 'required|int',
-            'appointment_city_id' => 'int',
-            'appointment_zip' => 'nullable|string|max:20',
-            'appointment_address_1' => 'required|string',
-            'appointment_address_2' => 'nullable|string',
+            'update_lead_id' => 'integer|required',
+            'update_representative_user' => 'integer|required',
+            'update_appointment_date' => 'required|date',
+            'update_appointment_time' => 'required|string',
+            'update_appointment_street' => 'nullable|string|max:255',
+            'update_appointment_country_id' => 'required|int',
+            'update_appointment_state_id' => 'required|int',
+            'update_appointment_city_id' => 'int',
+            'update_appointment_zip' => 'nullable|string|max:20',
+            'update_appointment_address_1' => 'required|string',
+            'update_appointment_address_2' => 'nullable|string',
         ]);
         if ($request->appointment_id) {
             $appointment = Appointment::findOrFail($request->appointment_id);
-            $appointment->representative_user = $request->representative_user;
-            $appointment->appointment_date = $request->appointment_date;
-            $appointment->appointment_time = $request->appointment_time;
-            $appointment->appointment_country_id = $request->appointment_country_id;
-            $appointment->appointment_state_id = $request->appointment_state_id;
-            $appointment->appointment_city_id = $request->appointment_city_id;
-            $appointment->appointment_street = $request->appointment_street;
-            $appointment->appointment_zip = $request->appointment_zip;
-            $appointment->appointment_address_1 = $request->appointment_address_1;
-            $appointment->appointment_address_2 = $request->appointment_address_2;
+            $appointment->representative_user = $request->update_representative_user;
+            $appointment->appointment_date = $request->update_appointment_date;
+            $appointment->appointment_time = $request->update_appointment_time;
+            $appointment->appointment_country_id = $request->update_appointment_country_id;
+            $appointment->appointment_state_id = $request->update_appointment_state_id;
+            $appointment->appointment_city_id = $request->update_appointment_city_id;
+            $appointment->appointment_street = $request->update_appointment_street;
+            $appointment->appointment_zip = $request->update_appointment_zip;
+            $appointment->appointment_address_1 = $request->update_appointment_address_1;
+            $appointment->appointment_address_2 = $request->update_appointment_address_2;
             if ($appointment->save()) {
                 return response()->json(['success' => 'Appointment updated successfully']);
             }else {

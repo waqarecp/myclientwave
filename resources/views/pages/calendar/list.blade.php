@@ -76,8 +76,9 @@
                                 <div class="col-md-6 mt-3">
                                     <label class="required fs-6 fw-semibold ">Country</label>
                                     <select onchange="getStates()" class="form-select" name="appointment_country_id" id="appointment_country_id" data-control="select2" data-dropdown-parent="#kt_modal_appointment" data-placeholder="Select a country">
+                                        <option value="">Select a Country...</option>    
                                         @foreach($countries as $id => $name)
-                                        <option value="{{ $id }}">{{ $name }}</option>
+                                            <option value="{{ $id }}">{{ $name }}</option>
                                         @endforeach
                                     </select>
                                     @error('appointment_country_id')

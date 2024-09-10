@@ -159,6 +159,20 @@
                 </div>
             @endif
             <!--end:Menu item-->
+            
+            <!--begin:Menu item-->
+            @php
+                $hasPermissionSetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
+            @endphp
+            @if($hasPermissionSetting)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('settings.index')}}">
+                    <a class="menu-link {{ request()->routeIs('settings.index') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+                        <span class="menu-icon">{!! getIcon('wrench', 'fs-3') !!}</span>
+                        <span class="menu-title">Settings</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
 
         </div>
         <!--end::Menu-->

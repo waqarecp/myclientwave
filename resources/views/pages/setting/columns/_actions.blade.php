@@ -13,11 +13,7 @@
     @endif
     @if(auth()->user()->can('write appointment'))
         <div class="menu-item px-3">
-            <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-kt-appointment-lead-id="{{ $appointment->lead_id }}" 
-                data-kt-appointment-representative-user="{{ $appointment->representative_user }}" data-kt-appointment-date="{{ $appointment->appointment_date }}" data-kt-appointment-time="{{ $appointment->appointment_time }}" 
-                data-kt-appointment-country-id="{{ $appointment->appointment_country_id }}" data-kt-appointment-state-id="{{ $appointment->appointment_state_id }}" data-kt-appointment-city-id="{{ $appointment->appointment_city_id }}" 
-                data-kt-appointment-street="{{ $appointment->appointment_street }}" data-kt-appointment-zip="{{ $appointment->appointment_zip }}" data-kt-appointment-address-1="{{ $appointment->appointment_address_1 }}" 
-                data-kt-appointment-address-2="{{ $appointment->appointment_address_2 }}" onclick="update_appointment_modal(this)">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" data-kt-appointment-lead-id="{{ $appointment->lead_id }}" data-kt-appointment-representative-user="{{ $appointment->representative_user }}" data-kt-appointment-date="{{ $appointment->appointment_date }}" data-kt-appointment-time="{{ $appointment->appointment_time }}" data-kt-appointment-country-id="{{ $appointment->appointment_country_id }}" data-kt-appointment-state-id="{{ $appointment->appointment_state_id }}" data-kt-appointment-city-id="{{ $appointment->appointment_city_id }}" data-kt-appointment-street="{{ $appointment->appointment_street }}" data-kt-appointment-zip="{{ $appointment->appointment_zip }}" data-kt-appointment-address-1="{{ $appointment->appointment_address_1 }}" data-kt-appointment-address-2="{{ $appointment->appointment_address_2 }}" onclick="appointment_modal(this)">
                 Edit Appointment
             </a>
         </div>

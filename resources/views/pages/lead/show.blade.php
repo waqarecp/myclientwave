@@ -42,15 +42,15 @@
                                     <div class="fw-bold mt-5">Lead ID</div>
                                     <div class="text-gray-600">{{ $lead->id }}</div>
                                     <div class="fw-bold mt-5">Lead Owner</div>
-                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="text-gray-600">{{ $lead->user ? $lead->user->name : 'N/A' }}</div>
                                     <div class="fw-bold mt-5">Sales Representative</div>
-                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="text-gray-600">{{ $lead->user ? $lead->user->name : 'N/A' }}</div>
                                     <div class="fw-bold mt-5">Mobile</div>
                                     <div class="text-gray-600">{{ $lead->mobile }}</div>
                                     <div class="fw-bold mt-5">Phone</div>
                                     <div class="text-gray-600">{{ $lead->phone }}</div>
                                     <div class="fw-bold mt-5">Utility Company</div>
-                                    <div class="text-gray-600">{{ $lead->utilitycompany->utility_companyname ?: 'N/A' }}</div>
+                                    <div class="text-gray-600">{{ $lead->utilitycompany ? $lead->utilitycompany->utility_companyname : 'N/A' }}</div>
                                 </div>
                             </div>
                             <!--end::Details content-->
@@ -60,7 +60,7 @@
                                     <!--begin::Details item-->
                                     <div class="text-gray-600"></div>
                                     <div class="fw-bold mt-5">Call Center Representative</div>
-                                    <div class="text-gray-600">{{ $lead->user->name }}</div>
+                                    <div class="text-gray-600">{{ $lead->user ? $lead->user->name : 'N/A' }}</div>
                                     <div class="fw-bold mt-5">Lead Created By</div>
                                     <?php
                                     $created_at = \Carbon\Carbon::parse($lead->created_at)->format('d F Y');
@@ -68,9 +68,9 @@
                                     ?>
                                     <div class="text-gray-600">{{ $created_by . ' | ' .$created_at }}</div>
                                     <div class="fw-bold mt-5">Lead Source</div>
-                                    <div class="text-gray-600">{{ $lead->leadSource->source_name }}</div>
+                                    <div class="text-gray-600">{{ $lead->leadSource ? $lead->leadSource->source_name : 'N/A' }}</div>
                                     <div class="fw-bold mt-5">Layout</div>
-                                    <div class="text-gray-600">{{ $lead->company->name }}</div>
+                                    <div class="text-gray-600">{{ $lead->company ? $lead->company->name : 'N/A' }}</div>
                                     <div class="fw-bold mt-5">Email</div>
                                     <div class="text-gray-600">{{ $lead->email }}</div>
                                 </div>

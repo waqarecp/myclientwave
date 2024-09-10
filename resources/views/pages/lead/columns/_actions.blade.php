@@ -16,7 +16,11 @@
     @if(auth()->user()->can('write lead'))
     <!--begin::Menu item-->
         <div class="menu-item px-3">
-            <a href="javascript:void(0)" class="menu-link px-3" data-kt-lead-id="{{ $lead->id }}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_lead" data-kt-action="update_row">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-lead-id="{{ $lead->id }}" data-kt-owner-id="{{ $lead->owner_id }}" data-kt-first-name="{{ $lead->first_name }}" 
+                data-kt-last-name="{{ $lead->last_name }}" data-kt-sale-representative="{{ $lead->sale_representative }}" data-kt-mobile="{{ $lead->mobile }}" data-kt-phone="{{ $lead->phone }}" data-kt-email="{{ $lead->email }}" 
+                data-kt-utility-company-id="{{ $lead->utility_company_id }}" data-kt-call-center-representative="{{ $lead->call_center_representative }}" data-kt-lead-source-id="{{ $lead->lead_source_id }}" data-kt-street="{{ $lead->street }}" data-kt-country-id="{{ $lead->country_id }}" 
+                data-kt-state-id="{{ $lead->state_id }}" data-kt-city-id="{{ $lead->city_id }}" data-kt-zip="{{ $lead->zip }}" data-kt-address-1="{{ $lead->address_1 }}" data-kt-address-2="{{ $lead->address_2 }}" 
+                onclick="lead_modal(this)">
                 Edit
             </a>
         </div>

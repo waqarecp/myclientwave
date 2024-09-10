@@ -68,7 +68,7 @@
                                                 <div class="col-md-4 mt-3">
                                                     <label class="required fs-6 fw-semibold ">Lead Source</label>
                                                     <select class="form-select" wire:model="lead_source_id" name="lead_source_id" required>
-                                                        <option value="">>--- Select Lead Source ---</option>
+                                                        <option value="">--- Select Lead Source ---</option>
                                                         @foreach($sources as $source)
                                                         <option value="{{$source->id}}">{{$source->source_name}}</option>
                                                         @endforeach

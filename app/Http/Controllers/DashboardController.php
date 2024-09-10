@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Country;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -37,22 +38,36 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
+        $companyId = Auth::user()->company_id;
+
+        // Get assigned countries for the company
+        $assignedCountryIds = Setting::where('company_id', $companyId)
+            ->pluck('country_id')
+            ->toArray();
+
+        // If no countries are assigned, use United States (id=233)
+        if (empty($assignedCountryIds)) {
+            $assignedCountryIds = [233];
+        }
+
+        // Fetch country names from the Country model
+        $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id');
         $users = User::where('deleted_at', null)
-            ->where('company_id', Auth::user()->company_id)
+            ->where('company_id', $companyId)
             ->get();
         $roles = Role::all();
         $utilitycompanies = UtilityCompany::where('deleted_at', null)
-            ->where('company_id', Auth::user()->company_id)
+            ->where('company_id', $companyId)
             ->get();
         $companies = Company::where('deleted_at', null)->get();
         $sources = LeadSource::where('deleted_at', null)
-            ->where('company_id', Auth::user()->company_id)
+            ->where('company_id', $companyId)
             ->get();
         $statuses = Status::where('deleted_at', null)
-            ->where('company_id', Auth::user()->company_id)
+            ->where('company_id', $companyId)
             ->get();
         $leads = Lead::where('deleted_at', null)
-            ->where('company_id', Auth::user()->company_id)
+            ->where('company_id', $companyId)
             ->with('leadSource')
             ->get();
         $leadSources = $leads->groupBy('leadSource.id')
@@ -83,8 +98,6 @@ class DashboardController extends Controller
         })->sortKeys();
         $appointmentData = $appointmentData->toJson();
         $countAppointments = count($appointments);
-
-        $countries = Country::active()->pluck('name', 'id');
 
         return view('pages/dashboards.index', 
                     compact('users', 'companies', 'sources', 'utilitycompanies', 'statuses', 'leadSources', 

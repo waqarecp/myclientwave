@@ -9,6 +9,7 @@ use App\Http\Controllers\StatecolourController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\UtilityCompanyController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
@@ -59,11 +60,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');
     Route::post('/leads/noteStore', [LeadController::class, 'noteStore'])->name('leads.noteStore');
-    Route::post('/leads/get-data', [LeadController::class, 'getData'])->name('leads.getData');
+    Route::post('/leads/update', [LeadController::class, 'update'])->name('leads.update');
     Route::post('/leads/mark-as-read', [LeadController::class, 'markAsRead'])->name('leads.markAsRead');
     Route::post('/leads/view-lead-comments', [LeadController::class, 'viewLeadComments'])->name('leads.viewLeadComments');
     Route::post('/leads/get-states', [LeadController::class, 'getStates'])->name('leads.getStates');
     Route::post('/leads/get-cities', [LeadController::class, 'getCities'])->name('leads.getCities');
+    Route::post('/leads/destroy', [LeadController::class, 'destroy'])->name('leads.destroy');
 
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
@@ -75,6 +77,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');
     Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
+
+
+    // setting routes
+    Route::get('settings/index', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');
+    Route::post('settings/update', [SettingController::class, 'update'])->name('setting.update');
 
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
