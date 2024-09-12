@@ -16,7 +16,8 @@
     @if(auth()->user()->can('write state colour'))
     <!--begin::Menu item-->
         <div class="menu-item px-3">
-            <a href="#" class="menu-link px-3" data-kt-state-colour-id="{{ $statecolour->id }}" data-bs-toggle="modal" data-bs-target="#kt_modal_add_state_colour" data-kt-action="update_row">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-state-colour-id="{{ $statecolour->id }}" data-kt-state-country-id="{{ $statecolour->state->country_id }}" 
+                data-kt-state-id="{{ $statecolour->state_id }}" data-kt-state-colour-code="{{ $statecolour->color_code }}" onclick="update_state_color_modal(this)">
                 Edit
             </a>
         </div>

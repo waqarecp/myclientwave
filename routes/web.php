@@ -55,7 +55,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Statuses routes
     Route::resource('state-colours', StatecolourController::class)->middleware('check.dynamic.route.permissions:state colour');
+    Route::post('/state-colours/store', [StatecolourController::class, 'store'])->name('state-colour.store');
+    Route::post('/state-colours/update', [StatecolourController::class, 'update'])->name('state-colour.update');
     Route::post('/state-colours/get-states', [StatecolourController::class, 'getStates'])->name('stateColours.getStates');
+    Route::post('/state-colours/destroy', [StatecolourController::class, 'destroy'])->name('state-colour.destroy');
 
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');

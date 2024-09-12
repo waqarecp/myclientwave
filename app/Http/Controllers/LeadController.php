@@ -146,7 +146,52 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request data
+        $this->validateRequest($request);
+
+        // Initialize variables
+        $noteAdded = $request->input('notes') ? 1 : 0;
+        $appointmentNoteAdded = $request->input('appointment_notes') ? 1 : 0;
+        $appointmentHasNewComment = $appointmentNoteAdded ? 1 : 0;
+
+        $userIds = isset($request->user_ids) ? implode(',', $request->user_ids) : null;
+        $appointmentUserIds = isset($request->appointment_user_ids) ? implode(',', $request->appointment_user_ids) : null;
+
+        // Create a new lead record
+        $lead = $this->createLead($request, $noteAdded);
+
+        if ($lead) {
+            // Create appointment if necessary
+            if ($lead->appointment_sat == 1 && $request->input('appointment_date') && $request->input('appointment_time')) {
+                $appointment = $this->createAppointment($request, $lead->id, $appointmentNoteAdded, $appointmentHasNewComment);
+
+                if ($appointment) {
+                    // Add timeline and notes
+                    $this->createTimelineAndNotes($request, $lead, $appointment, $noteAdded, $appointmentUserIds, $userIds);
+                }
+            }
+        }
+
+        // Send notification to the sales representative
+        $this->sendFirebaseNotification([$request->input('sale_representative')], [
+            'title' => 'New Lead Created',
+            'body' => 'A new lead has been assigned to you.',
+            'click_action' => env('APP_URL') . '/leads/' . $lead->id
+        ]);
+
+        // Send notification to the appointment tagged users
+        if ($request->appointment_user_ids) {
+            $this->sendFirebaseNotification($request->appointment_user_ids, [
+                'title' => 'You have been tagged in a comment',
+                'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
+                'click_action' => env('APP_URL') . '/appointments/' . $appointment->id . "?show_comments"
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Lead has been created successfully.');
+    }
+
+    protected function validateRequest($request)
+    {
         $request->validate([
             'owner_id' => 'required|integer',
             'sale_representative' => 'required|integer',
@@ -167,24 +212,11 @@ class LeadController extends Controller
             'address1' => 'required|string',
             'address2' => 'nullable|string',
         ]);
-        $note_added = 0;
-        $appointment_note_added = 0;
-        $appointment_has_new_comment = 0;
+    }
 
-        $note_added = $request->input('notes') ? 1 : 0;
-
-        if ($request->input('appointment_notes')) {
-            $appointment_note_added = 1;
-            $appointment_has_new_comment = 1;
-        }
-        if (isset($request->user_ids)) {
-            $userIds = implode(',', $request->user_ids);
-        }
-        if (isset($request->appointment_user_ids)) {
-            $appointmentUserIds = implode(',', $request->appointment_user_ids);
-        }
-        // Create a new lead record
-        $lead = Lead::create([
+    protected function createLead($request, $noteAdded)
+    {
+        return Lead::create([
             'company_id' => Auth::user()->company_id,
             'owner_id' => $request->input('owner_id'),
             'sale_representative' => $request->input('sale_representative'),
@@ -204,89 +236,87 @@ class LeadController extends Controller
             'country_id' => $request->input('country_id'),
             'address_1' => $request->input('address1'),
             'address_2' => $request->input('address2'),
-            'note_added' => $note_added,
+            'note_added' => $noteAdded,
+            'created_by' => Auth::user()->id,
+        ]);
+    }
+
+    protected function createAppointment($request, $leadId, $appointmentNoteAdded, $appointmentHasNewComment)
+    {
+        return Appointment::create([
+            'lead_id' => $leadId,
+            'status_id' => $request->input('status_id'),
+            'representative_user' => $request->input('call_center_representative'),
+            'appointment_date' => $request->input('appointment_date'),
+            'appointment_time' => $request->input('appointment_time'),
+            'appointment_street' => $request->input('street'),
+            'appointment_country_id' => $request->input('country_id'),
+            'appointment_state_id' => $request->input('state_id'),
+            'appointment_city_id' => $request->input('city_id'),
+            'appointment_zip' => $request->input('zip'),
+            'appointment_address_1' => $request->input('address1'),
+            'appointment_address_2' => $request->input('address2'),
+            'timeline_date' => date('Y-m-d'),
+            'note_added' => $appointmentNoteAdded,
+            'has_new_comments' => $appointmentHasNewComment,
+            'created_by' => Auth::user()->id,
+        ]);
+    }
+
+    protected function createTimelineAndNotes($request, $lead, $appointment, $noteAdded, $appointmentUserIds, $userIds)
+    {
+        Timeline::create([
+            'appointment_id' => $appointment->id,
+            'status_id' => $request->input('status_id'),
+            'timeline_date' => date('Y-m-d'),
+            'note_added' => $noteAdded,
             'created_by' => Auth::user()->id,
         ]);
 
-        if ($lead) {
-            // Create new Appointment if checked
-            if ($lead->appointment_sat && $lead->appointment_sat == 1 && $request->input('appointment_date') != null && $request->input('appointment_time') != null) {
-                $appointment = Appointment::create([
-                    'lead_id' => $lead->id,
-                    'status_id' => $request->input('status_id'),
-                    'representative_user' => $request->input('call_center_representative'),
-                    'appointment_date' => $request->input('appointment_date'),
-                    'appointment_time' => $request->input('appointment_time'),
-                    'appointment_street' => $request->input('street'),
-                    'appointment_country_id' => $request->input('country_id'),
-                    'appointment_state_id' => $request->input('state_id'),
-                    'appointment_city_id' => $request->input('city_id'),
-                    'appointment_zip' => $request->input('zip'),
-                    'appointment_address_1' => $request->input('address1'),
-                    'appointment_address_2' => $request->input('address2'),
-                    'timeline_date' => date('Y-m-d'),
-                    'note_added' => $appointment_note_added,
-                    'has_new_comments' => $appointment_has_new_comment,
-                    'created_by' => Auth::user()->id,
-                ]);
-                // Insert appointment notes
-                if ($appointment) {
-                    // Create appointment status timeline
-                    if ($appointment->id) {
-                        $timeline = Timeline::create([
-                            'appointment_id' => $appointment->id,
-                            'status_id' => $request->input('status_id'),
-                            'timeline_date' => date('Y-m-d'),
-                            'note_added' => $note_added,
-                            'created_by' => Auth::user()->id,
-                        ]);
-
-                        if ($request->input('appointment_notes') && $timeline->id) {
-                            // Insert appointment notes if any
-                            AppointmentNote::create([
-                                'appointment_id' => $appointment->id,
-                                'status_id' => $request->input('status_id'),
-                                'user_id' => Auth::user()->id,
-                                'user_ids' => $appointmentUserIds,
-                                'unread_ids' => $appointmentUserIds,
-                                'notes' => trim($request->input('appointment_notes')),
-                                'created_by' => Auth::user()->id,
-                            ]);
-                        }
-
-                        // Insert lead notes
-                        if ($request->input('notes')) {
-                            Note::create([
-                                'lead_id' => $lead->id,
-                                'user_id' => Auth::user()->id,
-                                'user_ids' => $userIds,
-                                'unread_ids' => $userIds,
-                                'notes' => trim($request->input('notes')),
-                                'created_by' => Auth::user()->id,
-                            ]);
-                        }
-                    }
-                }
-            }
+        if ($request->input('appointment_notes')) {
+            AppointmentNote::create([
+                'appointment_id' => $appointment->id,
+                'status_id' => $request->input('status_id'),
+                'user_id' => Auth::user()->id,
+                'user_ids' => $appointmentUserIds,
+                'unread_ids' => $appointmentUserIds,
+                'notes' => trim($request->input('appointment_notes')),
+                'created_by' => Auth::user()->id,
+            ]);
         }
-        // Retrieve FCM tokens for the sales representative
-        $fcmTokens = FirebaseToken::where('user_id', $request->input('sale_representative'))->pluck('fcm_token')->toArray();
 
+        if ($request->input('notes')) {
+            Note::create([
+                'lead_id' => $lead->id,
+                'user_id' => Auth::user()->id,
+                'user_ids' => $userIds,
+                'unread_ids' => $userIds,
+                'notes' => trim($request->input('notes')),
+                'created_by' => Auth::user()->id,
+            ]);
+        }
+    }
+
+    protected function sendFirebaseNotification($userIds, $notificationData)
+    {
+        // Retrieve FCM tokens for the given user IDs
+        $fcmTokensData = FirebaseToken::whereIn('user_id', $userIds)->pluck('fcm_token', 'user_id')->toArray();
+    
         // Check if there are any tokens to send notifications to
-        if (!empty($fcmTokens)) {
-            foreach ($fcmTokens as $token) {
+        if (!empty($fcmTokensData)) {
+            foreach ($fcmTokensData as $userId => $token) {
                 if ($token) {
                     FirebaseNotifications::sendNotification(
                         $token,
-                        array(
-                            'title' => 'New Lead Created',
-                            'body' => 'A new lead has been assigned to you.'
-                        )
+                        [
+                            'title' => $notificationData['title'],
+                            'body' => $notificationData['body'],
+                            'click_action' => $notificationData['click_action']
+                        ]
                     );
                 }
             }
         }
-        return redirect()->back()->with('success', 'Lead has been created successfully.');
     }
 
     /**

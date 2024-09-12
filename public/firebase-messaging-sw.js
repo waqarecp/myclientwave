@@ -28,8 +28,15 @@ messaging.onBackgroundMessage(function (payload) {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
-        icon: payload.notification.icon,
+        icon: payload.data.icon, // Use icon from data
+        data: { click_action: payload.data.click_action } // Use click_action from data
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
+    const notification = new Notification(notificationTitle, notificationOptions);
+
+    notification.onclick = function(event) {
+        event.preventDefault(); // Prevent default behavior (e.g., opening the notification in a new tab)
+        window.open(notificationOptions.data.click_action, '_blank'); // Open the URL on click
+    };
 });

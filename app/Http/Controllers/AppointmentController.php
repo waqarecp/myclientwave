@@ -135,7 +135,6 @@ class AppointmentController extends Controller
 
     public function updateAppointment(Request $request)
     {
-
         $request->validate([
             'update_lead_id' => 'integer|required',
             'update_representative_user' => 'integer|required',

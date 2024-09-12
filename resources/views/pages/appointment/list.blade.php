@@ -451,7 +451,7 @@
                 },
                 error: function(xhr) {
                     // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to save the appointment.';
+                    var errorMessage = xhr.responseJSON.error || 'Failed to update the appointment.';
 
                     Swal.fire({
                         text: errorMessage,

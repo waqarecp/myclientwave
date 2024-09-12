@@ -212,6 +212,36 @@
     </div>
     <!--end::Modal - New Address-->
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to get URL parameters
+            function getUrlParameter(name) {
+                name = name.replace(/[\[\]]/g, '\\$&');
+                const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+                const results = regex.exec(window.location.href);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            // Check if 'show_comments' exists in the URL
+            const showComments = getUrlParameter('show_comments');
+            if (showComments !== null) {
+                // Activate the "Appointment Timeline" tab
+                document.querySelector('a[data-bs-target="#kt_status_timeline"]').classList.add('active');
+                document.querySelector('a[data-bs-target="#kt_appointment_information"]').classList.remove('active');
+
+                // Show the "kt_status_timeline" content
+                document.getElementById('kt_status_timeline').classList.add('show', 'active');
+                document.getElementById('kt_appointment_information').classList.remove('show', 'active');
+
+                // Trigger the "View Comments" button click to popup the modal
+                const viewCommentsButton = document.querySelector('button[data-kt-status-id]');
+                if (viewCommentsButton) {
+                    viewCommentsButton.click();
+                }
+            }
+        });
+
         function viewStatusComments(element) {
             var status_id = $(element).attr('data-kt-status-id');
             var status_name = $(element).attr('data-kt-status-name');

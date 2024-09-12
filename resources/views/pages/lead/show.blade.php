@@ -50,7 +50,7 @@
                                     <div class="fw-bold mt-5">Phone</div>
                                     <div class="text-gray-600">{{ $lead->phone }}</div>
                                     <div class="fw-bold mt-5">Utility Company</div>
-                                    <div class="text-gray-600">{{ $lead->utilitycompany ? $lead->utilitycompany->utility_companyname : 'N/A' }}</div>
+                                    <div class="text-gray-600">{{ $lead->utilityCompany ? $lead->utilityCompany->utility_company_name : 'N/A' }}</div>
                                 </div>
                             </div>
                             <!--end::Details content-->

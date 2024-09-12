@@ -1069,10 +1069,12 @@
                             <button type="button" class="btn btn-warning" data-bs-dismiss="modal">
                                 <span class="indicator-label">Close</span>
                             </button>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" id="submit_lead" class="btn btn-primary">
                                 <span class="indicator-label">Submit Lead</span>
-                                <span class="indicator-progress">Please wait...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+
+                            <button id="wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
                             </button>
                         </div>
                         <!--end::Actions-->
@@ -1090,6 +1092,21 @@
     @push('scripts')
     <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
     <script>
+        document.getElementById('submit_lead').addEventListener('click', function (e) {
+            let form = document.getElementById('kt_modal_create_lead_form');
+
+            // Disable the submit button and show "Please wait" only after validation
+            if (form.checkValidity()) {
+                $('#submit_lead').addClass('d-none');
+                $('#wait_message').removeClass('d-none');
+
+                // Submit the form after validation
+                form.submit();
+            } else {
+                // If validation fails, trigger native form validation
+                form.reportValidity();
+            }
+        });
         function getStates(element) {
             var countryId = $(element).val();
             var stateDropdown = $('select[name="state_id"]');

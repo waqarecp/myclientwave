@@ -28,6 +28,14 @@
             </button>
         </div>
         <!--end::Submit button-->
+<!--         
+        <div class="text-gray-500 text-center fw-semibold fs-6">
+            Register Your Company
+
+            <a href="/register" class="link-primary fw-semibold">
+                Register Now
+            </a>
+        </div> -->
     </form>
     <!--end::Form-->
 </x-auth-layout>
