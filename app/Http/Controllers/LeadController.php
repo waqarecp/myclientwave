@@ -175,7 +175,7 @@ class LeadController extends Controller
         $this->sendFirebaseNotification([$request->input('sale_representative')], [
             'title' => 'New Lead Created',
             'body' => 'A new lead has been assigned to you.',
-            'click_action' => env('APP_URL') . '/leads/' . $lead->id
+            'click_action' => env('APP_URL') . 'leads/' . $lead->id
         ]);
 
         // Send notification to the appointment tagged users
@@ -183,7 +183,7 @@ class LeadController extends Controller
             $this->sendFirebaseNotification($request->appointment_user_ids, [
                 'title' => 'You have been tagged in a comment',
                 'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
-                'click_action' => env('APP_URL') . '/appointments/' . $appointment->id . "?show_comments"
+                'click_action' => env('APP_URL') . 'appointments/' . $appointment->id . "?show_comments"
             ]);
         }
 
