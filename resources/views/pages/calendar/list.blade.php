@@ -31,7 +31,7 @@
                             <div class="row">
                                 <div class="fv-row mb-7 col-md-6">
                                     <label class="required fw-semibold fs-6 mb-2">Lead</label>
-                                    <select id="lead_id" name="lead_id" onchange="getLeadAddress(this)" class="form-select form-select-solid border fw-semibold">
+                                    <select id="lead_id" name="lead_id" onchange="getLeadAddress(this)" class="form-select" data-control="select2" data-dropdown-parent="#kt_modal_appointment" data-placeholder="Select a Lead">
                                         <option value="">--- Select a Lead ---</option>
                                         @foreach($leads as $lead)
                                         <option value="{{$lead->id}}" data-street="{{$lead->street}}" data-city="{{$lead->city_id}}" data-state="{{$lead->state_id}}" data-zip="{{$lead->zip}}" data-country="{{$lead->country_id}}" data-address1="{{$lead->address_1}}" data-address2="{{$lead->address_2}}">{{$lead->first_name}} {{$lead->last_name}}</option>
@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="fv-row mb-7 col-md-6">
                                     <label class="required fw-semibold fs-6 mb-2">Call Center Representative</label>
-                                    <select name="representative_user" class="form-select form-select-solid border fw-semibold">
+                                    <select name="representative_user" class="form-select" data-control="select2" data-dropdown-parent="#kt_modal_appointment" data-placeholder="Select a User">
                                         <option value="">--- Select a User ---</option>
                                         @foreach($roles as $role)
                                         <optgroup label="{{ ucwords($role->name) }}">
@@ -139,7 +139,13 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-15">
                             <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" id="add_appointment" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                            </button>
+
+                            <button id="wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
+                            </button>
                         </div>
                         <!--end::Actions-->
                     </form>
@@ -469,40 +475,62 @@
 
             }
         }
-        $('#kt_modal_appointment_form').on('submit', function(e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var url = $('#appointmentId').val() ? "{{ route('appointment.updateAppointment') }}" : "{{ route('appointment.store') }}";
+        $(document).ready(function () {
+            $('#kt_modal_appointment_form').on('submit', function (e) {
+                e.preventDefault();
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                success: function(response) {
-                    $('#kt_modal_appointment').modal('hide');
-                    Swal.fire({
-                        text: response.success,
-                        icon: 'success',
-                        confirmButtonText: 'Close',
-                        customClass: { confirmButton: 'btn btn-light-success' }
-                    });
-                    // Reload or update your appointments list here
-                    window.location.reload();
-                },
-                error: function(xhr) {
-                    // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to save the appointment.';
+                // Check if form is valid before proceeding
+                if (this.checkValidity()) {
+                    // Hide the submit button and show "Please wait" message
+                    $('#add_appointment').addClass('d-none');
+                    $('#wait_message').removeClass('d-none');
 
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonText: 'Close',
-                        customClass: { confirmButton: 'btn btn-light-danger' }
+                    var formData = $(this).serialize();
+                    var url = $('#appointmentId').val() ? "{{ route('appointment.updateAppointment') }}" : "{{ route('appointment.store') }}";
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: formData,
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        success: function (response) {
+                            $('#kt_modal_appointment').modal('hide');
+                            Swal.fire({
+                                text: response.success,
+                                icon: 'success',
+                                confirmButtonText: 'Close',
+                                customClass: { confirmButton: 'btn btn-light-success' }
+                            });
+
+                            // Optionally reload or update the appointments list here
+                            window.location.reload();
+                        },
+                        error: function (xhr) {
+                            $('#add_appointment').removeClass('d-none');
+                            $('#wait_message').addClass('d-none');
+                            // Parse the error response if any
+                            var errorMessage = xhr.responseJSON?.error || 'Failed to save the appointment.';
+
+                            Swal.fire({
+                                text: errorMessage,
+                                icon: 'error',
+                                confirmButtonText: 'Close',
+                                customClass: { confirmButton: 'btn btn-light-danger' }
+                            });
+                        },
+                        complete: function () {
+                            // Re-enable the submit button after request completion
+                            $('#add_appointment').removeClass('d-none');
+                            $('#wait_message').addClass('d-none');
+                        }
                     });
+                } else {
+                    // If validation fails, trigger native HTML5 form validation
+                    this.reportValidity();
                 }
             });
         });
+
 
         // Function to get Lead address and set country, state, and city
         function getLeadAddress(element){

@@ -11,6 +11,7 @@ use App\Models\Role;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\Setting;
+use App\Models\StateColour;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -38,20 +39,26 @@ class CalendarController extends Controller
         }
 
         // Fetch country names from the Country model
-        $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id');
+        $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id')->toArray();
+
+         // Fetch states for assigned countries
+        $states = State::whereIn('country_id', $assignedCountryIds)->pluck('name', 'id')->toArray();
+
         // Fetch appointments with eager loading
         $appointments = Appointment::with(['lead', 'user', 'country', 'state', 'city'])
+            ->whereIn('appointments.appointment_country_id', array_keys($countries))
             ->whereNull('appointments.deleted_at')
             ->get();
 
-        // Load state colours for each appointment
-        foreach ($appointments as $appointment) {
-            $appointment->stateColour = DB::table('state_colours')
-                ->where('state_id', $appointment->appointment_state_id)
-                ->where('company_id', $companyId)
-                ->first();
-        }
+       $stateColorQuery = StateColour::where('state_colours.company_id', $companyId)
+            ->whereIn('state_colours.state_id', array_keys($states))
+            ->join('states', 'state_colours.state_id', '=', 'states.id')
+            ->whereNull('state_colours.deleted_at')
+            ->get();
 
+        foreach ($appointments as $appointment) {
+            $appointment->stateColour = $stateColorQuery->where('state_id', $appointment->appointment_state_id)->first();
+        }
         $calendarData = $appointments->map(function ($appointment) {
             $description = $appointment->has_new_comments == 1 ? 'New updates posted for this appointment' : 'No new updates';
 

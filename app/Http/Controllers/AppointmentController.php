@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\AppointmentDataTable;
+use App\Jobs\SendFirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\AppointmentNote;
@@ -14,6 +15,7 @@ use App\Models\Role;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use App\Models\FirebaseToken;
 use App\Models\Setting;
 use App\Models\Status;
 use Illuminate\Http\Request;
@@ -127,6 +129,13 @@ class AppointmentController extends Controller
         ];
         $appointment = Appointment::create($data);
         if ($appointment) {
+            Timeline::create([
+                'appointment_id' => $appointment->id,
+                'status_id' => $appointment->status_id,
+                'timeline_date' => $appointment->timeline_date,
+                'note_added' => '0',
+                'created_by' => Auth::user()->id,
+            ]);
             return response()->json(['success' => 'New Appointment created']);
         } else {
             return response()->json(['error' => 'Failed to create new Appointment'], 500);
@@ -196,7 +205,7 @@ class AppointmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Appointment $appointment)
+    public function update(Request $request)
     {
         if ($request->appointment_id) {
             $appointment = Appointment::findOrFail($request->appointment_id);
@@ -227,9 +236,19 @@ class AppointmentController extends Controller
                     ]);
                     $timelineId = $createdTimeline->id;
                 } else {
-                    $timeline = Timeline::findOrFail($timelineId);
-                    $timeline->timeline_date = $request->timeline_date;
-                    $timeline->save();
+                    if ($timelineId) {
+                        $timeline = Timeline::findOrFail($timelineId);
+                        $timeline->timeline_date = $request->timeline_date;
+                        $timeline->save();
+                    }else {
+                        $createdTimeline = Timeline::create([
+                            'appointment_id' => $request->appointment_id,
+                            'status_id' => $request->status_id,
+                            'timeline_date' => $request->timeline_date,
+                            'created_by' => Auth::user()->id,
+                        ]);
+                        $timelineId = $createdTimeline->id;
+                    }
                 }
                 if (!empty($uploadedFiles)) {
                     foreach ($uploadedFiles as $image_name) {
@@ -254,7 +273,7 @@ class AppointmentController extends Controller
         //
     }
 
-    public function updateTimeline(Request $request)
+    public function viewTimeline(Request $request)
     {
         if ($request->appointment_id) {
             $users = User::where('deleted_at', null)
@@ -268,16 +287,10 @@ class AppointmentController extends Controller
             $appointment = Appointment::where('deleted_at', null)
                 ->where('id', $request->appointment_id)
                 ->with('lead')
-                ->with('timeline')
-                ->with('appointmentNotes')
                 ->first();
-            $appointmentNotes = AppointmentNote::where('appointment_id', $request->appointment_id)
+            $allAppointmentNotes = AppointmentNote::where('appointment_id', $request->appointment_id)
                 ->whereNull('deleted_at')
                 ->get();
-            $allAppointmentNotes = [];
-            foreach ($appointmentNotes as $note) {
-                $allAppointmentNotes[$note->status_id][] = $note;
-            }
             return view('pages.appointment.appointment-data', compact('appointment', 'statuses', 'users', 'allAppointmentNotes'))->render();
         }
     }
@@ -289,15 +302,14 @@ class AppointmentController extends Controller
             'appointment_notes' => 'required|string',
         ]);
         if ($request->appointment_notes && $request->appointment_notes != Null) {
-            if (isset($request->user_ids) && $request->user_ids != null) {
-                $userIds = implode(',', $request->user_ids);
-            }
+            $implodedUserIds = $request->user_ids ? implode(',', $request->user_ids) : null;
+            $userIds = $request->user_ids ?: null;
             AppointmentNote::create([
                 'appointment_id' => $request->appointment_id,
                 'status_id' => $request->current_status_id,
                 'user_id' => Auth::user()->id,
-                'user_ids' => $userIds ?: null,
-                'unread_ids' => $userIds ?: null,
+                'user_ids' => $implodedUserIds,
+                'unread_ids' => $implodedUserIds,
                 'notes' => $request->appointment_notes,
                 'created_by' => Auth::user()->id,
             ]);
@@ -306,9 +318,23 @@ class AppointmentController extends Controller
             $appointment->has_new_comments = 1;
             $appointment->save();
 
+            // Send notification to the appointment tagged users
+            if ($userIds && isset($request->nofity)) {
+                $this->sendFirebaseNotification($userIds, [
+                    'title' => 'You have been tagged in a comment',
+                    'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
+                    'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
+                ]);
+            }
             return response()->json(['success' => true, 'message' => 'New Comment Added']);
         }
         return response()->json(['failed' => true, 'message' => 'Failed to Add Comment']);
+    }
+
+    protected function sendFirebaseNotification($userIds, $notificationData)
+    {
+        // Dispatch the job for sending Firebase notifications
+        SendFirebaseNotification::dispatch($userIds, $notificationData);
     }
 
     public function markAsRead(Request $request)

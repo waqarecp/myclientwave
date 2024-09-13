@@ -13,6 +13,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontendController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -28,10 +29,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [FrontendController::class, 'index']);
+Route::get('/register-company', [FrontendController::class, 'registerCompany'])->name('register-company');
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboards Routes
-    Route::get('/', [DashboardController::class, 'index']);
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard', [DashboardController::class, 'handlePostRequest'])->name('dashboard');
@@ -75,7 +77,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/store', [AppointmentController::class, 'store'])->name('appointment.store');
     Route::post('/appointments/update-appointment', [AppointmentController::class, 'updateAppointment'])->name('appointment.updateAppointment');
     Route::post('/appointments/get-address', [AppointmentController::class, 'getLeadAddress'])->name('appointment.getLeadAddress');
-    Route::post('/appointments/update-timeline', [AppointmentController::class, 'updateTimeline'])->name('appointments.updateTimeline');
+    Route::post('/appointments/view-timeline', [AppointmentController::class, 'viewTimeline'])->name('appointments.viewTimeline');
+    Route::post('/appointments/update-timeline', [AppointmentController::class, 'update'])->name('appointments.updateTimeline');
     Route::post('/appointments/mark-as-read', [AppointmentController::class, 'markAsRead'])->name('appointments.markAsRead');
     Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');
     Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');

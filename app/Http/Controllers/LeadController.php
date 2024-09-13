@@ -10,10 +10,8 @@ use App\Models\Appointment;
 use App\Models\AppointmentNote;
 use App\Models\Note;
 use App\Models\User;
-use App\Models\FirebaseToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\FirebaseNotifications;
 use App\Models\Company;
 use App\Models\Country;
 use App\Models\State;
@@ -23,6 +21,7 @@ use App\Models\Role;
 use App\Models\Setting;
 use App\Models\UtilityCompany;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\SendFirebaseNotification;
 
 class LeadController extends Controller
 {
@@ -299,24 +298,8 @@ class LeadController extends Controller
 
     protected function sendFirebaseNotification($userIds, $notificationData)
     {
-        // Retrieve FCM tokens for the given user IDs
-        $fcmTokensData = FirebaseToken::whereIn('user_id', $userIds)->pluck('fcm_token', 'user_id')->toArray();
-    
-        // Check if there are any tokens to send notifications to
-        if (!empty($fcmTokensData)) {
-            foreach ($fcmTokensData as $userId => $token) {
-                if ($token) {
-                    FirebaseNotifications::sendNotification(
-                        $token,
-                        [
-                            'title' => $notificationData['title'],
-                            'body' => $notificationData['body'],
-                            'click_action' => $notificationData['click_action']
-                        ]
-                    );
-                }
-            }
-        }
+        // Dispatch the job for sending Firebase notifications
+        SendFirebaseNotification::dispatch($userIds, $notificationData);
     }
 
     /**

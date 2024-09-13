@@ -1099,7 +1099,6 @@
             if (form.checkValidity()) {
                 $('#submit_lead').addClass('d-none');
                 $('#wait_message').removeClass('d-none');
-
                 // Submit the form after validation
                 form.submit();
             } else {

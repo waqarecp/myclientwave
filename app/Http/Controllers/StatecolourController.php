@@ -40,6 +40,7 @@ class StateColourController extends Controller
 
         // Retrieve leads based on these states
         $stateColorQuery = StateColour::where('state_colours.company_id', $companyId) // Specify the table for company_id
+            ->whereIn('state_colours.state_id', array_keys($states))
             ->join('states', 'state_colours.state_id', '=', 'states.id')  // Join with states table
             ->join('users', 'state_colours.created_by', '=', 'users.id')  // Join with users table
             ->whereNull('state_colours.deleted_at');
@@ -87,19 +88,32 @@ class StateColourController extends Controller
             'color_code' => 'required',
             'state_id' => 'required|int',
         ]);
+
+        // Check if a StateColour already exists for the given state and company
+        $existingStateColour = StateColour::where('company_id', Auth::user()->company_id)
+            ->where('state_id', $request->state_id)
+            ->first();
+
+        if ($existingStateColour) {
+            return response()->json(['error' => 'State Colour already exists for the selected state.'], 400);
+        }
+
         $data = [
             'company_id' => Auth::user()->company_id,
             'state_id' => $request->state_id,
             'color_code' => $request->color_code,
             'created_by' => Auth::user()->id,
         ];
+
         $stateColour = StateColour::create($data);
+
         if ($stateColour) {
             return response()->json(['success' => 'New State Colour created']);
         } else {
             return response()->json(['error' => 'Failed to create new State Colour'], 500);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -126,17 +140,30 @@ class StateColourController extends Controller
             'update_color_code' => 'required',
             'update_state_id' => 'required|int',
         ]);
+
         if ($request->state_colour_id) {
+            // Check if another StateColour exists for the same state and company (excluding the current one)
+            $existingStateColour = StateColour::where('company_id', Auth::user()->company_id)
+                ->where('state_id', $request->update_state_id)
+                ->where('id', '!=', $request->state_colour_id)
+                ->first();
+
+            if ($existingStateColour) {
+                return response()->json(['error' => 'State Colour already exists for the selected state.'], 400);
+            }
+
             $stateColour = StateColour::findOrFail($request->state_colour_id);
             $stateColour->state_id = $request->update_state_id;
             $stateColour->color_code = $request->update_color_code;
+
             if ($stateColour->save()) {
                 return response()->json(['success' => 'State Colour updated successfully']);
-            }else {
+            } else {
                 return response()->json(['error' => 'Failed to update State Colour'], 500);
             }
         }
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -69,6 +69,7 @@
                             <h2>{{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</h2>
                             <div class="fs-6 fw-semibold text-muted">Appointment status timeline</div>
                         </div>
+                        <button type="button" class="btn btn-sm btn-primary align-self-center text-nowrap d-none">Show All Comments</button>
                         <!--end::Card title-->
                     </div>
                     <div class="card-body">
@@ -235,9 +236,10 @@
                 document.getElementById('kt_appointment_information').classList.remove('show', 'active');
 
                 // Trigger the "View Comments" button click to popup the modal
-                const viewCommentsButton = document.querySelector('button[data-kt-status-id]');
-                if (viewCommentsButton) {
-                    viewCommentsButton.click();
+                const buttons = document.querySelectorAll('button[data-kt-status-id]');
+                if (buttons.length > 0) {
+                    const lastButton = buttons[buttons.length - 1];
+                    lastButton.click();
                 }
             }
         });

@@ -9,7 +9,7 @@
     @endsection
 
     <!--begin::Content-->
-    <div class="flex-lg-row-fluid ms-lg-15">
+    <div class="">
         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8">
             <li class="nav-item">
                 <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" data-bs-target="#kt_lead_information" href="javascript:void(0)">Lead information</a>
@@ -114,16 +114,16 @@
                         </div>
                         <!--end::Card title-->
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-2">
                         <table class="table">
                             <thead>
                                 <tr class="bg-light-primary">
                                     <th>S.No</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
+                                    <th width="12%">Date Time</th>
                                     <th>Address</th>
                                     <th>Created By</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,8 +131,7 @@
                                 @foreach ($appointments as $appointment)
                                 <tr>
                                     <td>{{$count++}}</td>
-                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_date)->format('d F Y')}}</td>
-                                    <td>{{\Carbon\Carbon::parse($appointment->appointment_time)->format('H:i')}}</td>
+                                    <td><b>{{\Carbon\Carbon::parse($appointment->appointment_date)->format('d M Y')}} {{\Carbon\Carbon::parse($appointment->appointment_time)->format('H:i')}}</b></td>
                                     <td><small>{{(implode(', ', array_filter([
                                             optional($appointment->country)->name,
                                             optional($appointment->state)->name,
@@ -149,7 +148,18 @@
                                     <td>
                                         <span class="badge rounded-pill w-15px h-15px me-1 d-inline-block" style="background-color: {{ $appointment->status->color_code }};"></span>
                                         {{$appointment->status?$appointment->status->status_name:'N/A'}}
-                                        <button class="btn btn-sm btn-light-primary p-2 flaot-end" title="View Comments" data-kt-appointment-id="{{ $appointment->id }}" onclick="updateAppointmentTimeline('{{ $appointment->id }}')"><i class="fa fa-comments"></i></button>
+                                    </td>
+                                    <td>
+                                    <a href="#" class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions<i class="ki-duotone ki-down fs-5 ms-1"></i></a>
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4" data-kt-menu="true">
+                                        @if(auth()->user()->can('read appointment'))
+                                            <div class="menu-item px-3">
+                                                <a href="{{ route('appointments.show', $appointment->id) }}" class="menu-link px-3">View Details</a>
+                                            </div>
+                                            <div class="menu-item px-3">
+                                                <a title="View appointment comments" href="javascript:void(0)" data-kt-appointment-id="{{ $appointment->id }}" onclick="viewAppointmentTimeline('{{ $appointment->id }}')" class="menu-link px-3">Show Comments</a>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -188,9 +198,9 @@
     </div>
     <!--end::Modal - New Address-->
 <script>
-    function updateAppointmentTimeline(appointment_id, activeCommentsTab = false) {
+    function viewAppointmentTimeline(appointment_id, activeCommentsTab = false) {
         $.ajax({
-            url: "{{ route('appointments.updateTimeline') }}", // Use the URL from the data attribute
+            url: "{{ route('appointments.viewTimeline') }}", // Use the URL from the data attribute
             method: 'post',
             data: {
                 appointment_id: appointment_id,

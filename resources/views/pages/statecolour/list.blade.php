@@ -141,8 +141,12 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-15">
                             <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
-                            <button type="submit" class="btn btn-primary">
-                                <span class="indicator-label">Create</span>
+                            <button type="submit" id="add_state_color" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                            </button>
+
+                            <button id="wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
                             </button>
                         </div>
                         <!--end::Actions-->
@@ -207,8 +211,12 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-15">
                             <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
-                            <button type="submit" class="btn btn-primary">
-                                <span class="indicator-label">Update</span>
+                            <button type="submit" id="update_state_color" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                            </button>
+
+                            <button id="update_wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
                             </button>
                         </div>
                         <!--end::Actions-->
@@ -287,84 +295,105 @@
 
         $('#kt_modal_add_state_colour_form').on('submit', function(e) {
             e.preventDefault();
-            var formData = $(this).serialize();
-            var url = "{{ route('state-colour.store') }}";
+            if (this.checkValidity()) {
+                // Hide the submit button and show "Please wait" message
+                $('#add_state_color').addClass('d-none');
+                $('#wait_message').removeClass('d-none');
+                var formData = $(this).serialize();
+                var url = "{{ route('state-colour.store') }}";
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#kt_modal_add_state_colour').modal('hide');
-                    Swal.fire({
-                        text: response.success,
-                        icon: 'success',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-success'
-                        }
-                    });
-                    // Reload or update your state colour list here
-                    location.reload();
-                },
-                error: function(xhr) {
-                    // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to save the state colour.';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#kt_modal_add_state_colour').modal('hide');
+                        Swal.fire({
+                            text: response.success,
+                            icon: 'success',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-success'
+                            }
+                        });
+                        // Reload or update your state colour list here
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        // Show submit button again and hide "Please wait" message
+                        $('#add_state_color').removeClass('d-none');
+                        $('#wait_message').addClass('d-none');
+                        // Parse the error response if any
+                        var errorMessage = xhr.responseJSON.error || 'Failed to save the state colour.';
 
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-danger'
-                        }
-                    });
-                }
-            });
+                        Swal.fire({
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-danger'
+                            }
+                        });
+                    }
+                });
+            } else {
+                // If validation fails, trigger native HTML5 form validation
+                this.reportValidity();
+            }
         });
 
         $('#kt_modal_update_state_colour_form').on('submit', function(e) {
             e.preventDefault();
-            var formData = $(this).serialize();
-            var url = "{{ route('state-colour.update') }}";
+            if (this.checkValidity()) {
+                // Hide the submit button and show "Please wait" message
+                $('#update_state_color').addClass('d-none');
+                $('#update_wait_message').removeClass('d-none');
+                var formData = $(this).serialize();
+                var url = "{{ route('state-colour.update') }}";
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#kt_modal_update_state_colour').modal('hide');
-                    Swal.fire({
-                        text: response.success,
-                        icon: 'success',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-success'
-                        }
-                    });
-                    // Reload or update your state colour list here
-                    location.reload();
-                },
-                error: function(xhr) {
-                    // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to update the state colour.';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#kt_modal_update_state_colour').modal('hide');
+                        Swal.fire({
+                            text: response.success,
+                            icon: 'success',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-success'
+                            }
+                        });
+                        // Reload or update your state colour list here
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        $('#update_state_color').removeClass('d-none');
+                        $('#update_wait_message').addClass('d-none');
+                        // Parse the error response if any
+                        var errorMessage = xhr.responseJSON.error || 'Failed to update the state colour.';
 
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-danger'
-                        }
-                    });
-                }
-            });
+                        Swal.fire({
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-danger'
+                            }
+                        });
+                    }
+                });
+            } else {
+                // If validation fails, trigger native HTML5 form validation
+                this.reportValidity();
+            }
         });
 
         function update_state_color_modal(element) {

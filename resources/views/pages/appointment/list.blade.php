@@ -39,6 +39,17 @@
         </div>
         <!--end::Card header-->
         <!--begin::Card body-->
+        @if (session('success'))
+        <div class="alert alert-success text-center">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if (session('error'))
+        <div class="alert alert-danger text-center">
+            {{ session('error') }}
+        </div>
+        @endif
         <div class="card-body py-4">
             <!--begin::Table-->
             <div class="table-responsive">
@@ -149,7 +160,7 @@
                                 </div>
                                 <div class="fv-row mb-7 col-md-6">
                                     <label class="required fw-semibold fs-6 mb-2">Appointment Time</label>
-                                    <input placeholder="Enter Appointment Time" type="time" id="appointment_time" name="appointment_time" class="form-control form-control-solid border mb-3 mb-lg-0" />
+                                    <input placeholder="Enter Appointment Time" type="time" id="appointment_time" name="appointment_time" class="form-control form-control-solid border mb-3 mb-lg-0"  required/>
                                     @error('appointment_time')
                                     <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -221,7 +232,13 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-15">
                             <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" id="add_appointment" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                            </button>
+
+                            <button id="wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
+                            </button>
                         </div>
                         <!--end::Actions-->
                     </form>
@@ -353,7 +370,13 @@
                         <!--begin::Actions-->
                         <div class="text-center pt-15">
                             <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" id="update_appointment" class="btn btn-primary">
+                                <span class="indicator-label">Update</span>
+                            </button>
+
+                            <button id="update_wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
+                            </button>
                         </div>
                         <!--end::Actions-->
                     </form>
@@ -383,86 +406,117 @@
             });
         });
 
+        $('#kt_modal_add_appointment, #kt_modal_update_appointment').on('hidden.bs.modal', function() {
+            // window.location.reload();
+            $('#kt_modal_add_appointment_form').trigger('reset');
+            $('#kt_modal_update_appointment_form').trigger('reset');
+        });
+        
+        $('#kt_modal_update_appointment_timeline').on('hidden.bs.modal', function() {
+            window.location.reload();
+        });
         $('#kt_modal_add_appointment_form').on('submit', function(e) {
             e.preventDefault();
-            var formData = $(this).serialize();
-            var url = "{{ route('appointment.store') }}";
+            // Check if form is valid before proceeding
+            if (this.checkValidity()) {
+                // Hide the submit button and show "Please wait" message
+                $('#add_appointment').addClass('d-none');
+                $('#wait_message').removeClass('d-none');
+                var formData = $(this).serialize();
+                var url = "{{ route('appointment.store') }}";
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#kt_modal_add_appointment').modal('hide');
-                    Swal.fire({
-                        text: response.success,
-                        icon: 'success',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-success'
-                        }
-                    });
-                    // Reload or update your appointments list here
-                    location.reload();
-                },
-                error: function(xhr) {
-                    // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to save the appointment.';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#kt_modal_add_appointment').modal('hide');
+                        Swal.fire({
+                            text: response.success,
+                            icon: 'success',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-success'
+                            }
+                        });
+                        // Reload or update your appointments list here
+                        location.reload();
+                    },
+                    error: function(xhr) {    
+                        $('#add_appointment').removeClass('d-none');
+                        $('#wait_message').addClass('d-none');
+                        // Parse the error response if any
+                        var errorMessage = xhr.responseJSON.error || 'Failed to save the appointment.';
 
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-danger'
-                        }
-                    });
-                }
-            });
+                        Swal.fire({
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-danger'
+                            }
+                        });
+                    }
+                });
+            } else {
+                // If validation fails, trigger native HTML5 form validation
+                this.reportValidity();
+            }
         });
 
         $('#kt_modal_update_appointment_form').on('submit', function(e) {
             e.preventDefault();
-            var formData = $(this).serialize();
-            var url = "{{ route('appointment.updateAppointment') }}";
+            // Check if form is valid before proceeding
+            if (this.checkValidity()) {
+                // Hide the submit button and show "Please wait" message
+                $('#update_appointment').addClass('d-none');
+                $('#update_wait_message').removeClass('d-none');
+                var formData = $(this).serialize();
+                var url = "{{ route('appointment.updateAppointment') }}";
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    $('#kt_modal_update_appointment').modal('hide');
-                    Swal.fire({
-                        text: response.success,
-                        icon: 'success',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-success'
-                        }
-                    });
-                    // Reload or update your appointments list here
-                    location.reload();
-                },
-                error: function(xhr) {
-                    // Parse the error response if any
-                    var errorMessage = xhr.responseJSON.error || 'Failed to update the appointment.';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#kt_modal_update_appointment').modal('hide');
+                        Swal.fire({
+                            text: response.success,
+                            icon: 'success',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-success'
+                            }
+                        });
+                        // Reload or update your appointments list here
+                        location.reload();
+                    },
+                    error: function(xhr) { 
+                        $('#update_appointment').removeClass('d-none');
+                        $('#update_wait_message').addClass('d-none');
+                        // Parse the error response if any
+                        var errorMessage = xhr.responseJSON.error || 'Failed to update the appointment.';
 
-                    Swal.fire({
-                        text: errorMessage,
-                        icon: 'error',
-                        confirmButtonText: 'Close',
-                        customClass: {
-                            confirmButton: 'btn btn-light-danger'
-                        }
-                    });
-                }
-            });
+                        Swal.fire({
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-danger'
+                            }
+                        });
+                    }
+                });
+            } else {
+                // If validation fails, trigger native HTML5 form validation
+                this.reportValidity();
+            }
         });
 
         function getLeadAddress(element) {
@@ -775,9 +829,9 @@
             dropdownParent: $('#kt_modal_update_appointment')
         });
 
-        function updateAppointmentTimeline(appointment_id, activeCommentsTab = false) {
+        function viewAppointmentTimeline(appointment_id, activeCommentsTab = false) {
             $.ajax({
-                url: "{{ route('appointments.updateTimeline') }}", // Use the URL from the data attribute
+                url: "{{ route('appointments.viewTimeline') }}", // Use the URL from the data attribute
                 method: 'post',
                 data: {
                     appointment_id: appointment_id,

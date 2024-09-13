@@ -28,14 +28,20 @@
             </button>
         </div>
         <!--end::Submit button-->
-<!--         
+        
+        <div class="text-gray-500 text-center fw-semibold fs-6">
+            <a href="/" class="btn btn-sm btn-primary fw-semibold">
+                Go To Website
+            </a>
+        </div>
+        <br>
         <div class="text-gray-500 text-center fw-semibold fs-6">
             Register Your Company
 
-            <a href="/register" class="link-primary fw-semibold">
+            <a href="{{route('register-company')}}" class="btn btn-sm btn-secondary flaot-end fw-semibold">
                 Register Now
             </a>
-        </div> -->
+        </div>
     </form>
     <!--end::Form-->
 </x-auth-layout>
