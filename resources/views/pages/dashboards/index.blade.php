@@ -963,7 +963,7 @@
                                             </div>
                                             <div class="col-md-4 mt-3">
                                                 <label class="required fs-6 fw-semibold ">Address Line 1</label>
-                                                <input type="text" class="form-control" name="address1" requried />
+                                                <input type="text" class="form-control" name="address1" required />
                                                 @error('address1')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -1295,13 +1295,19 @@
             // Initially hide the appointment date and time fields
             $('.appointment_fields').hide();
 
-            // Show/Hide appointment date and time based on checkbox
             $('#appointment_sat').change(function() {
                 $('input[name="appointment_date"]').val('');
+                $('input[name="appointment_date"]').attr('required', true);
                 $('input[name="appointment_time"]').val('');
+                $('input[name="appointment_time"]').attr('required', true);
+                
                 if ($(this).is(':checked')) {
+                    $('input[name="appointment_date"]').attr('required', true);
+                    $('input[name="appointment_time"]').attr('required', true);
                     $('.appointment_fields').show();
                 } else {
+                    $('input[name="appointment_date"]').removeAttr('required');
+                    $('input[name="appointment_time"]').removeAttr('required');
                     $('.appointment_fields').hide();
                 }
             });

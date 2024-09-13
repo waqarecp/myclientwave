@@ -202,7 +202,7 @@ class LeadController extends Controller
             'utility_company_id' => 'nullable|integer',
             'call_center_representative' => 'nullable|integer',
             'lead_source_id' => 'required|integer',
-            'appointment_sat' => 'nullable|boolean',
+            'appointment_sat' => 'nullable',
             'street' => 'nullable|string|max:255',
             'country_id' => 'required|int',
             'state_id' => 'required|int',
@@ -210,6 +210,10 @@ class LeadController extends Controller
             'zip' => 'nullable|string|max:20',
             'address1' => 'required|string',
             'address2' => 'nullable|string',
+        ]);
+        $request->validate([
+            'appointment_date' => 'required_if:appointment_sat,1',
+            'appointment_time' => 'required_if:appointment_sat,1',
         ]);
     }
 
