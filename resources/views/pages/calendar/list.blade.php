@@ -11,8 +11,16 @@
     @section('breadcrumbs')
     {{ Breadcrumbs::render('calendars.index') }}
     @endsection
+    <style>
+        .fc .fc-timegrid-event .fc-event-main {
+            padding: 0rem .25rem;
+        }
+        .fc-v-event .fc-event-title-container {
+            margin-top: -2px;
+        }
+    </style>
     <!--begin::Card header-->
-    <div class="card-header border-0 pt-6">
+    <div class="card-header border-0">
     <!--begin::Modal - Add Appointment-->
     <div class="modal fade" id="kt_modal_appointment" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered mw-750px">
@@ -160,7 +168,7 @@
     <!--begin::Content-->
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <!--begin::Content container-->
-        <div id="kt_app_content_container" class="app-container container-xxl">
+        <div id="kt_app_content_container" class="">
             <!--begin::Card-->
             <div class="card">
                 <!--begin::Card header-->

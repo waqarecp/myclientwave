@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendFirebaseNotification implements ShouldQueue
 {
@@ -41,9 +42,9 @@ class SendFirebaseNotification implements ShouldQueue
  
         // Check if there are any tokens to send notifications to
         if (!empty($fcmTokensData)) {
-            foreach ($fcmTokensData as $token) {
+            foreach ($fcmTokensData as $userId => $token) {
                 if ($token) {
-                    FirebaseNotifications::sendNotification(
+                    $response = FirebaseNotifications::sendNotification(
                         $token,
                         [
                             'title' => $this->notificationData['title'],
@@ -51,6 +52,12 @@ class SendFirebaseNotification implements ShouldQueue
                             'click_action' => $this->notificationData['click_action']
                         ]
                     );
+                    
+                    // Check for 'UNREGISTERED' error and remove the token
+                    if (isset($response['error']) && $response['error']['status'] === 'NOT_FOUND') {
+                        FirebaseToken::where('fcm_token', $token)->delete();
+                        Log::info("Deleted unregistered FCM token {$token}");
+                    }
                 }
             }
         }

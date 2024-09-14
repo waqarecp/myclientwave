@@ -72,14 +72,13 @@ class LoginRequest extends FormRequest
             $company = Company::where('id', $authenticatedUser->company_id)->first();
             // Set session variables
             session(['company' => $company]);
-            session(['fcm_token' => $this->input('fcm_token')]);
-             // Save the FCM token
-             if ($this->has('fcm_token') && $this->input('fcm_token')) {
-                FirebaseToken::create([
-                    'user_id' => $authenticatedUser->id,
-                    'fcm_token' => $this->input('fcm_token'),
-                    'ip_address' => request()->ip(),
-                ]);
+            // Save the FCM token
+            if ($this->has('fcm_token') && $this->input('fcm_token')) {
+                FirebaseToken::updateOrCreate(
+                    ['user_id' => $authenticatedUser->id, 'fcm_token' => $this->input('fcm_token')],
+                    ['ip_address' => request()->ip()]
+                );
+                session(['fcm_token' => $this->input('fcm_token')]);
             }
         }
 
