@@ -16,7 +16,7 @@
             padding: 0rem .25rem;
         }
         .fc-v-event .fc-event-title-container {
-            margin-top: -2px;
+            margin-top: -3px;
         }
     </style>
     <!--begin::Card header-->
