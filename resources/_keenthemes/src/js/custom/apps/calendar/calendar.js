@@ -149,6 +149,10 @@ var initCalendarApp = function () {
                 // Optionally, set a default color if colorCode is not provided
                 info.el.style.backgroundColor = '#fff';  // Default background color
                 info.el.style.border = '1px solid #ccc';      // Default border color
+                const childElement = info.el.querySelector('.fc-event-main');
+                if (childElement) {
+                    childElement.style.color = '#000';  // Apply the style
+                }
             }
         }
     });
@@ -750,7 +754,7 @@ var initCalendarApp = function () {
             initValidator();
             initDatepickers();
             // handleEditButton();
-            handleAddButton();
+            // handleAddButton();
             handleDeleteEvent();
             handleCancelButton();
             handleCloseButton();

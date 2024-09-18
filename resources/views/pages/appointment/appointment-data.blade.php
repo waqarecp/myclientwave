@@ -113,7 +113,7 @@
                                     <input type="hidden" name="lead_id" id="lead_id" value="{{ $appointment->lead_id }}">
                                     <div class="fv-row mb-3">
                                         <label class="fw-semibold m-4">Tag users in comment</label>
-                                        <label for="notify" class="btn btn-sm btn-secondary border p-2 float-end m-2"><input type="checkbox" name="nofity" id="notify" value="1"> Notify Tagged Users</label>
+                                        <label for="notify" class="btn btn-sm btn-secondary border p-2 float-end m-2"><input type="checkbox" name="nofity" id="notify" value="1" checked> Notify Tagged Users</label>
                                         <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
                                             <option value="all">Tag All Users</option>
                                             @foreach($users as $userId => $userName)
