@@ -340,7 +340,6 @@ class AppointmentController extends Controller
     public function markAsRead(Request $request)
     {
         $appointmentNote = AppointmentNote::where('id', $request->noteId)->first();
-
         $unread_ids = $appointmentNote->unread_ids ? explode(',', $appointmentNote->unread_ids) : [];
 
         if (($key = array_search(Auth::user()->id, $unread_ids)) !== false) {

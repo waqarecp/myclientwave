@@ -142,41 +142,41 @@
                     <div>
                         <div id="collapseViewComment" class="show active-timeline-comments" data-bs-parent="#accordion_view_comments">
                             @if (count($allAppointmentNotes) > 0)
-                                @foreach ($allAppointmentNotes as $comment)
-                                    <?php
-                                    $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
-                                    $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
-                                    ?>
-                                    <div class="ms-3">
-                                        <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><i>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</i></a>
-                                        <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
-                                    </div>
-                                    <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
-                                        <div class="d-inline-block">{!! $comment->notes !!}</div>
-                                        @if (in_array(Auth::user()->id, $unreadUsers))
-                                        <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
-                                        @endif
-                                    </div>
-                                    <div class="mt-2">
-                                        @if (in_array(Auth::user()->id, $unreadUsers))
-                                            <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
-                                                <i class="ki-duotone ki-check fs-3"></i> Mark as read
-                                            </a>
-                                        @endif
-                                        <div class="float-end">
-                                            @if($taggedUsers)
-                                                <small class="text-muted">Tagged Users </small>
-                                                @foreach ($taggedUsers as $taggedUser)
-                                                    <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
-                                                @endforeach
-                                            @endif
-                                        </div><br><br>
-                                    </div>
-                                @endforeach
+                            @foreach ($allAppointmentNotes as $comment)
+                            <?php
+                            $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
+                            $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
+                            ?>
+                            <div class="ms-3">
+                                <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><i>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</i></a>
+                                <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
+                            </div>
+                            <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
+                                <div class="d-inline-block">{!! $comment->notes !!}</div>
+                                @if (in_array(Auth::user()->id, $unreadUsers))
+                                <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
+                                @endif
+                            </div>
+                            <div class="mt-2">
+                                @if (in_array(Auth::user()->id, $unreadUsers))
+                                <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
+                                    <i class="ki-duotone ki-check fs-3"></i> Mark as read
+                                </a>
+                                @endif
+                                <div class="float-end">
+                                    @if($taggedUsers)
+                                    <small class="text-muted">Tagged Users </small>
+                                    @foreach ($taggedUsers as $taggedUser)
+                                    <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
+                                    @endforeach
+                                    @endif
+                                </div><br><br>
+                            </div>
+                            @endforeach
                             @else
-                                <div class="alert alert-danger">
-                                    <h4 class="text-center">There are no comments added for this appointment! Thank you</h4>
-                                </div>
+                            <div class="alert alert-danger">
+                                <h4 class="text-center">There are no comments added for this appointment! Thank you</h4>
+                            </div>
                             @endif
                         </div>
                     </div>
@@ -185,108 +185,97 @@
             </div>
         </div>
     </div>
-    <script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
-    <script>
-        $(document).ready(function() {
+</div>
+<script src="{{asset('assets/js/ckeditor/ckeditor.js')}}"></script>
+<script>
+    $(document).ready(function() {
+        $('#status_id').select2({
+            templateResult: formatState,
+            templateSelection: formatState,
+            dropdownParent: $('#update_followup') // Ensure dropdown appends to modal
+        });
+
+        // Function to format Select2 options with color
+        function formatState(state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' + $(state.element).data('color') + '"></span>' + state.text + '</span>'
+            );
+            return $state;
+        }
+
+        // Re-initialize Select2 when the modal is shown
+        $('#update_followup').on('shown.bs.modal', function() {
             $('#status_id').select2({
                 templateResult: formatState,
                 templateSelection: formatState,
                 dropdownParent: $('#update_followup') // Ensure dropdown appends to modal
             });
-
-            // Function to format Select2 options with color
-            function formatState(state) {
-                if (!state.id) {
-                    return state.text;
-                }
-                var $state = $(
-                    '<span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color:' + $(state.element).data('color') + '"></span>' + state.text + '</span>'
-                );
-                return $state;
-            }
-
-            // Re-initialize Select2 when the modal is shown
-            $('#update_followup').on('shown.bs.modal', function() {
-                $('#status_id').select2({
-                    templateResult: formatState,
-                    templateSelection: formatState,
-                    dropdownParent: $('#update_followup') // Ensure dropdown appends to modal
-                });
-            });
         });
-        CKEDITOR.replace('appointment_notes', {
-            height: '150px',
-        });
-        $('.select2').select2({
-            placeholder: "Select users to tag", // Add placeholder
-            allowClear: true // Allows clearing of the selection
-        });
+    });
+    CKEDITOR.replace('appointment_notes', {
+        height: '150px',
+    });
+    $('.select2').select2({
+        placeholder: "Select users to tag", // Add placeholder
+        allowClear: true // Allows clearing of the selection
+    });
 
-        function selectAll(element) {
-            if ($(element).val() == 'all') {
-                $("#tag_users option").each(function() {
-                    if ($(this).val() !== 'all') { // Exclude the option with value 'all'
-                        $(this).prop("selected", true);
-                    } else {
-                        $(this).prop("selected", false);
-                    }
-                });
-                $("#tag_users").trigger("change");
-            }
-        }
-
-        function confirmSubmit(element) {
-            var button = $(element);
-            $(button).attr('type', 'button');
-            Swal.fire({
-                title: 'Update Appointment Status',
-                text: "Are you sure to update this appointment status?",
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, update it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(button).attr('type', 'submit');
-                    $("#formUpdateAppointmentTimeline").submit();
+    function selectAll(element) {
+        if ($(element).val() == 'all') {
+            $("#tag_users option").each(function() {
+                if ($(this).val() !== 'all') { // Exclude the option with value 'all'
+                    $(this).prop("selected", true);
+                } else {
+                    $(this).prop("selected", false);
                 }
             });
+            $("#tag_users").trigger("change");
         }
+    }
 
-        $('#btnAddComment').on('click', function(e) {
-            e.preventDefault();
+    function confirmSubmit(element) {
+        var button = $(element);
+        $(button).attr('type', 'button');
+        Swal.fire({
+            title: 'Update Appointment Status',
+            text: "Are you sure to update this appointment status?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, update it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(button).attr('type', 'submit');
+                $("#formUpdateAppointmentTimeline").submit();
+            }
+        });
+    }
 
-            // Fetch the button and form data
-            var formData = new FormData($('#AddLeadNote')[0]);
-            var url = $(this).data('url');
-            formData.append('appointment_notes', CKEDITOR.instances.appointment_notes.getData());
+    $('#btnAddComment').on('click', function(e) {
+        e.preventDefault();
 
-            // Perform the AJAX request
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
-                },
-                success: function(response) {
-                    if (response.success) {
-                        viewAppointmentTimeline($("#new_comment_appointment_id").val(), true);
-                    } else {
-                        Swal.fire({
-                            text: 'Failed to add your comment! Try again later',
-                            icon: 'error',
-                            confirmButtonText: "Close",
-                            buttonsStyling: false,
-                            customClass: {
-                                confirmButton: "btn btn-light-danger"
-                            }
-                        });
-                    }
-                },
-                error: function(response) {
+        // Fetch the button and form data
+        var formData = new FormData($('#AddLeadNote')[0]);
+        var url = $(this).data('url');
+        formData.append('appointment_notes', CKEDITOR.instances.appointment_notes.getData());
+
+        // Perform the AJAX request
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+            },
+            success: function(response) {
+                if (response.success) {
+                    viewAppointmentTimeline($("#new_comment_appointment_id").val(), true);
+                } else {
                     Swal.fire({
                         text: 'Failed to add your comment! Try again later',
                         icon: 'error',
@@ -297,37 +286,49 @@
                         }
                     });
                 }
-            });
-        });
-
-        function markAsRead(element, noteId) {
-            $.ajax({
-                url: "{{route('appointments.markAsRead')}}",
-                method: 'post',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
-                },
-                data: {
-                    noteId: noteId
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $(element).remove();
-                        $('[data-unread-id="' + noteId + '"]').remove();
-                        $('[data-note-comment="' + noteId + '"]').removeClass("bg-light-primary").addClass("bg-light-secondary");
+            },
+            error: function(response) {
+                Swal.fire({
+                    text: 'Failed to add your comment! Try again later',
+                    icon: 'error',
+                    confirmButtonText: "Close",
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: "btn btn-light-danger"
                     }
-                },
-                error: function(data) {
-                    Swal.fire({
-                        text: 'Failed to mark this comment as read! Try again later',
-                        icon: 'error',
-                        confirmButtonText: "Close",
-                        buttonsStyling: false,
-                        customClass: {
-                            confirmButton: "btn btn-light-danger"
-                        }
-                    });
+                });
+            }
+        });
+    });
+
+    function markAsRead(element, noteId) {
+        $.ajax({
+            url: "{{route('appointments.markAsRead')}}",
+            method: 'post',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+            },
+            data: {
+                noteId: noteId
+            },
+            success: function(response) {
+                if (response.success) {
+                    $(element).remove();
+                    $('[data-unread-id="' + noteId + '"]').remove();
+                    $('[data-note-comment="' + noteId + '"]').removeClass("bg-light-primary").addClass("bg-light-secondary");
                 }
-            });
-        }
-    </script>
+            },
+            error: function(data) {
+                Swal.fire({
+                    text: 'Failed to mark this comment as read! Try again later',
+                    icon: 'error',
+                    confirmButtonText: "Close",
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: "btn btn-light-danger"
+                    }
+                });
+            }
+        });
+    }
+</script>

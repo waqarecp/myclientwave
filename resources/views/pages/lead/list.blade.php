@@ -93,7 +93,7 @@
                             <td>{{ $row->leadSource->source_name}}</td>
                             <td>{{ $row->utilityCompany ? $row->utilityCompany->utility_company_name :'Nil'}}</td>
                             <td>
-                                {{ $row->user->name }}&nbsp;<small>{{\Carbon\Carbon::parse($row->created_at)->format('d F Y H:i')}}</small>
+                                {{ $row->user->name }}&nbsp;<small>{{\Carbon\Carbon::parse($row->created_at)->format('d M Y H:i')}}</small>
                             </td>
 
                             <td>

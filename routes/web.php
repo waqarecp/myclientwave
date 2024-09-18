@@ -12,6 +12,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontendController::class, 'index']);
 Route::get('/register-company', [FrontendController::class, 'registerCompany'])->name('register-company');
+Route::post('/store-company', [CompanyController::class, 'store'])->name('store-company');
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboards Routes

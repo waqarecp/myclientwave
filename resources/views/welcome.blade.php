@@ -59,11 +59,11 @@
                                         <!--begin::Top-->
                                         <div class="text-center mb-15">
                                             <!--begin::Title-->
-                                            <h3 class="fs-2hx text-gray-900 mb-5">MyClientWave CRM - About Us</h3>
+                                            <h3 class="fs-2hx text-gray-900 mb-5">Welcome to My Client Wave</h3>
                                             <!--end::Title-->
                                             <!--begin::Text-->
-                                            <div class="fs-5 text-muted fw-semibold">Within the last 10 years, we have sold over 100,000 admin theme copies that have been
-                                                <br />successfully deployed by small businesses to global enterprises
+                                            <div class="fs-5 text-muted fw-semibold">Are you ready to elevate your business operations and drive growth? My client Wave 
+                                                <br />is the ultimate customer relationship management solution designed to transform the way you interact with your clients and streamline your processes.
                                             </div>
                                             <!--end::Text-->
                                         </div>
@@ -85,23 +85,22 @@
                                     <!--end::Wrapper-->
                                     <!--begin::Description-->
                                     <div class="fs-5 fw-semibold text-gray-600">
+                                        <b>Why Choose My Client Wave?</b>
                                         <!--begin::Text-->
-                                        <p class="mb-8">First, a disclaimer – the entire process of writing a blog post often takes more than a couple of hours, even if you can type eighty words per minute and your writing skills are sharp. From the seed of the idea to finally hitting “Publish,” you might spend several days or maybe even a week “writing” a blog post, but it’s important to spend those vital hours planning your post and even thinking about
-                                            <a href="pages/blog/post.html" class="link-primary pe-1">Your Post</a>(yes, thinking counts as working if you’re a blogger) before you actually write it.
+                                        <p class="mb-8">Seamless Integration: Effortlessly connect with your existing tools and platforms. Whether you use email, marketing software, or accounting systems, My Client Wave integrates smoothly to ensure all your data is in one place.
                                         </p>
                                         <!--end::Text-->
                                         <!--begin::Text-->
-                                        <p class="mb-8">There’s an old maxim that states,
-                                            <span class="text-gray-800 pe-1">“No fun for the writer, no fun for the reader.”</span>No matter what industry you’re working in, as a blogger, you should live and die by this statement.
+                                        <p class="mb-8">360-Degree Customer View: 
+                                            <span class="text-gray-800 pe-1">“Gain a comprehensive understanding of your customers with detailed profiles, interaction history, and real-time updates.”</span> Personalize your outreach and foster deeper connections.
                                         </p>
                                         <!--end::Text-->
                                         <!--begin::Text-->
-                                        <p class="mb-8">Before you do any of the following steps, be sure to pick a topic that actually interests you. Nothing – and
-                                            <a href="pages/blog/home.html" class="link-primary pe-1">I mean NOTHING</a>– will kill a blog post more effectively than a lack of enthusiasm from the writer. You can tell when a writer is bored by their subject, and it’s so cringe-worthy it’s a little embarrassing.
+                                        <p class="mb-8">Advanced Analytics and Reporting: Make informed decisions with powerful analytics and customizable reports. Track key metrics, identify trends, and measure your success to continuously refine your strategies.
                                         </p>
                                         <!--end::Text-->
                                         <!--begin::Text-->
-                                        <p class="mb-17">I can hear your objections already. “But Dan, I have to blog for a cardboard box manufacturing company.” I feel your pain, I really do. During the course of my career, I’ve written content for dozens of clients in some less-than-thrilling industries (such as financial regulatory compliance and corporate housing), but the hallmark of a professional blogger is the ability to write well about any topic, no matter how dry it may be. Blogging is a lot easier, however, if you can muster at least a little enthusiasm for the topic at hand.</p>
+                                        <p class="mb-17">Automated Workflows: Increase efficiency by automating repetitive tasks and processes. From lead nurturing to follow-ups, let My Client Wave handle the routine so you can focus on growing your business.</p>
                                         <!--end::Text-->
                                     </div>
                                     <!--end::Description-->
@@ -204,16 +203,13 @@
                                         <!--end::Wrapper-->
                                         <!--begin::Testimonial-->
                                         <div class="fs-2 fw-semibold text-muted text-center mb-3">
-                                            <span class="fs-1 lh-1 text-gray-700">“</span>When you care about your topic, you’ll write about it in a
-                                            <br />
-                                            <span class="text-gray-700 me-1">more powerful</span>, emotionally expressive way
+                                            <span class="fs-1 lh-1 text-gray-700">“</span>Unlock Your Business Potential with My Client Wave
                                             <span class="fs-1 lh-1 text-gray-700">“</span>
                                         </div>
                                         <!--end::Testimonial-->
                                         <!--begin::Author-->
                                         <div class="fs-2 fw-semibold text-muted text-center">
-                                            <a href="account/security.html" class="link-primary fs-4 fw-bold">Marcus Levy</a>
-                                            <span class="fs-4 fw-bold text-gray-600">,KeenThemes CEO</span>
+                                            <a href="{{route('login')}}" class="link-primary fs-4 fw-bold">Login My Client Wave</a>
                                         </div>
                                         <!--end::Author-->
                                     </div>
@@ -228,8 +224,8 @@
                                         <h3 class="fs-2hx text-gray-900 mb-5">Publications</h3>
                                         <!--end::Title-->
                                         <!--begin::Text-->
-                                        <div class="fs-5 text-muted fw-semibold">Our goal is to provide a complete and robust theme solution
-                                            <br />to boost all of our customer’s project deployments
+                                        <div class="fs-5 text-muted fw-semibold">At My Client Wave, we understand the challenges of managing leads and appointments efficiently.
+                                            <br />Our comprehensive CRM solution is designed to simplify your workflow and enhance productivity. Here’s how we can help:
                                         </div>
                                         <!--end::Text-->
                                     </div>
@@ -255,18 +251,18 @@
                                                 <!--begin::Body-->
                                                 <div class="m-0">
                                                     <!--begin::Title-->
-                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">Admin Panel - How To Started the Dashboard Tutorial</a>
+                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">Streamline Your Lead Management and Elevate Your Business</a>
                                                     <!--end::Title-->
                                                     <!--begin::Text-->
-                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5">We’ve been focused on making a the from also not been afraid to and step away been focused create eye</div>
+                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5">Our intuitive interface allows you to organize, update, and categorize leads effortlessly. Monitor lead statuses, assign tasks, and ensure nothing falls through the cracks.</div>
                                                     <!--end::Text-->
                                                     <!--begin::Content-->
                                                     <div class="fs-6 fw-bold">
                                                         <!--begin::Author-->
-                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Jane Miller</a>
+                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Erick</a>
                                                         <!--end::Author-->
                                                         <!--begin::Date-->
-                                                        <span class="text-muted">on Mar 21 2021</span>
+                                                        <span class="text-muted">on {{ date('d F Y') }}</span>
                                                         <!--end::Date-->
                                                     </div>
                                                     <!--end::Content-->
@@ -281,9 +277,9 @@
                                             <!--begin::Publications post-->
                                             <div class="card-xl-stretch mx-md-3">
                                                 <!--begin::Overlay-->
-                                                <a class="d-block overlay mb-4" data-fslightbox="lightbox-hot-sales" href="assets/media/stock/600x400/img-74.jpg">
+                                                <a class="d-block overlay mb-4" data-fslightbox="lightbox-hot-sales" href="assets/media/stock/600x400/img-6.jpg">
                                                     <!--begin::Image-->
-                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('assets/media/stock/600x400/img-74.jpg')"></div>
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('assets/media/stock/600x400/img-6.jpg')"></div>
                                                     <!--end::Image-->
                                                     <!--begin::Action-->
                                                     <div class="overlay-layer bg-dark card-rounded bg-opacity-25">
@@ -295,18 +291,18 @@
                                                 <!--begin::Body-->
                                                 <div class="m-0">
                                                     <!--begin::Title-->
-                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">Admin Panel - How To Started the Dashboard Tutorial</a>
+                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">Appointment Scheduling Say goodbye to scheduling conflicts</a>
                                                     <!--end::Title-->
                                                     <!--begin::Text-->
-                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5">We’ve been focused on making the from v4 to v5 but we have also not been afraid to step away been focused</div>
+                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5"> with our integrated calendar. Schedule, reschedule, and manage appointments seamlessly. Keep track of your meetings and updated notes and never miss an important date.</div>
                                                     <!--end::Text-->
                                                     <!--begin::Content-->
                                                     <div class="fs-6 fw-bold">
                                                         <!--begin::Author-->
-                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Cris Morgan</a>
+                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Wesley Polonia</a>
                                                         <!--end::Author-->
                                                         <!--begin::Date-->
-                                                        <span class="text-muted">on Apr 14 2021</span>
+                                                        <span class="text-muted">on {{ date('d F Y') }}</span>
                                                         <!--end::Date-->
                                                     </div>
                                                     <!--end::Content-->
@@ -321,9 +317,9 @@
                                             <!--begin::Publications post-->
                                             <div class="card-xl-stretch ms-md-6">
                                                 <!--begin::Overlay-->
-                                                <a class="d-block overlay mb-4" data-fslightbox="lightbox-hot-sales" href="assets/media/stock/600x400/img-47.jpg">
+                                                <a class="d-block overlay mb-4" data-fslightbox="lightbox-hot-sales" href="assets/media/stock/600x400/img-80.jpg">
                                                     <!--begin::Image-->
-                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('assets/media/stock/600x400/img-47.jpg')"></div>
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('assets/media/stock/600x400/img-80.jpg')"></div>
                                                     <!--end::Image-->
                                                     <!--begin::Action-->
                                                     <div class="overlay-layer bg-dark card-rounded bg-opacity-25">
@@ -335,18 +331,18 @@
                                                 <!--begin::Body-->
                                                 <div class="m-0">
                                                     <!--begin::Title-->
-                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">Admin Panel - How To Started the Dashboard Tutorial</a>
+                                                    <a href="pages/user-profile/overview.html" class="fs-4 text-gray-900 fw-bold text-hover-primary text-gray-900 lh-base">User-Friendly Interface</a>
                                                     <!--end::Title-->
                                                     <!--begin::Text-->
-                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5">We’ve been focused on making the from v4 to v5 but we’ve also not been afraid to step away been focused</div>
+                                                    <div class="fw-semibold fs-5 text-gray-600 text-gray-900 mt-3 mb-5">Navigate your CRM with ease using our user-friendly interface. Whether you’re on the go or at your desk, manage your leads and appointments effortlessly. Tag teammate in comments and keep everyone on the same page.</div>
                                                     <!--end::Text-->
                                                     <!--begin::Content-->
                                                     <div class="fs-6 fw-bold">
                                                         <!--begin::Author-->
-                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Carles Nilson</a>
+                                                        <a href="apps/projects/users.html" class="text-gray-700 text-hover-primary">Yasel Corporan</a>
                                                         <!--end::Author-->
                                                         <!--begin::Date-->
-                                                        <span class="text-muted">on May 14 2021</span>
+                                                        <span class="text-muted">on {{ date('d F Y') }}</span>
                                                         <!--end::Date-->
                                                     </div>
                                                     <!--end::Content-->
@@ -361,7 +357,7 @@
                                 </div>
                                 <!--end::Section-->
                                 <!--begin::Team-->
-                                <div class="mb-18">
+                                <div class="mb-18 d-none">
                                     <!--begin::Heading-->
                                     <div class="text-center mb-12">
                                         <!--begin::Title-->

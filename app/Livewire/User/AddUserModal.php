@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 
 class AddUserModal extends Component
@@ -53,7 +54,12 @@ class AddUserModal extends Component
         // Define validation rules
         $rules = [
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                // Check if email is unique globally across the 'users' table
+                Rule::unique('users'), 
+            ],
             'password' => 'required|string|min:4',
             'role' => 'required|string',
             'avatar' => 'nullable|sometimes|image|max:1024',
@@ -71,6 +77,7 @@ class AddUserModal extends Component
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
+                'password_plan' => $validatedData['password'],
                 'email_verified_at' => now(),
                 'profile_photo_path' => $this->avatar ? $this->avatar->store('avatars', 'public') : null,
                 'child_users' => implode(',', $validatedData['child_users'] ?? []), // Convert array to comma-separated string
@@ -99,7 +106,12 @@ class AddUserModal extends Component
         // Define validation rules
         $rules = [
             'name' => 'required|string',
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                // Check if the email is unique globally but ignore the current user's email
+                Rule::unique('users')->ignore($this->user_id),
+            ],
             'password' => 'nullable|string|min:4',
             'role' => 'required|string',
             'avatar' => 'nullable|sometimes|image|max:1024',

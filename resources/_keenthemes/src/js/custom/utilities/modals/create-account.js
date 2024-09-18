@@ -151,7 +151,7 @@ var KTCreateAccount = function () {
 			form,
 			{
 				fields: {
-					account_type: {
+					company_account_type: {
 						validators: {
 							notEmpty: {
 								message: 'Account type is required'
@@ -175,21 +175,21 @@ var KTCreateAccount = function () {
 			form,
 			{
 				fields: {
-					'account_team_size': {
+					'company_employee_size': {
 						validators: {
 							notEmpty: {
-								message: 'Time size is required'
+								message: 'Employee size is required'
 							}
 						}
 					},
-					'account_name': {
+					'company_account_name': {
 						validators: {
 							notEmpty: {
 								message: 'Account name is required'
 							}
 						}
 					},
-					'account_plan': {
+					'company_account_plan': {
 						validators: {
 							notEmpty: {
 								message: 'Account plan is required'
@@ -214,31 +214,31 @@ var KTCreateAccount = function () {
 			form,
 			{
 				fields: {
-					'business_name': {
+					'company_business_name': {
 						validators: {
 							notEmpty: {
-								message: 'Busines name is required'
+								message: 'Business name is required'
 							}
 						}
 					},
-					'business_descriptor': {
+					'company_business_descriptor': {
 						validators: {
 							notEmpty: {
-								message: 'Busines descriptor is required'
+								message: 'Business descriptor is required'
 							}
 						}
 					},
-					'business_type': {
+					'company_business_type': {
 						validators: {
 							notEmpty: {
-								message: 'Busines type is required'
+								message: 'Business type is required'
 							}
 						}
 					},
-					'business_email': {
+					'company_business_email': {
 						validators: {
 							notEmpty: {
-								message: 'Busines email is required'
+								message: 'Business email is required'
 							},
 							emailAddress: {
 								message: 'The value is not a valid email address'
@@ -263,52 +263,27 @@ var KTCreateAccount = function () {
 			form,
 			{
 				fields: {
-					'card_name': {
+					'company_business_phone': {
 						validators: {
 							notEmpty: {
-								message: 'Name on card is required'
+								message: 'Business phone is required'
 							}
 						}
 					},
-					'card_number': {
+					'password': {
 						validators: {
 							notEmpty: {
-								message: 'Card member is required'
+								message: 'Password is required'
 							},
-                            creditCard: {
-                                message: 'Card number is not valid'
-                            }
 						}
 					},
-					'card_expiry_month': {
+					'country_id': {
 						validators: {
 							notEmpty: {
-								message: 'Month is required'
+								message: 'Country is required'
 							}
 						}
 					},
-					'card_expiry_year': {
-						validators: {
-							notEmpty: {
-								message: 'Year is required'
-							}
-						}
-					},
-					'card_cvv': {
-						validators: {
-							notEmpty: {
-								message: 'CVV is required'
-							},
-							digits: {
-								message: 'CVV must contain only digits'
-							},
-							stringLength: {
-								min: 3,
-								max: 4,
-								message: 'CVV must contain 3 to 4 digits only'
-							}
-						}
-					}
 				},
 
 				plugins: {

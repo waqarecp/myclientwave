@@ -28,7 +28,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // This logic will only execute on the login page
-if (window.location.pathname === '/login') {  // Change this to the actual login route
+if (window.location.pathname === '/login' || window.location.pathname === '/register-company') {  // Change this to the actual login route
     Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
             console.log('Notification permission granted.');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -13,6 +14,8 @@ class FrontendController extends Controller
     
     public function registerCompany()
     {
-        return view('register-company');
+        
+        $countries = Country::where('deleted_at', null)->get();
+        return view('register-company', compact('countries'));
     }
 }

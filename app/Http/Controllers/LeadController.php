@@ -311,6 +311,7 @@ class LeadController extends Controller
      */
     public function show(Lead $lead)
     {
+        
         $appointments = Appointment::whereNull('deleted_at')
             ->where('lead_id', $lead->id)
             ->with('status')
@@ -318,7 +319,19 @@ class LeadController extends Controller
             ->with('state')
             ->with('city')
             ->get();
-        return view('pages/lead/show', compact('lead', 'appointments'));
+        $users = User::whereNull('deleted_at')
+            ->where('company_id', Auth::user()->company_id)
+            ->pluck('name', 'id')
+            ->toArray();
+        $rows = AppointmentNote::select('appointment_notes.id as note_id', 'users.name as user_name', 'appointment_notes.*')
+            ->Join('appointments', 'appointment_notes.appointment_id', 'appointments.id')
+            ->leftJoin('users', 'appointment_notes.created_by', 'users.id')
+            ->leftJoin('leads', 'appointments.lead_id', 'leads.id')
+            ->whereNull('appointment_notes.deleted_at')
+            ->orderBy('appointment_notes.created_at', 'DESC') // Order by latest
+            ->paginate(10) // Adjust the pagination limit as needed
+            ->withQueryString();
+        return view('pages/lead/show', compact('lead', 'appointments', 'users', 'rows'));
     }
 
     /**
@@ -487,4 +500,5 @@ class LeadController extends Controller
 
         return response()->json(['cities' => []]); // Return empty array if no stateId is provided
     }
+
 }
