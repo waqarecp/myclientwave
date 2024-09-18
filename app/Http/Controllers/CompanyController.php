@@ -45,6 +45,11 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $this->validateRequest($request);
+        // Check if the email is already registered
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            return redirect()->back()->with('error', 'The email is already registered. Please use a different email.');
+        }
         $company = $this->createCompany($request);
         if ($company) {
             $role = Role::create([
