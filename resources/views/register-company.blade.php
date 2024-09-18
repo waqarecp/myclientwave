@@ -471,7 +471,6 @@
 	</div>
 	<!--end::Wrapper-->
 	<!--begin::Javascript-->
-	{!! NoCaptcha::renderJs() !!}
 	<script>
 		var hostUrl = "assets/";
 		document.getElementById('register_company').addEventListener('click', function(e) {
