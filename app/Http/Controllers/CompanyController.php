@@ -148,7 +148,6 @@ class CompanyController extends Controller
             'website' => 'nullable|string',
             'address' => 'nullable|string',
             'password' => 'required|string|min:4',
-            'g-recaptcha-response' => 'required|captcha',
         ]);
     }
 
