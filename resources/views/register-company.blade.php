@@ -400,7 +400,7 @@
 								<!--begin::Label-->
 								<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
 									<span class="required">Business Phone</span>
-									<span class="ms-1" data-bs-toggle="tooltip" title="Specify a card holder's name">
+									<span class="ms-1" data-bs-toggle="" title="">
 										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
 											<span class="path1"></span>
 											<span class="path2"></span>

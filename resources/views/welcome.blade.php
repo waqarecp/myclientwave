@@ -76,7 +76,7 @@
                                             <!--begin::Links-->
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                                 <a href="{{route('login')}}" class="btn btn-primary">Login to CRM</a>
-                                                <a href="{{route('register-company')}}" class="btn btn-light-primary ms-3">Register Your Company</a>
+                                                <a href="{{route('register-company')}}" class="btn btn-light ms-3">Register Your Company</a>
                                             </div>
                                             <!--end::Links-->
                                         </div>
