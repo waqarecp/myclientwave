@@ -14,7 +14,7 @@ class RoleList extends Component
 
     public function render()
     {
-        $this->roles = Role::with('permissions')->get();
+        $this->roles = Role::with('permissions')->where("company_id", "=", auth()->user()->company_id)->get();
 
         return view('livewire.permission.role-list');
     }
