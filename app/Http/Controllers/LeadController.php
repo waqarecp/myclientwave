@@ -22,6 +22,9 @@ use App\Models\Setting;
 use App\Models\UtilityCompany;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\SendFirebaseNotification;
+use App\Mail\LeadAssigned;
+use App\Mail\UserTagged;
+use Illuminate\Support\Facades\Mail;
 
 class LeadController extends Controller
 {
@@ -168,25 +171,36 @@ class LeadController extends Controller
                     $this->createTimelineAndNotes($request, $lead, $appointment, $noteAdded, $appointmentUserIds, $userIds);
                 }
             }
-        }
 
-        // Send notification to the sales representative
-        $this->sendFirebaseNotification([$request->input('sale_representative')], [
-            'title' => 'New Lead Created',
-            'body' => 'A new lead has been assigned to you.',
-            'click_action' => env('APP_URL') . "leads/" . $lead->id
-        ]);
-
-        // Send notification to the appointment tagged users
-        if ($request->appointment_user_ids) {
-            $this->sendFirebaseNotification($request->appointment_user_ids, [
-                'title' => 'You have been tagged in a comment',
-                'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
-                'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
+            // Send notification to the sales representative
+            $this->sendFirebaseNotification([$request->input('sale_representative')], [
+                'title' => 'New Lead Created',
+                'body' => 'A new lead has been assigned to you.',
+                'click_action' => env('APP_URL') . "leads/" . $lead->id
             ]);
+
+            // Send notification to the appointment tagged users
+            if ($request->appointment_user_ids) {
+                $this->sendFirebaseNotification($request->appointment_user_ids, [
+                    'title' => 'You have been tagged in a comment',
+                    'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
+                    'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
+                ]);
+            }
+            // Send email to the assigned sales representative
+            Mail::send(new LeadAssigned($lead, $lead->saleRepresentative));
+
+            // Send email to the appointment tagged users
+            if($request->appointment_user_ids) { 
+                foreach ($request->appointment_user_ids as $userId) { 
+                    $user = User::find($userId); 
+                    Mail::send(new UserTagged($appointment, $user));
+                } 
+            }
+            return redirect()->back()->with('success', 'Lead has been created successfully.');
         }
 
-        return redirect()->back()->with('success', 'Lead has been created successfully.');
+        return redirect()->back()->with('error', 'Failed to create lead.');
     }
 
     protected function validateRequest($request)

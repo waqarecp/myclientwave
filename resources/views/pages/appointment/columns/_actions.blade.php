@@ -24,7 +24,7 @@
     @endif
     @if(auth()->user()->can('write appointment') || auth()->user()->can('create appointment'))
         <div class="menu-item px-3">
-            <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" onclick="AppointmentTimeline('{{ $appointment->id }}')">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-appointment-id="{{ $appointment->id }}" onclick="viewAppointmentTimeline('{{ $appointment->id }}')">
                 Update Timeline
             </a>
         </div>

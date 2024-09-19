@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\AppointmentDataTable;
 use App\Jobs\SendFirebaseNotification;
 use App\Http\Controllers\Controller;
+use App\Mail\UserTagged;
 use App\Models\Appointment;
 use App\Models\AppointmentNote;
 use App\Models\Timeline;
@@ -21,6 +22,8 @@ use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
@@ -325,6 +328,18 @@ class AppointmentController extends Controller
                     'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
                     'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
                 ]);
+                // Send email to the appointment tagged users
+                if($userIds) { 
+                    $users = User::find($userIds); 
+                    foreach ($users as $user) { 
+                        try {
+                            Mail::to($user->email)->send(new UserTagged($appointment, $user));
+                            Log::info("Email successfully sent to user Name: {$user->name}");
+                        } catch (\Exception $e) {
+                            Log::error("Failed to send email to user Name: {$user->name}. Error: " . $e->getMessage());
+                        }
+                    } 
+                }
             }
             return response()->json(['success' => true, 'message' => 'New Comment Added']);
         }
