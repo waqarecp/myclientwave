@@ -14,7 +14,15 @@ var KTChartsWidget28 = function () {
         if (!element) {
             return;
         }
-        
+
+        // Get the data from the hidden input field
+        var hiddenInput = document.getElementById('appointment_data');
+        var data = JSON.parse(hiddenInput.value);
+
+        // Parse dates and values for the chart
+        var categories = Object.keys(data); // Dates
+        var values = Object.values(data); // Values
+
         var height = parseInt(KTUtil.css(element, 'height'));
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-500');
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
@@ -22,8 +30,8 @@ var KTChartsWidget28 = function () {
 
         var options = {
             series: [{
-                name: 'Links',
-                data: [190, 230, 230, 200, 200, 190, 190, 200, 200, 220, 220, 200, 200, 210, 210]
+                name: 'Appointments',
+                data: values  // Set values from hidden input
             }],            
             chart: {
                 fontFamily: 'inherit',
@@ -55,7 +63,7 @@ var KTChartsWidget28 = function () {
                 colors: [baseColor]
             },
             xaxis: {
-                categories: ['May 04', 'May 05', 'May 06', 'May 09', 'May 10', 'May 12', 'May 14', 'May 17', 'May 18', 'May 20', 'May 22', 'May 24', 'May 26', 'May 28', 'May 30'],
+                categories: categories, // Set categories (dates) from hidden input
                 axisBorder: {
                     show: false,
                 },
@@ -91,15 +99,15 @@ var KTChartsWidget28 = function () {
             },
             yaxis: {
                 tickAmount: 4,
-                max: 250,
-                min: 100,
+                max: Math.ceil(Math.max(...values) + 1), // Adjust max value and round up to nearest integer
+                min: Math.floor(Math.min(...values) - 1), // Adjust min value and round down to nearest integer
                 labels: {
                     style: {
                         colors: labelColor,
                         fontSize: '12px'
                     },
                     formatter: function (val) {
-                        return val 
+                        return Math.round(val);  // Ensure only integer values are displayed
                     }
                 }
             },
@@ -130,7 +138,7 @@ var KTChartsWidget28 = function () {
                 },
                 y: {
                     formatter: function (val) {
-                        return val 
+                        return val;
                     }
                 }
             },

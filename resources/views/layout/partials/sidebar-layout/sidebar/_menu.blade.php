@@ -60,6 +60,32 @@
             @endif
             <!--end:Menu item-->
 
+            @php
+                $hasPermissionDeal = auth()->user()->can('read deal') || auth()->user()->can('write deal') || auth()->user()->can('create deal');
+            @endphp
+            @if($hasPermissionDeal)
+                <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('deals.index') ? 'active' : '' }}" href="{{ route('deals.index') }}">
+                        <span class="menu-icon">{!! getIcon('like', 'fs-3') !!}</span>
+                        <span class="menu-title">Deals</span>
+                    </a>
+                </div>
+            @endif
+            
+            <!--begin:Menu item-->
+            @php
+                $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
+            @endphp
+            @if($hasPermissionUtilityCompanies)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('utility-companies')}}">
+                    <a class="menu-link {{ request()->routeIs('utility-companies') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
+                        <span class="menu-icon">{!! getIcon('color-swatch', 'fs-2') !!}</span>
+                        <span class="menu-title">Utility Companies</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
+
             <!--begin:Menu item-->
             @php
                 $hasPermissionUser = auth()->user()->can('read user') || auth()->user()->can('write user') || auth()->user()->can('create user');
@@ -108,14 +134,12 @@
                 $hasPermissionLeadSources = auth()->user()->can('read lead source') || auth()->user()->can('write lead source') || auth()->user()->can('create lead source');
                 $hasPermissionStatus = auth()->user()->can('read status') || auth()->user()->can('write status') || auth()->user()->can('create status');
                 $hasPermissionState = auth()->user()->can('read state colour') || auth()->user()->can('write state colour') || auth()->user()->can('create state colour');
-                $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
                 $hasPermissionStage = auth()->user()->can('read stage') || auth()->user()->can('write stage') || auth()->user()->can('create stage');
                 $hasPermissionHomeType = auth()->user()->can('read home type') || auth()->user()->can('write home type') || auth()->user()->can('create home type');
                 $hasPermissionCommunicationMethod = auth()->user()->can('read communication method') || auth()->user()->can('write communication method') || auth()->user()->can('create communication method');
-                $hasPermissionDeal = auth()->user()->can('read deal') || auth()->user()->can('write deal') || auth()->user()->can('create deal');
                 $hasPermissionCountrySetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
 
-                $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionUtilityCompanies || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionDeal || $hasPermissionCountrySetting;
+                $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting;
                 $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'utility-companies.*', 'deals.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
 
@@ -153,13 +177,6 @@
                             </a>
                         @endif
 
-                        @if($hasPermissionUtilityCompanies)
-                            <a class="menu-link {{ request()->routeIs('utility-companies.*') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
-                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                <span class="menu-title">Utility Companies</span>
-                            </a>
-                        @endif
-
                         @if($hasPermissionStage)
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('stages.index') ? 'active' : '' }}" href="{{ route('stages.index') }}">
@@ -182,16 +199,7 @@
                             <div class="menu-item">
                                 <a class="menu-link {{ request()->routeIs('communication_methods.index') ? 'active' : '' }}" href="{{ route('communication_methods.index') }}">
                                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                    <span class="menu-title">Deal Communication Methods</span>
-                                </a>
-                            </div>
-                        @endif
-
-                        @if($hasPermissionDeal)
-                            <div class="menu-item">
-                                <a class="menu-link {{ request()->routeIs('deals.index') ? 'active' : '' }}" href="{{ route('deals.index') }}">
-                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
-                                    <span class="menu-title">Deals</span>
+                                    <span class="menu-title">Communication Methods</span>
                                 </a>
                             </div>
                         @endif

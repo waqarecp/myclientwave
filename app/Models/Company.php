@@ -26,7 +26,7 @@ class Company extends Model
         'company_employee_size',
         'company_account_plan',
         'company_business_name',
-        'company_business_descriptor',
+        'company_address',
         'company_business_type',
         'company_business_description',
         'company_business_status',

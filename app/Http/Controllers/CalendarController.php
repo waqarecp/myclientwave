@@ -48,6 +48,9 @@ class CalendarController extends Controller
         $appointments = Appointment::with(['lead', 'user', 'country', 'state', 'city'])
             ->whereIn('appointments.appointment_country_id', array_keys($countries))
             ->whereNull('appointments.deleted_at')
+            ->whereHas('lead', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
             ->get();
 
        $stateColorQuery = StateColour::where('state_colours.company_id', $companyId)

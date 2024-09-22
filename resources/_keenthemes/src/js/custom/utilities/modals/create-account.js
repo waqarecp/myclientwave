@@ -178,7 +178,7 @@ var KTCreateAccount = function () {
 					'company_employee_size': {
 						validators: {
 							notEmpty: {
-								message: 'Employee size is required'
+								message: 'Company employee count is required'
 							}
 						}
 					},
@@ -186,13 +186,6 @@ var KTCreateAccount = function () {
 						validators: {
 							notEmpty: {
 								message: 'Account name is required'
-							}
-						}
-					},
-					'company_account_plan': {
-						validators: {
-							notEmpty: {
-								message: 'Account plan is required'
 							}
 						}
 					}
@@ -217,21 +210,21 @@ var KTCreateAccount = function () {
 					'company_business_name': {
 						validators: {
 							notEmpty: {
-								message: 'Business name is required'
+								message: 'Business Name is required'
 							}
 						}
 					},
-					'company_business_descriptor': {
+					'company_address': {
 						validators: {
 							notEmpty: {
-								message: 'Business descriptor is required'
+								message: 'Company Address is required'
 							}
 						}
 					},
 					'company_business_type': {
 						validators: {
 							notEmpty: {
-								message: 'Business type is required'
+								message: 'Business Type is required'
 							}
 						}
 					},

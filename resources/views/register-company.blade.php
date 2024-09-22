@@ -12,9 +12,8 @@
 	<meta property="og:locale" content="en_US" />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="CRM - MyClientWave" />
-	<meta property="og:url" content="https://keenthemes.com/metronic" />
+	<meta property="og:url" content="https://myclientwave.com" />
 	<meta property="og:site_name" content="CRM - MyClientWave" />
-	<link rel="canonical" href="http://authentication/extended/multi-steps-sign-up.html" />
 	<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
 	<!--begin::Fonts(mandatory for all pages)-->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
@@ -115,10 +114,10 @@
 							<!--end::Input group-->
 
 							<!--begin::Input group-->
-							<div class="mb-10 fv-row">
+							<div class="row">
 								<!--begin::Label-->
-								<label class="d-flex align-items-center form-label mb-3">Specify Team Size
-									<span class="ms-1" data-bs-toggle="tooltip" title="Provide your team size.">
+								<label class="d-flex align-items-center form-label mb-3">Specify Company Size
+									<span class="ms-1" data-bs-toggle="tooltip" title="Provide company team size/ total employees count">
 										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
 											<span class="path1"></span>
 											<span class="path2"></span>
@@ -127,13 +126,13 @@
 									</span></label>
 								<!--end::Label-->
 								<!--begin::Row-->
-								<div class="row mb-2" data-kt-buttons="true">
+								<div class="row mb-10" data-kt-buttons="true">
 									<!--begin::Col-->
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="1-1" />
-											<span class="fw-bold fs-3">1-1</span>
+											<input type="radio" class="btn-check" name="company_employee_size" value="1" />
+											<span class="fw-bold fs-3">1-10</span>
 										</label>
 										<!--end::Option-->
 									</div>
@@ -142,17 +141,7 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4 active">
-											<input type="radio" class="btn-check" name="company_employee_size" checked="checked" value="2-10" />
-											<span class="fw-bold fs-3">2-10</span>
-										</label>
-										<!--end::Option-->
-									</div>
-									<!--end::Col-->
-									<!--begin::Col-->
-									<div class="col">
-										<!--begin::Option-->
-										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="10-50" />
+											<input type="radio" class="btn-check" name="company_employee_size" checked="checked" value="2" />
 											<span class="fw-bold fs-3">10-50</span>
 										</label>
 										<!--end::Option-->
@@ -162,311 +151,149 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="50+" />
-											<span class="fw-bold fs-3">50+</span>
+											<input type="radio" class="btn-check" name="company_employee_size" value="3" />
+											<span class="fw-bold fs-3">50-100</span>
+										</label>
+										<!--end::Option-->
+									</div>
+									<!--end::Col-->
+									<!--begin::Col-->
+									<div class="col">
+										<!--begin::Option-->
+										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
+											<input type="radio" class="btn-check" name="company_employee_size" value="4" />
+											<span class="fw-bold fs-3">100+</span>
 										</label>
 										<!--end::Option-->
 									</div>
 									<!--end::Col-->
 								</div>
 								<!--end::Row-->
-								<!--begin::Hint-->
-								<div class="form-text">Customers will see this shortened version of your statement descriptor</div>
-								<!--end::Hint-->
-							</div>
-							<!--end::Input group-->
-						</div>
-						<!--end::Wrapper-->
-					</div>
-					<!--end::Step 1-->
-					<!--begin::Step 2-->
-					<div class="col-md-6">
-						<!--begin::Wrapper-->
-						<div class="w-100">
-							<!--begin::Input group-->
-							<div class="mb-10 fv-row">
-								<!--begin::Label-->
-								<label class="form-label mb-3">Team Account Name</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input type="text" class="form-control form-control-lg form-control-solid" name="name" />
-								@error('name')
-								<span class="text-danger">{{ $message }}</span>
-								@enderror
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="mb-0 fv-row">
-								<!--begin::Label-->
-								<label class="d-flex align-items-center form-label mb-5">Select Account Plan
-									<span class="ms-1" data-bs-toggle="tooltip" title="CRM will be based on your account plan">
-										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
-											<span class="path1"></span>
-											<span class="path2"></span>
-											<span class="path3"></span>
-										</i>
-									</span></label>
-								<!--end::Label-->
-								<!--begin::Options-->
-								<div class="mb-0">
-									<!--begin:Option-->
-									<label class="d-flex flex-stack mb-5 cursor-pointer">
-										<!--begin:Label-->
-										<span class="d-flex align-items-center me-2">
-											<!--begin::Icon-->
-											<span class="symbol symbol-50px me-6">
-												<span class="symbol-label">
-													<i class="ki-duotone ki-bank fs-1 text-gray-600">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</span>
-											</span>
-											<!--end::Icon-->
-											<!--begin::Description-->
-											<span class="d-flex flex-column">
-												<span class="fw-bold text-gray-800 text-hover-primary fs-5">Company Account</span>
-											</span>
-											<!--end:Description-->
-										</span>
-										<!--end:Label-->
-										<!--begin:Input-->
-										<span class="form-check form-check-custom form-check-solid">
-											<input class="form-check-input" type="radio" name="company_account_plan" value="1" />
-										</span>
-										<!--end:Input-->
-									</label>
-									<!--end::Option-->
-									<!--begin:Option-->
-									<label class="d-flex flex-stack mb-5 cursor-pointer">
-										<!--begin:Label-->
-										<span class="d-flex align-items-center me-2">
-											<!--begin::Icon-->
-											<span class="symbol symbol-50px me-6">
-												<span class="symbol-label">
-													<i class="ki-duotone ki-chart fs-1 text-gray-600">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</span>
-											</span>
-											<!--end::Icon-->
-											<!--begin::Description-->
-											<span class="d-flex flex-column">
-												<span class="fw-bold text-gray-800 text-hover-primary fs-5">Developer Account</span>
-												<span class="fs-6 fw-semibold text-muted">Use images to your post time</span>
-											</span>
-											<!--end:Description-->
-										</span>
-										<!--end:Label-->
-										<!--begin:Input-->
-										<span class="form-check form-check-custom form-check-solid">
-											<input class="form-check-input" type="radio" checked="checked" name="company_account_plan" value="2" />
-										</span>
-										<!--end:Input-->
-									</label>
-									<!--end::Option-->
-									<!--begin:Option-->
-									<label class="d-flex flex-stack mb-0 cursor-pointer">
-										<!--begin:Label-->
-										<span class="d-flex align-items-center me-2">
-											<!--begin::Icon-->
-											<span class="symbol symbol-50px me-6">
-												<span class="symbol-label">
-													<i class="ki-duotone ki-chart-pie-4 fs-1 text-gray-600">
-														<span class="path1"></span>
-														<span class="path2"></span>
-														<span class="path3"></span>
-													</i>
-												</span>
-											</span>
-											<!--end::Icon-->
-											<!--begin::Description-->
-											<span class="d-flex flex-column">
-												<span class="fw-bold text-gray-800 text-hover-primary fs-5">Testing Account</span>
-												<span class="fs-6 fw-semibold text-muted">Use images to enhance time travel rivers</span>
-											</span>
-											<!--end:Description-->
-										</span>
-										<!--end:Label-->
-										<!--begin:Input-->
-										<span class="form-check form-check-custom form-check-solid">
-											<input class="form-check-input" type="radio" name="company_account_plan" value="3" />
-										</span>
-										<!--end:Input-->
-									</label>
-									<!--end::Option-->
+								<div class="fv-row mb-10">
+									<label class="form-label required">Write Business Name</label>
+									<input name="company_business_name" required class="form-control form-control-lg" placeholder="Enter Company/Business Name" />
+									@error('company_business_name')
+									<span class="text-danger">{{ $message }}</span>
+									@enderror
 								</div>
-								<!--end::Options-->
+								<div class="fv-row mb-10">
+									<label class="d-flex align-items-center form-label">
+										<span class="required">Write Company Address</span>
+										<span class="lh-1 ms-1">
+											<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+											</i>
+										</span>
+									</label>
+									<input name="company_address" placeholder="Write company address ..." class="form-control form-control-lg" required/>
+								</div>
 							</div>
-							<!--end::Input group-->
+							<div class="row">
+								<div class="fv-row mb-10 col-md-6">
+									<label class="form-label required">Select Business Type</label>
+									<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
+										<option value=""></option>
+										<option value="1">S Corporation</option>
+										<option value="2">C Corporation</option>
+										<option value="3">Sole Proprietorship</option>
+										<option value="4">Non-profit</option>
+										<option value="5">Limited Liability</option>
+										<option value="6">General Partnership</option>
+									</select>
+								</div>
+								<div class="fv-row mb-10 col-md-6">
+										<label class="form-label">Select Corporation Type</label>
+										<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
+											<option value=""></option>
+											<option value="1">S Corporation</option>
+											<option value="2">C Corporation</option>
+											<option value="3">Sole Proprietorship</option>
+											<option value="4">Non-profit</option>
+											<option value="5">Limited Liability</option>
+											<option value="6">General Partnership</option>
+										</select>
+									</div>
+							</div>
 						</div>
-						<!--end::Wrapper-->
 					</div>
-					<!--end::Step 2-->
-				</div>
-				<div class="row">
-					<!--begin::Step 3-->
 					<div class="col-md-6">
-						<!--begin::Wrapper-->
 						<div class="w-100">
-							<!--begin::Input group-->
-							<div class="fv-row mb-10">
-								<!--begin::Label-->
-								<label class="form-label required">Business Name</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input name="company_business_name" class="form-control form-control-lg form-control-solid" />
-								@error('company_business_name')
-								<span class="text-danger">{{ $message }}</span>
-								@enderror
-								<!--end::Input-->
+							<div class="row">
+								<div class="fv-row mb-10 col-md-6">
+									<label class="form-label">Contact Person Name</label>
+									<input type="text" class="form-control form-control-lg" name="name" placeholder="Your Name or Contact Person Name" required />
+									@error('name')
+									<span class="text-danger">{{ $message }}</span>
+									@enderror
+								</div>
+								<div class="fv-row mb-10 col-md-6">
+									<!--begin::Label-->
+									<label class="fs-6 fw-semibold form-label required">Contact Email</label>
+									<!--end::Label-->
+									<!--begin::Input-->
+									<input id="company_business_email" name="email" required class="form-control form-control-lg" placeholder="Enter Email Address" />
+									@error('email')
+									<span class="text-danger">{{ $message }}</span>
+									@enderror
+									<!--end::Input-->
+								</div>
 							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="fv-row mb-10">
-								<!--begin::Label-->
-								<label class="d-flex align-items-center form-label">
-									<span class="required">Shortened Descriptor</span>
-									<span class="lh-1 ms-1">
-										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
-											<span class="path1"></span>
-											<span class="path2"></span>
-											<span class="path3"></span>
-										</i>
-									</span>
-								</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input name="company_business_descriptor" class="form-control form-control-lg form-control-solid" />
-								<!--end::Input-->
-								<!--begin::Hint-->
-								<div class="form-text">Customers will see this shortened version of your statement descriptor</div>
-								<!--end::Hint-->
+							<div class="row">
+								<div class="fv-row mb-10 col-md-6">
+									<!--begin::Label-->
+									<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
+										<span class="required">Business Phone</span>
+									</label>
+									<input type="text" class="form-control" name="phone" placeholder="Enter Phone Number" required/>
+									@error('phone')
+									<span class="text-danger">{{ $message }}</span>
+									@enderror
+								</div>
+								<div class="fv-row mb-10 col-md-6">
+									<!--begin::Label-->
+									<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
+										<span class="required">Enter a Password</span>
+									</label>
+									<!--end::Label-->
+									<input type="text" class="form-control" placeholder="Enter your password" name="password" required/>
+									@error('password')
+									<span class="text-danger">{{ $message }}</span>
+									@enderror
+								</div>
 							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="fv-row mb-10">
-								<!--begin::Label-->
-								<label class="form-label required">Corporation Type</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<select name="company_business_type" class="form-select form-select-lg form-select-solid" data-control="select2" data-placeholder="Select..." data-allow-clear="true" data-hide-search="true">
-									<option></option>
-									<option value="1">S Corporation</option>
-									<option value="2">C Corporation</option>
-									<option value="3">Sole Proprietorship</option>
-									<option value="4">Non-profit</option>
-									<option value="5">Limited Liability</option>
-									<option value="6">General Partnership</option>
-								</select>
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="fv-row mb-10">
-								<!--end::Label-->
-								<label class="form-label">Business Description</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<textarea name="company_business_description" class="form-control form-control-lg form-control-solid" rows="3"></textarea>
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="fv-row mb-0">
-								<!--begin::Label-->
-								<label class="fs-6 fw-semibold form-label required">Contact Email</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input name="email" class="form-control form-control-lg form-control-solid" />
-								@error('email')
-								<span class="text-danger">{{ $message }}</span>
-								@enderror
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-						</div>
-						<!--end::Wrapper-->
-					</div>
-					<!--end::Step 3-->
-					<!--begin::Step 4-->
-					<div class="col-md-6">
-						<!--begin::Wrapper-->
-						<div class="w-100">
-							<!--begin::Input group-->
-							<div class="d-flex flex-column mb-7 fv-row">
-								<!--begin::Label-->
-								<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
-									<span class="required">Business Phone</span>
-									<span class="ms-1" data-bs-toggle="" title="">
-										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
-											<span class="path1"></span>
-											<span class="path2"></span>
-											<span class="path3"></span>
-										</i>
-									</span>
-								</label>
-								<!--end::Label-->
-								<input type="text" class="form-control form-control-solid" name="phone" />
-								@error('phone')
-								<span class="text-danger">{{ $message }}</span>
-								@enderror
-							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="d-flex flex-column mb-7 fv-row">
-								<!--begin::Label-->
-								<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
-									<span class="required">Password</span>
-									<span class="ms-1">
-										<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
-											<span class="path1"></span>
-											<span class="path2"></span>
-											<span class="path3"></span>
-										</i>
-									</span>
-								</label>
-								<!--end::Label-->
-								<input type="text" class="form-control form-control-solid" placeholder="" name="password" />
-								@error('password')
-								<span class="text-danger">{{ $message }}</span>
-								@enderror
-							</div>
-							<!--end::Input group-->
-							<!--begin::Input group-->
-							<div class="fv-row mb-10">
-								<!--begin::Label-->
-								<label class="form-label required">Country</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<select name="country_id[]" class="form-select form-select-lg form-select-solid" multiple data-control="select2" data-placeholder="Select..." data-allow-clear="true" data-hide-search="true">
-									@foreach ($countries as $country)
-									<option value="{{$country->id}}">{{$country->name}}</option>
-									@endforeach
-								</select>
-								<!--end::Input-->
-							</div>
-							<!--end::Input group-->
-							<div class="d-flex flex-stack">
-								<div>
-									<button type="button" id="register_company" class="btn btn-primary">
-										<span class="indicator-label">Submit</span>
-									</button>
+							<div class="row mt-3">
+								<div class="fv-row mb-10">
+									<label class="form-label">About Business/ Company Information</label>
+									<textarea name="company_business_description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="7"></textarea>
+								</div>
+								<div class="col-md-12">
+									<div class="fv-row mb-10">
+										<label class="form-label required">Select Countries of operation</label>
+										<select name="country_id[]" class="form-select form-select-lg" required multiple data-control="select2" data-placeholder="Select countries ..." data-allow-clear="true" data-hide-search="true">
+											@foreach ($countries as $country)
+											<option value="{{$country->id}}">{{$country->name}}</option>
+											@endforeach
+										</select>
+									</div>
+									<div class="d-flex flex-stack">
+										<div>
+											<button type="button" id="register_company" class="btn btn-primary">
+												<span class="indicator-label"><i class="fa fa-check-circle"></i> Create an Account</span>
+											</button>
 
-									<button id="wait_message" class="btn btn-primary d-none" disabled>
-										<span class="indicator-label">Please wait...</span>
-									</button>
+											<button id="wait_message" class="btn btn-primary d-none" disabled>
+												<span class="indicator-label">Please wait...</span>
+											</button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-						<!--end::Wrapper-->
 					</div>
-					<!--end::Step 4-->
 				</div>
 			</form>
-			<!--end::Form-->
 		</div>
 	</div>
 	<!--end::Wrapper-->
