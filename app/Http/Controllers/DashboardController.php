@@ -55,7 +55,7 @@ class DashboardController extends Controller
         $users = User::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
-        $roles = Role::all();
+        $roles = Role::where('company_id', Auth::user()->company_id)->get();
         $utilitycompanies = UtilityCompany::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();

@@ -44,7 +44,7 @@ class AddUserModal extends Component
     
     public function render()
     {
-        $roles = Role::all();
+        $roles = Role::where('company_id', Auth::user()->company_id)->get();
         $allUsers = User::where('company_id', Auth::user()->company_id)->get();
         return view('livewire.user.add-user-modal', compact('roles', 'allUsers'));
     }

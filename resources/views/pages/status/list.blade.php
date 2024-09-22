@@ -1,7 +1,7 @@
 <x-default-layout>
 
     @section('title')
-        Status
+        Statuses
     @endsection
 
     @section('breadcrumbs')

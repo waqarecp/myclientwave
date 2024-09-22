@@ -31,8 +31,8 @@ class AddTimelineModal extends Component
 
     public function render()
     {
-        $users = User::where('deleted_at', null)->get();
-        $leads = Lead::where('deleted_at', null)->get();
+        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $leads = Lead::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         return view('livewire.timeline.add-timeline-modal', compact('users', 'leads'));
     }
 

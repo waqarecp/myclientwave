@@ -1,7 +1,7 @@
 <x-default-layout>
 
     @section('title')
-        Utility Company
+        Utility Companies
     @endsection
 
     @section('breadcrumbs')

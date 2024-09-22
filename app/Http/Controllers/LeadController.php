@@ -39,7 +39,7 @@ class LeadController extends Controller
         $companies = Company::where('deleted_at', null)->get();
         $appointment = Appointment::where('deleted_at', null)->with('lead')->get();
         $note = Note::where('deleted_at', null)->get();
-        $roles = Role::all();
+        $roles = Role::where('company_id', Auth::user()->company_id)->get();
         // Get assigned countries for the company
         $assignedCountryIds = Setting::where('company_id', $companyId)
             ->pluck('country_id')

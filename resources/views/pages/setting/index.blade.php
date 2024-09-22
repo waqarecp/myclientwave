@@ -5,7 +5,7 @@
     @endsection
 
     @section('breadcrumbs')
-    {{ Breadcrumbs::render('settings') }}
+    {{ Breadcrumbs::render('settings.index') }}
     @endsection
     <div class="card" id="kt_setting">
         <!--begin::Card body-->

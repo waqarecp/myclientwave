@@ -12,10 +12,13 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\CommunicationMethodController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DealController;
 use App\Http\Controllers\FrontendController;
-
+use App\Http\Controllers\HomeTypeController;
+use App\Http\Controllers\StageController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -51,19 +54,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/user-management/permissions', PermissionManagementController::class)->middleware('check.dynamic.route.permissions:permission');
     });
 
-    // Lead Sources routes
-    Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
-
-    // Statuses routes
-    Route::resource('statuses', StatusController::class)->middleware('check.dynamic.route.permissions:status');
-
-    // Statuses routes
-    Route::resource('state-colours', StatecolourController::class)->middleware('check.dynamic.route.permissions:state colour');
-    Route::post('/state-colours/store', [StatecolourController::class, 'store'])->name('state-colour.store');
-    Route::post('/state-colours/update', [StatecolourController::class, 'update'])->name('state-colour.update');
-    Route::post('/state-colours/get-states', [StatecolourController::class, 'getStates'])->name('stateColours.getStates');
-    Route::post('/state-colours/destroy', [StatecolourController::class, 'destroy'])->name('state-colour.destroy');
-
     // Leads routes
     Route::resource('leads', LeadController::class)->middleware('check.dynamic.route.permissions:lead');
     Route::post('/leads/noteStore', [LeadController::class, 'noteStore'])->name('leads.noteStore');
@@ -86,16 +76,51 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
 
-
-    // setting routes
-    Route::get('settings/index', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');
-    Route::post('settings/update', [SettingController::class, 'update'])->name('setting.update');
-
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
 
-    // Utility Company routes
-    Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
+    Route::prefix('manage-settings')->group(function () {
+        // Lead Sources routes
+        Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
+    
+        // Statuses routes
+        Route::resource('statuses', StatusController::class)->middleware('check.dynamic.route.permissions:status');
+
+        // States color routes
+        Route::resource('state-colours', StatecolourController::class)->middleware('check.dynamic.route.permissions:state colour');
+        Route::post('/state-colours/store', [StatecolourController::class, 'store'])->name('state-colour.store');
+        Route::post('/state-colours/update', [StatecolourController::class, 'update'])->name('state-colour.update');
+        Route::post('/state-colours/get-states', [StatecolourController::class, 'getStates'])->name('stateColours.getStates');
+        Route::post('/state-colours/destroy', [StatecolourController::class, 'destroy'])->name('state-colour.destroy');
+        
+        // Utility Company routes
+        Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
+
+        // stages routes
+        Route::resource('stages', StageController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:stage');
+        Route::post('/stages/update', [StageController::class, 'update'])->name('stage.update');
+        Route::post('/stages/destroy', [StageController::class, 'destroy'])->name('stage.destroy');
+    
+        // home types routes
+        Route::resource('home_types', HomeTypeController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:home type');
+        Route::post('/home_types/update', [HomeTypeController::class, 'update'])->name('home_types.update');
+        Route::post('/home_types/destroy', [HomeTypeController::class, 'destroy'])->name('home_types.destroy');
+    
+        // communications routes
+        Route::resource('communication_methods', CommunicationMethodController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:communication method');
+        Route::post('/communication_methods/update', [CommunicationMethodController::class, 'update'])->name('communication_methods.update');
+        Route::post('/communication_methods/destroy', [CommunicationMethodController::class, 'destroy'])->name('communication_methods.destroy');
+        
+        // deals routes
+        Route::resource('deals', DealController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:deal');
+        Route::post('/deals/update', [DealController::class, 'update'])->name('deals.update');
+        Route::post('/deals/destroy', [DealController::class, 'destroy'])->name('deals.destroy');
+
+        // Country setting routes
+        Route::get('country', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');
+        Route::post('country/update', [SettingController::class, 'update'])->name('setting.update');
+    });
+
 });
 
 Route::get('/error', function () {

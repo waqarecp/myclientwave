@@ -1,7 +1,7 @@
 <x-default-layout>
 
     @section('title')
-    State
+    State Colours
     @endsection
 
     @section('breadcrumbs')

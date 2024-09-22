@@ -57,8 +57,8 @@ class AddAppointmentModal extends Component
     public function render()
     {
         $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $leads = Lead::where('deleted_at', null)->get();
-        $roles = Role::all();
+        $leads = Lead::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $roles = Role::where('company_id', Auth::user()->company_id)->get();
         $countries = Country::active()->pluck('name', 'id');
         // Check if country_id is set and fetch states accordingly
         if ($this->appointment_country_id) {

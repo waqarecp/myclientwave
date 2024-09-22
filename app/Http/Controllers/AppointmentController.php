@@ -34,8 +34,8 @@ class AppointmentController extends Controller
     {
         $companyId = Auth::user()->company_id;
         $users = User::where('deleted_at', null)->where('company_id', $companyId)->get();
-        $leads = Lead::where('deleted_at', null)->get();
-        $roles = Role::all();
+        $leads = Lead::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $roles = Role::where('company_id', Auth::user()->company_id)->get();
 
         // Get assigned countries for the company
         $assignedCountryIds = Setting::where('company_id', $companyId)

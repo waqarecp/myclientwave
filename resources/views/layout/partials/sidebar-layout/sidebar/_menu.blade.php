@@ -17,62 +17,6 @@
                 </a>
             </div>
             <!--end:Menu item-->
-
-            <!--begin:Menu item-->
-            @php
-                $hasPermissionLeadSources = auth()->user()->can('read lead source') || auth()->user()->can('write lead source') || auth()->user()->can('create lead source');
-            @endphp
-            @if($hasPermissionLeadSources)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('lead-sources')}}">
-                    <a class="menu-link {{ request()->routeIs('lead-sources') ? 'active' : '' }}" href="{{ route('lead-sources.index') }}">
-                        <span class="menu-icon">{!! getIcon('outline', 'ki-chart') !!}</span>
-                        <span class="menu-title">Lead Sources</span>
-                    </a>
-                </div>
-            @endif
-            <!--end:Menu item-->
-            
-            <!--begin:Menu item-->
-            @php
-                $hasPermissionStatus = auth()->user()->can('read status') || auth()->user()->can('write status') || auth()->user()->can('create status');
-            @endphp
-            @if($hasPermissionStatus)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('statuses')}}">
-                    <a class="menu-link {{ request()->routeIs('statuses') ? 'active' : '' }}" href="{{ route('statuses.index') }}">
-                        <span class="menu-icon">{!! getIcon('cloud', 'fs-2') !!}</span>
-                        <span class="menu-title">Statuses</span>
-                    </a>
-                </div>
-            @endif
-            <!--end:Menu item-->
-            
-            <!--begin:Menu item-->
-            @php
-                $hasPermissionState = auth()->user()->can('read state colour') || auth()->user()->can('write state colour') || auth()->user()->can('create state colour');
-            @endphp
-            @if($hasPermissionState)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('state-colours')}}">
-                    <a class="menu-link {{ request()->routeIs('state-colours') ? 'active' : '' }}" href="{{ route('state-colours.index') }}">
-                        <span class="menu-icon">{!! getIcon('setting', 'fs-2') !!}</span>
-                        <span class="menu-title">State Colors</span>
-                    </a>
-                </div>
-            @endif
-            <!--end:Menu item-->
-            
-            <!--begin:Menu item-->
-            @php
-                $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
-            @endphp
-            @if($hasPermissionUtilityCompanies)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('utility-companies')}}">
-                    <a class="menu-link {{ request()->routeIs('utility-companies') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
-                        <span class="menu-icon">{!! getIcon('color-swatch', 'fs-2') !!}</span>
-                        <span class="menu-title">Utility Companies</span>
-                    </a>
-                </div>
-            @endif
-            <!--end:Menu item-->
             
             <!--begin:Menu item-->
             @php
@@ -160,19 +104,110 @@
             @endif
             <!--end:Menu item-->
             
-            <!--begin:Menu item-->
             @php
-                $hasPermissionSetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
+                $hasPermissionLeadSources = auth()->user()->can('read lead source') || auth()->user()->can('write lead source') || auth()->user()->can('create lead source');
+                $hasPermissionStatus = auth()->user()->can('read status') || auth()->user()->can('write status') || auth()->user()->can('create status');
+                $hasPermissionState = auth()->user()->can('read state colour') || auth()->user()->can('write state colour') || auth()->user()->can('create state colour');
+                $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
+                $hasPermissionStage = auth()->user()->can('read stage') || auth()->user()->can('write stage') || auth()->user()->can('create stage');
+                $hasPermissionHomeType = auth()->user()->can('read home type') || auth()->user()->can('write home type') || auth()->user()->can('create home type');
+                $hasPermissionCommunicationMethod = auth()->user()->can('read communication method') || auth()->user()->can('write communication method') || auth()->user()->can('create communication method');
+                $hasPermissionDeal = auth()->user()->can('read deal') || auth()->user()->can('write deal') || auth()->user()->can('create deal');
+                $hasPermissionCountrySetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
+
+                $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionUtilityCompanies || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionDeal || $hasPermissionCountrySetting;
+                $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'utility-companies.*', 'deals.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
-            @if($hasPermissionSetting)
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('settings.index')}}">
-                    <a class="menu-link {{ request()->routeIs('settings.index') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+
+            <!--end:Menu item-->
+            @if($hasPermissionManagementSetting)
+                <!-- Parent Menu for Manage Settings -->
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $manageSettingsActive ? 'here show' : '' }}">
+                    <span class="menu-link">
                         <span class="menu-icon">{!! getIcon('wrench', 'fs-3') !!}</span>
-                        <span class="menu-title">Settings</span>
-                    </a>
+                        <span class="menu-title">Manage Settings</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    
+                    <!-- Child Menu Items -->
+                    <div class="menu-sub menu-sub-accordion">
+
+                        @if($hasPermissionLeadSources)
+                            <a class="menu-link {{ request()->routeIs('lead-sources.*') ? 'active' : '' }}" href="{{ route('lead-sources.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Lead Sources</span>
+                            </a>
+                        @endif
+
+                        @if($hasPermissionStatus)
+                            <a class="menu-link {{ request()->routeIs('statuses.*') ? 'active' : '' }}" href="{{ route('statuses.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Statuses</span>
+                            </a>
+                        @endif
+
+                        @if($hasPermissionState)
+                            <a class="menu-link {{ request()->routeIs('state-colours.*') ? 'active' : '' }}" href="{{ route('state-colours.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">State Colors</span>
+                            </a>
+                        @endif
+
+                        @if($hasPermissionUtilityCompanies)
+                            <a class="menu-link {{ request()->routeIs('utility-companies.*') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Utility Companies</span>
+                            </a>
+                        @endif
+
+                        @if($hasPermissionStage)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('stages.index') ? 'active' : '' }}" href="{{ route('stages.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Deal Stages</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($hasPermissionHomeType)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('home_types.index') ? 'active' : '' }}" href="{{ route('home_types.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Deal Home Types</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($hasPermissionCommunicationMethod)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('communication_methods.index') ? 'active' : '' }}" href="{{ route('communication_methods.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Deal Communication Methods</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($hasPermissionDeal)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('deals.index') ? 'active' : '' }}" href="{{ route('deals.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Deals</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($hasPermissionCountrySetting)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('settings.index') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Country</span>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endif
-            <!--end:Menu item-->
+
 
         </div>
         <!--end::Menu-->
