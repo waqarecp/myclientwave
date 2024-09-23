@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\FirebaseToken;
 use App\Models\LoginActivity;
-use App\Models\ModeHasRole;
-use App\Models\ModelHasRole;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Models\RoleHasPermission;
 use App\Models\Setting;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -19,6 +16,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Models\CommunicationMethod;
+use App\Models\Stage;
+use App\Models\Status;
+use App\Models\LeadSource;
+use App\Models\HomeType;
 
 class CompanyController extends Controller
 {
@@ -125,6 +127,59 @@ class CompanyController extends Controller
                 'last_login_at' => Carbon::now()->toDateTimeString(),
                 'last_login_ip' => $request->getClientIp()
             ]);
+
+            // Add company communication methods
+            $defaultMethods = array("Call", "Email");
+            foreach($defaultMethods as $method) {
+                CommunicationMethod::create([
+                    'company_id' => $company->id,
+                    'method_name' => $method,
+                    'created_by' => $authenticatedUser->id,
+                ]);
+            }
+
+            // Add company deal stages
+            $defaultStages = array("New" => "#fbff00", "Approved" => "#1eff00", "Cancelled" => "#ff0000");
+            foreach($defaultStages as $stage => $color) {
+                Stage::create([
+                    'company_id' => $company->id,
+                    'stage_name' => $stage,
+                    'stage_color_code' => $color,
+                    'created_by' => $authenticatedUser->id,
+                ]);
+            }
+
+            // Add company appointment statues
+            $defaultStatuses = array("Pending" => "#fbff00", "Completed" => "#1eff00", "Cancelled" => "#ff0000");
+            foreach($defaultStatuses as $status => $color) {
+                Status::create([
+                    'company_id' => $company->id,
+                    'status_name' => $status,
+                    'color_code' => $color,
+                    'created_by' => $authenticatedUser->id,
+                ]);
+            }
+
+            // Add company lead sources
+            $defaultSources = array("Email Marketing", "Direct Traffic", "Organic Search", "Networking");
+            foreach($defaultSources as $source) {
+                LeadSource::create([
+                    'company_id' => $company->id,
+                    'source_name' => $source,
+                    'created_by' => $authenticatedUser->id,
+                ]);
+            }
+
+            // Add deal home types
+            $defaultHomeTypes = array("Single-Family Detached Home", "Apartment", "Townhouse (Townhome)", "Bungalow");
+            foreach($defaultHomeTypes as $homeType) {
+                HomeType::create([
+                    'company_id' => $company->id,
+                    'home_type_name' => $homeType,
+                    'created_by' => $authenticatedUser->id,
+                ]);
+            }
+
             // Clear cache
             cache()->clear(); // Clear the application cache
             return redirect()->intended(RouteServiceProvider::HOME);
@@ -136,11 +191,11 @@ class CompanyController extends Controller
     {
         $request->validate([
             'company_account_type' => 'nullable|integer',
-            'company_employee_size' => 'nullable|string',
+            'company_employee_size' => 'nullable|int',
             'name' => 'required|string|max:255',
             'company_account_plan' => 'nullable|integer',
             'company_business_name' => 'required|string|max:255',
-            'company_business_descriptor' => 'string',
+            'company_address' => 'string',
             'company_business_type' => 'nullable|integer',
             'company_business_description' => 'string',
             'email' => [
@@ -160,11 +215,11 @@ class CompanyController extends Controller
     {
         return Company::create([
             'company_account_type' => $request->input('company_account_type'),
-            'company_employee_size' => $request->input('company_employee_size'),
+            'company_employee_size' => $request->input('company_employee_size', 1),
             'name' => $request->input('name'),
-            'company_account_plan' => $request->input('company_account_plan'),
+            'company_account_plan' => $request->input('company_account_plan', 1),
             'company_business_name' => $request->input('company_business_name'),
-            'company_business_descriptor' => $request->input('company_business_descriptor'),
+            'company_address' => $request->input('company_address'),
             'company_business_type' => $request->input('company_business_type'),
             'company_business_description' => $request->input('company_business_description'),
             'email' => $request->input('email'),

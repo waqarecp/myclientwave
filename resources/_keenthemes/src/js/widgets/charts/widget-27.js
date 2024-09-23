@@ -6,22 +6,40 @@ var KTChartsWidget27 = function () {
         self: null,
         rendered: false
     };
+
+    // Helper function to get data from hidden input
+    var getLeadData = function() {
+        var leadDataInput = document.getElementById("lead_data");
+        if (!leadDataInput) {
+            return { dates: [], values: [] };
+        }
+
+        var leadData = JSON.parse(leadDataInput.value);
+        var dates = Object.keys(leadData);
+        var values = Object.values(leadData);
+
+        return { dates: dates, values: values };
+    };
+
     // Private methods
     var initChart = function(chart) {
-        var element = document.getElementById("kt_charts_widget_27"); 
+        var element = document.getElementById("kt_charts_widget_27");
 
         if (!element) {
             return;
         }
+
+        // Get lead data
+        var leadData = getLeadData();
         
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-800');    
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
-        var maxValue = 18;
-        
+        var maxValue = Math.max(...leadData.values) || 10; // Adjust maxValue based on data
+
         var options = {
             series: [{
-                name: 'Sessions',
-                data: [12.478, 7.546, 6.083, 5.041, 4.420]                                                                                                             
+                name: 'Leads',
+                data: leadData.values                                                                                                              
             }],           
             chart: {
                 fontFamily: 'inherit',
@@ -38,23 +56,16 @@ var KTChartsWidget27 = function () {
                     distributed: true,
                     barHeight: 50,
                     dataLabels: {
-				        position: 'bottom' // use 'bottom' for left and 'top' for right align(textAnchor)
-			        }                                                       
+                        position: 'bottom' // use 'bottom' for left and 'top' for right align(textAnchor)
+                    }                                                       
                 }
             },
-            dataLabels: {  // Docs: https://apexcharts.com/docs/options/datalabels/
+            dataLabels: {
                 enabled: true,              
                 textAnchor: 'start',  
                 offsetX: 0,                 
-                formatter: function (val, opts) {
-                    var val = val * 1000;
-                    var Format = wNumb({
-                        //prefix: '$',
-                        //suffix: ',-',
-                        thousand: ','
-                    });
-
-                    return Format.to(val);
+                formatter: function (val) {
+                    return Math.round(val * 1000).toLocaleString(); // Format large numbers
                 },
                 style: {
                     fontSize: '14px',
@@ -67,10 +78,16 @@ var KTChartsWidget27 = function () {
             },                               
             colors: ['#3E97FF', '#F1416C', '#50CD89', '#FFC700', '#7239EA'],                                                                      
             xaxis: {
-                categories: ["USA", "India", 'Canada', 'Brasil', 'France'],
+                categories: leadData.dates,
                 labels: {
                     formatter: function (val) {
-                        return val + "K"
+                        // Convert to thousands and add "K"
+                        let newVal = val * 1000;
+                        if (newVal >= 1000) {
+                            return (newVal / 1000).toFixed(1).replace('.0', '') + 'K'; // Show values like 1K, 1.5K, 2K, etc.
+                        } else {
+                            return newVal.toFixed(0); // Show values below 1000 as whole numbers
+                        }
                     },
                     style: {
                         colors: labelColor,
@@ -80,14 +97,14 @@ var KTChartsWidget27 = function () {
                     }                  
                 },
                 axisBorder: {
-					show: false
-				}                         
+                    show: false
+                }                         
             },
             yaxis: {
                 labels: {       
-                    formatter: function (val, opt) {
+                    formatter: function (val) {
                         if (Number.isInteger(val)) {
-                            var percentage = parseInt(val * 100 / maxValue) . toString(); 
+                            var percentage = Math.round((val / maxValue) * 100).toString(); 
                             return val + ' - ' + percentage + '%';
                         } else {
                             return val;
@@ -126,8 +143,8 @@ var KTChartsWidget27 = function () {
                     }
                 }
             }                                 
-        };  
-          
+        };
+
         chart.self = new ApexCharts(element, options);
 
         // Set timeout to properly get the parent elements width
@@ -163,6 +180,3 @@ if (typeof module !== 'undefined') {
 KTUtil.onDOMContentLoaded(function() {
     KTChartsWidget27.init();
 });
-
-
- 

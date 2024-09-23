@@ -28,7 +28,7 @@
                     @if(auth()->user()->can('create stage'))
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_stage">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                        Add New Stage
+                        Add Deal Stage
                     </button>
                     @endif
                     <!--end::Add state-->

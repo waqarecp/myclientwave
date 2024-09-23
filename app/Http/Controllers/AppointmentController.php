@@ -80,6 +80,8 @@ class AppointmentController extends Controller
             });
         }
 
+        $query->where("leads.company_id", "=", $companyId);
+
         // Paginate the results
         $rows = $query->paginate(15)->withQueryString();
 

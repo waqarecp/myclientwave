@@ -47,7 +47,7 @@
                     <thead>
                         <tr class="bg-light-primary">
                             <th>ID</th>
-                            <th>Communication Method Name</th>
+                            <th>Communication Method</th>
                             <th>Created By</th>
                             <th>Created Date</th>
                             <th>Action</th>

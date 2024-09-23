@@ -14,6 +14,7 @@ use App\Models\UtilityCompany;
 use App\Models\Country;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -41,9 +42,7 @@ class DashboardController extends Controller
         $companyId = Auth::user()->company_id;
 
         // Get assigned countries for the company
-        $assignedCountryIds = Setting::where('company_id', $companyId)
-            ->pluck('country_id')
-            ->toArray();
+        $assignedCountryIds = Setting::where('company_id', $companyId)->pluck('country_id')->toArray();
 
         // If no countries are assigned, use United States (id=233)
         if (empty($assignedCountryIds)) {
@@ -66,44 +65,49 @@ class DashboardController extends Controller
         $statuses = Status::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
-        $leads = Lead::where('deleted_at', null)
+        $leads = Lead::whereNull('deleted_at')
             ->where('company_id', $companyId)
+            ->whereBetween('created_at', [Carbon::today()->subDays(30), Carbon::today()->endOfDay()])
             ->with('leadSource')
             ->get();
-        $leadSources = $leads->groupBy('leadSource.id')
-            ->map(function ($dataLead, $leadSourceId) {
-                // Return the count of leads for each lead source
-                return [
-                    'count' => count($dataLead),
-                    'source_name' => $dataLead->first()->leadSource->source_name ?? 'Unknown', // Get the source name or 'Unknown' if null
-                ];
-            })
-            ->sortByDesc('count')  // Sort by lead count in descending order
-            ->take(5);  // Take top 5 lead sources
-        $leadData = $leads->groupBy(function($date){
-            return \Carbon\Carbon::parse($date->created_at)->format('M d');
+        $leadData = $leads->groupBy(function ($date) {
+            return Carbon::parse($date->created_at)->format('M d');
         })->map(function ($dateLeads) {
             return count($dateLeads);
         })->sortKeysDesc()
-        ->take(5);
+            ->take(5);
         $leadData = $leadData->toJson();
         $countLeads = count($leads);
-        
-        $appointments = Appointment::where('deleted_at', null)
+
+        $appointments = Appointment::whereNull('appointments.deleted_at')
+            ->whereBetween('appointments.created_at', [Carbon::now()->subDays(30), Carbon::now()])
+            ->join('leads', 'leads.id', '=', 'appointments.lead_id')
+            ->where('leads.company_id', $companyId)
+            ->select('appointments.*')
             ->get();
-        $appointmentData = $appointments->groupBy(function($date) {
-            return \Carbon\Carbon::parse($date->appointment_date)->format('M d'); // Group by day
+        $appointmentData = $appointments->groupBy(function ($date) {
+            return Carbon::parse($date->appointment_date)->format('M d'); // Group by day
         })->map(function ($dayAppointments) {
             return count($dayAppointments);
         })->sortKeys();
         $appointmentData = $appointmentData->toJson();
         $countAppointments = count($appointments);
 
-        return view('pages/dashboards.index', 
-                    compact('users', 'companies', 'sources', 'utilitycompanies', 'statuses', 'leadSources', 
-                        'roles', 'leadData', 'countLeads', 'appointmentData', 'countAppointments', 'countries'
-                    )
-                );
+        return view(
+            'pages/dashboards.index',
+            compact(
+                'users',
+                'companies',
+                'sources',
+                'utilitycompanies',
+                'statuses',
+                'roles',
+                'leadData',
+                'countLeads',
+                'appointmentData',
+                'countAppointments',
+                'countries'
+            )
+        );
     }
-
 }

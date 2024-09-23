@@ -25,7 +25,7 @@
                     @endif
                 <!--end::Daterangepicker-->
                 @if(auth()->user()->can('create lead'))
-                    <a href="javascript:void(0)" class="btn fw-bold btn-info" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
+                    <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
                 @endif
             </div>
         @endIf
