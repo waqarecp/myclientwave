@@ -281,9 +281,9 @@
                                         @foreach($roles as $role)
                                         <optgroup label="{{ ucwords($role->name) }}">
                                             @foreach($users as $user)
-                                            @if($user->roles->contains($role))
-                                            <option value="{{$user->id}}">{{$user->name}}</option>
-                                            @endif
+                                                @if($user->roles->contains($role))
+                                                <option value="{{$user->id}}">{{$user->name}}</option>
+                                                @endif
                                             @endforeach
                                         </optgroup>
                                         @endforeach

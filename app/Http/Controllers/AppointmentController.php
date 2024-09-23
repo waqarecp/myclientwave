@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\AppointmentDataTable;
 use App\Jobs\SendFirebaseNotification;
 use App\Http\Controllers\Controller;
 use App\Mail\UserTagged;
@@ -15,8 +14,6 @@ use App\Models\Lead;
 use App\Models\Role;
 use App\Models\Country;
 use App\Models\State;
-use App\Models\City;
-use App\Models\FirebaseToken;
 use App\Models\Setting;
 use App\Models\Status;
 use Illuminate\Http\Request;
@@ -325,24 +322,39 @@ class AppointmentController extends Controller
 
             // Send notification to the appointment tagged users
             if ($userIds && isset($request->nofity)) {
+                $senderUser = auth()->user();
+                $receiverUsers = User::whereIn('id', $userIds)->get();
+            
+                // Firebase notify
                 $this->sendFirebaseNotification($userIds, [
                     'title' => 'You have been tagged in a comment',
-                    'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
+                    'body' => ucwords($senderUser->name) . ' has mentioned you in a comment.',
                     'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
                 ]);
-                // Send email to the appointment tagged users
-                if($userIds) { 
-                    $users = User::find($userIds); 
-                    foreach ($users as $user) { 
-                        try {
-                            Mail::to($user->email)->send(new UserTagged($appointment, $user));
-                            Log::info("Email successfully sent to user Name: {$user->name}");
-                        } catch (\Exception $e) {
-                            Log::error("Failed to send email to user Name: {$user->name}. Error: " . $e->getMessage());
+        
+                // Email notify
+                DB::beginTransaction();
+                try {
+                    // Set comment in appointment variable
+                    $appointment->comment = $request->appointment_notes;
+
+                    foreach ($receiverUsers as $taggedUser) {
+                        if ($taggedUser && $taggedUser->email) {
+                            // Queue the email for sending
+                            Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $senderUser, $taggedUser));
+                            // Log::info("Queued email successfully for user Name: {$taggedUser->name}, Email: {$taggedUser->email}");
+                        } else {
+                            // Log::error("Receiver user or email is missing for user ID: " . ($taggedUser->id ?: 'unknown'));
                         }
-                    } 
+                    }
+        
+                    DB::commit(); // Commit transaction if all goes well
+                } catch (\Exception $e) {
+                    DB::rollBack(); // Rollback transaction in case of error
+                    Log::error("Failed to send emails. Error: " . $e->getMessage());
                 }
             }
+            
             return response()->json(['success' => true, 'message' => 'New Comment Added']);
         }
         return response()->json(['failed' => true, 'message' => 'Failed to Add Comment']);

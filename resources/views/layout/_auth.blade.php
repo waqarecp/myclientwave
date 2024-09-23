@@ -21,22 +21,6 @@
                     <!--end::Wrapper-->
                 </div>
                 <!--end::Form-->
-
-                <!--begin::Footer-->
-                <div class="d-flex flex-center flex-wrap px-5">
-                    <!--begin::Links-->
-                    <div class="d-flex fw-semibold text-primary fs-base">
-                        <a href="#" target="_blank" class="menu-link call px-2">Privacy Policy</a>
-
-
-
-                        <a href="#" target="_blank" class="menu-link call px-2" >Terms & Conditions</a>
-
-                        <a href="https://myclientwave.com/contact-us/" class="px-5" target="_blank">Contact Us</a>
-                    </div>
-                    <!--end::Links-->
-                </div>
-                <!--end::Footer-->
             </div>
             <!--end::Body-->
 

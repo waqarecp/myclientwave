@@ -9,20 +9,24 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+// use Illuminate\Support\Facades\Log;
+use Illuminate\Mail\Mailables\Address;
 
 class UserTagged extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public $appointment;
+    public $senderUser;
     public $taggedUser;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Appointment $appointment, $taggedUser)
+    public function __construct(Appointment $appointment, $senderUser, $taggedUser)
     {
         $this->appointment = $appointment;
+        $this->senderUser = $senderUser;
         $this->taggedUser = $taggedUser;
     }
 
@@ -31,9 +35,15 @@ class UserTagged extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        // Log::info("Sender: {$this->senderUser}, Receiver: {$this->taggedUser}");
         return new Envelope(
+            from: new Address(address: env('MAIL_FROM_ADDRESS'), name: env('MAIL_FROM_NAME')),
             subject: 'You have been tagged in a comment',
-            to: $this->taggedUser->email
+            to: $this->taggedUser->email,
+            replyTo: 
+                [
+                    new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                ]
         );
     }
 
@@ -46,6 +56,7 @@ class UserTagged extends Mailable implements ShouldQueue
             view: 'emails.user_tagged',
             with: [
                 'appointment' => $this->appointment,
+                'senderUser' => $this->senderUser,
                 'taggedUser' => $this->taggedUser,
             ]
         );
