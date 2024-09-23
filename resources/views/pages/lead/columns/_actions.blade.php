@@ -46,40 +46,14 @@
     </div>
     @endif
     <!--end::Menu item-->
+    
+    @if(auth()->user()->can('write deal') || auth()->user()->can('create deal'))
+        <div class="menu-item px-3">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-lead-id="{{ $lead->id }}" data-kt-lead-name="{{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}" onclick="convertLeadToDealForm(this)">
+                Convert To Deal
+            </a>
+        </div>
+    @endif
+
 </div>
 <!--end::Menu-->
-<script>
-    function viewLeadComments(lead_id, activeCommentsTab = false) {
-        $.ajax({
-            url: "{{ route('leads.viewLeadComments') }}", // Use the URL from the data attribute
-            method: 'post',
-            data: {
-                lead_id: lead_id,
-            },
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
-            },
-            success: function(data) {
-                $('.kt_modal_attach').html(data);
-                $('#kt_modal_view_lead_comments').modal('show');
-                if (activeCommentsTab) {
-                    $('#update_followup .nav-item a').removeClass('active');
-                    $('#update_followup .nav-item a').eq(1).addClass('active');
-                    $('#lead-comments-content .tab-pane').removeClass('active show');
-                    $('#lead-comments-content .tab-pane').eq(1).addClass('active show');
-                }
-            },
-            error: function(data) {
-                Swal.fire({
-                    text: 'Failed to view comments for this lead!', 
-                    icon: 'error',
-                    confirmButtonText: "Close",
-                    buttonsStyling: false,
-                    customClass: {
-                        confirmButton: "btn btn-light-danger"
-                    }
-                });
-            }
-        });
-    }
-</script>

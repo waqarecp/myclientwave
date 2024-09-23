@@ -24,6 +24,10 @@ use Illuminate\Support\Facades\DB;
 use App\Jobs\SendFirebaseNotification;
 use App\Mail\LeadAssigned;
 use App\Mail\UserTagged;
+use App\Models\CommunicationMethod;
+use App\Models\Deal;
+use App\Models\HomeType;
+use App\Models\Stage;
 use Illuminate\Support\Facades\Mail;
 
 class LeadController extends Controller
@@ -67,7 +71,9 @@ class LeadController extends Controller
         ->where('company_id', $companyId)
         ->get();
         $utilityCompanies = UtilityCompany::where('company_id', $companyId)->get();
-
+        $homeTypes = HomeType::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $dealStages = Stage::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $communicationMethods = CommunicationMethod::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         // Retrieve leads based on these states
         $leadsQuery = Lead::with('leadSource', 'utilityCompany', 'user', 'company')
             ->where('company_id', $companyId)
@@ -131,9 +137,8 @@ class LeadController extends Controller
         // Paginate the results
         $rows = $leadsQuery->paginate(15)->withQueryString();
 
-        return view('pages.lead.list', compact('sources', 'roles', 'utilityCompanies', 'states', 'cities', 'rows', 'request', 'users', 'companies', 'note', 'appointment', 'countries' ));
+        return view('pages.lead.list', compact('sources', 'roles', 'utilityCompanies', 'states', 'cities', 'rows', 'request', 'users', 'companies', 'note', 'appointment', 'countries', 'homeTypes', 'dealStages', 'communicationMethods' ));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -409,7 +414,6 @@ class LeadController extends Controller
         ]);
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
@@ -513,6 +517,86 @@ class LeadController extends Controller
         }
 
         return response()->json(['cities' => []]); // Return empty array if no stateId is provided
+    }
+    
+    public function convertLeadToDeal(Request $request)
+    {
+        $request->validate([
+            'convert_lead_id' => 'nullable|integer|exists:leads,id',
+            'project_administrator_id' => 'nullable|integer|exists:users,id',
+            'owner_id' => 'nullable|integer|exists:users,id',
+            'financier_id' => 'nullable|integer|exists:financiers,id',
+            'home_type_id' => 'nullable|integer|exists:home_types,id',
+            'deal_account_name' => 'nullable|string|max:255',
+            'deal_contact_name' => 'nullable|string|max:255',
+            'deal_phone_burner_last_call_outcome' => 'nullable|string|max:255',
+            'deal_social_lead_id' => 'nullable|string|max:255',
+            'deal_amount' => 'nullable|numeric',
+            'deal_closing_date' => 'nullable|date',
+            'deal_pipeline' => 'nullable|integer',
+            'communication_method_id' => 'nullable|integer|exists:communication_methods,id',
+            'stage_id' => 'nullable|integer|exists:stages,id',
+            'deal_probability' => 'nullable|numeric|min:0|max:100',
+            'deal_expected_revenue' => 'nullable|numeric',
+            'deal_permit_number' => 'nullable|string|max:255',
+            'deal_phone_burner_followup_date' => 'nullable|date',
+            'deal_phone_burner_last_call_time' => 'nullable|date_format:Y-m-d\TH:i',
+            'deal_availability_start' => 'nullable',
+            'deal_availability_end' => 'nullable',
+            'organization_id' => 'nullable|integer|exists:organizations,id',
+        ]);
+        $leadId = $request->convert_lead_id;
+
+        if ($leadId) {
+            $lead = Lead::findOrFail($leadId);
+            $deal_address = (implode(', ', array_filter([
+                optional($lead->country)->name,
+                optional($lead->state)->name,
+                optional($lead->city)->name,
+                $lead->address_1,
+                $lead->address_2,
+                $lead->street,
+                $lead->zip
+            ])));
+            $deal_name = (implode(' ', array_filter([$lead->first_name, $lead->last_name])));
+            $deal_phone_1 = $lead->phone;
+            $deal_email = $lead->email;
+            $source_id = $lead->lead_source_id;
+            Deal::create([
+                'lead_id' => $leadId,
+                'project_administrator_id' => $request->project_administrator_id,
+                'owner_id' => $request->owner_id,
+                'deal_name' => $deal_name,
+                'deal_address' => $deal_address,
+                'deal_phone_1' => $deal_phone_1,
+                'deal_email' => $deal_email,
+                'financier_id' => $request->financier_id,
+                'home_type_id' => $request->home_type_id,
+                'source_id' => $source_id,
+                'deal_account_name' => $request->deal_account_name,
+                'deal_contact_name' => $request->deal_contact_name,
+                'deal_phone_burner_last_call_outcome' => $request->deal_phone_burner_last_call_outcome,
+                'deal_social_lead_id' => $request->deal_social_lead_id,
+                'deal_amount' => $request->deal_amount,
+                'deal_closing_date' => $request->deal_closing_date,
+                'deal_pipeline' => $request->deal_pipeline,
+                'communication_method_id' => $request->communication_method_id,
+                'stage_id' => $request->stage_id,
+                'deal_probability' => $request->deal_probability,
+                'deal_expected_revenue' => $request->deal_expected_revenue,
+                'deal_permit_number' => $request->deal_permit_number,
+                'deal_phone_burner_followup_date' => $request->deal_phone_burner_followup_date,
+                'deal_phone_burner_last_call_time' => $request->deal_phone_burner_last_call_time,
+                'deal_availability_start' => $request->deal_availability_start,
+                'deal_availability_end' => $request->deal_availability_end,
+                'organization_id' => $request->organization_id,
+                'company_id' => Auth::user()->company_id,
+                'created_by' => Auth::user()->id,
+            ]);
+            return response()->json(['success' => 'Deal created successfully.']);
+        } else {
+            return response()->json(['error' => 'Failed to convert Lead to Deal'], 500);
+        }
     }
 
 }

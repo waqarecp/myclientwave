@@ -385,6 +385,303 @@
     </div>
     <!--end::Modal - New Address-->
 
+    <!--begin::Modal - Convert Lead to deal-->
+    <div class="modal fade" id="kt_modal_convert_lead_to_deal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Convert <span class="badge badge-lg bg-secondary" id="convert_lead_name_header"></span> to Deal</h2>
+                </div>
+                <div class="modal-body py-10 px-lg-17">
+                <form id="kt_modal_convert_lead_to_deal_form" class="form" action="#" enctype="multipart/form-data">
+                    <input type="hidden" id="convert_lead_id" name="convert_lead_id" />
+                        <div class="d-flex flex-column scroll-y px-2 px-lg-10" id="kt_modal_convert_lead_to_deal_scroll"
+                            data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto"
+                            data-kt-scroll-dependencies="#kt_modal_convert_lead_to_deal_header"
+                            data-kt-scroll-wrappers="#kt_modal_convert_lead_to_deal_scroll" data-kt-scroll-offset="300px">
+                            <!-- Begin: Row 1 (left and right) -->
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Project Administrator -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Project Administrator</label>
+                                            <select name="project_administrator_id" id="project_administrator_id" class="form-control form-select form-control-solid">
+                                                @foreach($roles as $role)
+                                                <optgroup label="{{ ucwords($role->name) }}">
+                                                    @foreach($users as $user)
+                                                    @if($user->roles->contains($role))
+                                                    <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                        {{ $user->name }}
+                                                    </option>
+                                                    @endif
+                                                    @endforeach
+                                                </optgroup>
+                                                @endforeach
+                                            </select>
+                                            @error('project_administrator_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Deal Owner -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
+                                            <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid">
+                                                @foreach($roles as $role)
+                                                <optgroup label="{{ ucwords($role->name) }}">
+                                                    @foreach($users as $user)
+                                                    @if($user->roles->contains($role))
+                                                    <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                        {{ $user->name }}
+                                                    </option>
+                                                    @endif
+                                                    @endforeach
+                                                </optgroup>
+                                                @endforeach
+                                            </select>
+                                            @error('owner_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Financier -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Financier</label>
+                                            <select name="financier_id" id="financier_id" class="form-control form-select form-control-solid">
+                                                <option value="">None</option>
+                                                <!-- Dynamic options here -->
+                                            </select>
+                                            @error('financier_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Type -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Home Type</label>
+                                            <select name="home_type_id" id="home_type_id" class="form-control form-select form-control-solid">
+                                                <option value="">-- Select --</option>
+                                                @foreach($homeTypes as $homeType)
+                                                <option value="{{ $homeType->id }}">
+                                                    {{ $homeType->home_type_name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('home_type_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Deal Account name -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Account Name</label>
+                                            <input type="text" name="deal_account_name" id="deal_account_name" class="form-control form-control-solid" />
+                                            @error('deal_account_name')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- deal_contact_name -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Contact Name</label>
+                                            <input type="text" name="deal_contact_name" id="deal_contact_name" class="form-control form-control-solid" />
+                                            @error('deal_contact_name')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- deal_phone_burner_last_call_outcome -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Outcome</label>
+                                            <input type="text" name="deal_phone_burner_last_call_outcome" id="deal_phone_burner_last_call_outcome" class="form-control form-control-solid" />
+                                            @error('deal_phone_burner_last_call_outcome')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- deal_social_lead_id -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Social Lead Id</label>
+                                            <input type="text" name="deal_social_lead_id" id="deal_social_lead_id" class="form-control form-control-solid" />
+                                            @error('deal_social_lead_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Amount -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Amount</label>
+                                            <input type="number" name="deal_amount" id="deal_amount" class="form-control form-control-solid" />
+                                            @error('deal_amount')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Closing Date -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Closing Date</label>
+                                            <input type="date" name="deal_closing_date" id="deal_closing_date" class="form-control form-control-solid" />
+                                            @error('deal_closing_date')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Pipeline -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Pipeline</label>
+                                            <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid">
+                                                <option value="">-- Select --</option>
+                                                <!-- Dynamic options here -->
+                                            </select>
+                                            @error('deal_pipeline')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- communication_method_id -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                            <select name="communication_method_id" id="communication_method_id" class="form-control form-select form-control-solid">
+                                                <option value="">-- Select --</option>
+                                                @foreach($communicationMethods as $communicationMethod)
+                                                <option value="{{ $communicationMethod->id }}">
+                                                    {{ $communicationMethod->method_name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('communication_method_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Stage -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Stage</label>
+                                            <select name="stage_id" id="stage_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_convert_lead_to_deal" data-placeholder="Select a Stage">
+                                                <option value="">-- Select --</option>
+                                                @foreach($dealStages as $dealStage)
+                                                <option value="{{ $dealStage->id }}" data-color="{{ $dealStage->stage_color_code }}">
+                                                    {{ $dealStage->stage_name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('stage_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Probability -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Probability (%)</label>
+                                            <input type="number" name="deal_probability" id="deal_probability" class="form-control form-control-solid" value="100" />
+                                            @error('deal_probability')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- Expected Revenue -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Expected Revenue</label>
+                                            <input type="number" name="deal_expected_revenue" id="deal_expected_revenue" class="form-control form-control-solid" />
+                                            @error('deal_expected_revenue')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <!-- Permit Number -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Permit No.</label>
+                                            <input type="text" name="deal_permit_number" id="deal_permit_number" class="form-control form-control-solid" />
+                                            @error('deal_permit_number')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- deal_phone_burner_followup_date -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Phone Burner Followup Date</label>
+                                            <input type="date" name="deal_phone_burner_followup_date" id="deal_phone_burner_followup_date" class="form-control form-control-solid" />
+                                            @error('deal_phone_burner_followup_date')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <!-- deal_phone_burner_last_call_time -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Time</label>
+                                            <input type="datetime-local" name="deal_phone_burner_last_call_time" id="deal_phone_burner_last_call_time" class="form-control form-control-solid" />
+                                            @error('deal_phone_burner_last_call_time')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="row">   
+                                    <div class="col-md-4">
+                                        <!-- Availability Start & End -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Availability Start</label>
+                                            <input type="time" name="deal_availability_start" id="deal_availability_start" class="form-control form-control-solid" />
+                                            @error('deal_availability_start')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-4">
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Availability End</label>
+                                            <input type="time" name="deal_availability_end" id="deal_availability_end" class="form-control form-control-solid" />
+                                            @error('deal_availability_end')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div> 
+                                    <div class="col-md-4">
+                                        <!-- Organization -->
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Organization</label>
+                                            <select name="organization_id" id="organization_id" class="form-control form-select form-control-solid">
+                                                <option value="">None</option>
+                                                <!-- Dynamic options here -->
+                                            </select>
+                                            @error('organization_id')
+                                            <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End: Row 1 -->
+                        </div>
+
+                        <!-- Begin: Actions -->
+                        <div class="text-center pt-15">
+                            <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal" aria-label="Close">Discard</button>
+                            <button type="submit" id="convert_deal" class="btn btn-primary">
+                                <span class="indicator-label">Save</span>
+                            </button>
+                            <button id="wait_message" class="btn btn-primary d-none" disabled>
+                                <span class="indicator-label">Please wait...</span>
+                            </button>
+                        </div>
+                        <!-- End: Actions -->
+                    </form>
+                </div>
+                <!--end::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Convert Lead to deal -->
+
     @push('scripts')
     <script>
         document.querySelectorAll('[data-kt-action="delete_row"]').forEach(function (element) {
@@ -713,8 +1010,123 @@
                 }
             });
         });
+        
+        function viewLeadComments(lead_id, activeCommentsTab = false) {
+            $.ajax({
+                url: "{{ route('leads.viewLeadComments') }}", // Use the URL from the data attribute
+                method: 'post',
+                data: {
+                    lead_id: lead_id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                },
+                success: function(data) {
+                    $('.kt_modal_attach').html(data);
+                    $('#kt_modal_view_lead_comments').modal('show');
+                    if (activeCommentsTab) {
+                        $('#update_followup .nav-item a').removeClass('active');
+                        $('#update_followup .nav-item a').eq(1).addClass('active');
+                        $('#lead-comments-content .tab-pane').removeClass('active show');
+                        $('#lead-comments-content .tab-pane').eq(1).addClass('active show');
+                    }
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to view comments for this lead!', 
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
+        
+        function convertLeadToDealForm(element) {
+            var leadId = $(element).data('kt-lead-id');
+            var leadName = $(element).data('kt-lead-name');
+            $('#convert_lead_name_header').text(leadName);
+            $('#convert_lead_id').val(leadId);
+            $('#stage_id').select2({
+                    dropdownParent: $('#kt_modal_convert_lead_to_deal'),
+                    templateResult: formatStageColour,
+                    templateSelection: formatStageColour
+                });
+            $('#kt_modal_convert_lead_to_deal').modal('show');
+                
+        }
+        $('#stage_id').select2({
+            templateResult: formatStageColour,
+            templateSelection: formatStageColour,
+            dropdownParent: $('#kt_modal_convert_lead_to_deal')
+        });
+
+        function formatStageColour(stage) {
+            if (!stage.id) {
+                return stage.text;
+            }
+
+            var color = $(stage.element).data('color'); // Get color from option data
+            var $stage = $(
+                '<span><span class="badge badge-circle w-15px h-15px me-1" style="background-color:' + color + '"></span>' + stage.text + '</span>'
+            );
+
+            return $stage;
+        }
+        $('#kt_modal_convert_lead_to_deal_form').on('submit', function(e) {
+            e.preventDefault();
+            if (this.checkValidity()) {
+                // Hide the submit button and show "Please wait" message
+                $('#convert_deal').addClass('d-none');
+                $('#wait_message').removeClass('d-none');
+                var formData = $(this).serialize();
+                var url = "{{ route('leads.convertLeadToDeal') }}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        $('#kt_modal_convert_lead_to_deal').modal('hide');
+                        Swal.fire({
+                            text: response.success,
+                            icon: 'success',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-success'
+                            }
+                        });
+                        // Reload or update your deals list here
+                        location.reload();
+                    },
+                    error: function(xhr) {
+                        // Show submit button again and hide "Please wait" message
+                        $('#convert_deal').removeClass('d-none');
+                        $('#wait_message').addClass('d-none');
+                        // Parse the error response if any
+                        var errorMessage = xhr.responseJSON.error || 'Failed to convert lead to Deal.';
+
+                        Swal.fire({
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'Close',
+                            customClass: {
+                                confirmButton: 'btn btn-light-danger'
+                            }
+                        });
+                    }
+                });
+            } else {
+                // If validation fails, trigger native HTML5 form validation
+                this.reportValidity();
+            }
+        });
     </script>
-
     @endpush
-
 </x-default-layout>

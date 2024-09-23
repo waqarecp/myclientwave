@@ -140,7 +140,7 @@
                 $hasPermissionCountrySetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
 
                 $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting;
-                $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'utility-companies.*', 'deals.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
+                $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'utility-companies.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
 
             <!--end:Menu item-->

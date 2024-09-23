@@ -27,6 +27,7 @@
                 @include('partials/general/_button-indicator', ['label' => 'Sign In To CRM'])
             </button>
         </div>
+        <a href="{{route('password.request')}}" class="float-end fw-semibold">Did you forgot your password?</a>
 
         <div class="text-gray-500 text-center fw-semibold fs-6 mt-8">
             <br><br>
