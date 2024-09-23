@@ -157,6 +157,17 @@ Breadcrumbs::for('utility-companies.index', function (BreadcrumbTrail $trail) {
     $trail->push('Utility Company', route('utility-companies.index'));
 });
 
+// Home > Settings > Deals > index
+Breadcrumbs::for('deals.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Deals', route('deals.index'));
+});
+
+// Home > Settings > Deals > [Deal]
+Breadcrumbs::for('deals.show', function (BreadcrumbTrail $trail, $deal) {
+    $trail->parent('deals.index');
+    $trail->push($deal->deal_name, route('deals.show', $deal));
+});
 // Home > settings >Utility Company > [Utility Company]
 Breadcrumbs::for('utility-companies.show', function (BreadcrumbTrail $trail, UtilityCompany $utilityCompany) {
     $trail->parent('utility-companies.index');
@@ -200,19 +211,6 @@ Breadcrumbs::for('communication_methods.index', function (BreadcrumbTrail $trail
 Breadcrumbs::for('communication_methods.show', function (BreadcrumbTrail $trail, $method) {
     $trail->parent('communication_methods.index');
     $trail->push($method->method_name, route('communication_methods.show', $method));
-});
-
-// Home > Settings > Deals > index
-Breadcrumbs::for('deals.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard');
-    $trail->push('Manage Settings', '#'); // The settings parent node
-    $trail->push('Deals', route('deals.index'));
-});
-
-// Home > Settings > Deals > [Deal]
-Breadcrumbs::for('deals.show', function (BreadcrumbTrail $trail, $deal) {
-    $trail->parent('deals.index');
-    $trail->push($deal->deal_name, route('deals.show', $deal));
 });
 
 // Home > Manage Setting > ountry > index

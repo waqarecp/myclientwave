@@ -80,6 +80,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
 
+    // deals routes
+    Route::resource('deals', DealController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:deal');
+    Route::post('/deals/update', [DealController::class, 'update'])->name('deals.update');
+    Route::post('/deals/destroy', [DealController::class, 'destroy'])->name('deals.destroy');
+    Route::post('/deals/view-deal-timeline', [DealController::class, 'viewDealTimeline'])->name('deals.viewTimeline');
+    Route::post('/deals/update-deal-timeline', [DealController::class, 'updateDealTimeline'])->name('deals.updateTimeline');
+    
+    // Utility Company routes
+    Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
+    
     Route::prefix('manage-settings')->group(function () {
         // Lead Sources routes
         Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
@@ -93,9 +103,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/state-colours/update', [StatecolourController::class, 'update'])->name('state-colour.update');
         Route::post('/state-colours/get-states', [StatecolourController::class, 'getStates'])->name('stateColours.getStates');
         Route::post('/state-colours/destroy', [StatecolourController::class, 'destroy'])->name('state-colour.destroy');
-        
-        // Utility Company routes
-        Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
 
         // stages routes
         Route::resource('stages', StageController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:stage');
@@ -111,13 +118,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('communication_methods', CommunicationMethodController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:communication method');
         Route::post('/communication_methods/update', [CommunicationMethodController::class, 'update'])->name('communication_methods.update');
         Route::post('/communication_methods/destroy', [CommunicationMethodController::class, 'destroy'])->name('communication_methods.destroy');
-        
-        // deals routes
-        Route::resource('deals', DealController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:deal');
-        Route::post('/deals/update', [DealController::class, 'update'])->name('deals.update');
-        Route::post('/deals/destroy', [DealController::class, 'destroy'])->name('deals.destroy');
-        Route::post('/deals/view-deal-timeline', [DealController::class, 'viewDealTimeline'])->name('deals.viewTimeline');
-        Route::post('/deals/update-deal-timeline', [DealController::class, 'updateDealTimeline'])->name('deals.updateTimeline');
 
         // Country setting routes
         Route::get('country', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');
