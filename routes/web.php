@@ -63,6 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/leads/get-states', [LeadController::class, 'getStates'])->name('leads.getStates');
     Route::post('/leads/get-cities', [LeadController::class, 'getCities'])->name('leads.getCities');
     Route::post('/leads/destroy', [LeadController::class, 'destroy'])->name('leads.destroy');
+    Route::post('/leads/covert-lead-to-deal', [LeadController::class, 'convertLeadToDeal'])->name('leads.convertLeadToDeal');
 
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
@@ -115,6 +116,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('deals', DealController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:deal');
         Route::post('/deals/update', [DealController::class, 'update'])->name('deals.update');
         Route::post('/deals/destroy', [DealController::class, 'destroy'])->name('deals.destroy');
+        Route::post('/deals/view-deal-timeline', [DealController::class, 'viewDealTimeline'])->name('deals.viewTimeline');
+        Route::post('/deals/update-deal-timeline', [DealController::class, 'updateDealTimeline'])->name('deals.updateTimeline');
 
         // Country setting routes
         Route::get('country', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');

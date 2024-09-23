@@ -32,6 +32,9 @@
         <div class="text-gray-500 text-center fw-semibold fs-6">
             <a href="/" class="btn btn-sm btn-primary fw-semibold">
                 Go To Website
+            </a>&nbsp;
+            <a href="{{route('password.request')}}" class=" fw-semibold">
+                Forgot Password?
             </a>
         </div>
         <br>

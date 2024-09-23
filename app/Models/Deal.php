@@ -88,4 +88,9 @@ class Deal extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    
+    public function dealTimeline()
+    {
+        return $this->hasMany(DealTimeline::class, 'deal_id');
+    }
 }

@@ -28,7 +28,7 @@
                     @if(auth()->user()->can('create deal'))
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_deal">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                        Add New Deal
+                        Create New Deal
                     </button>
                     @endif
                     <!--end::Add stage-->
@@ -48,8 +48,10 @@
                         <tr class="bg-light-primary">
                             <th>ID</th>
                             <th>Deal Name</th>
+                            <th>Deal Email</th>
+                            <th>Deal Amount</th>
+                            <th>Deal Stage</th>
                             <th>Created By</th>
-                            <th>Created Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -59,13 +61,21 @@
                         <tr>
                             <td>{{ $row->id }}</td>
                             <td>
-                                {{ $row->deal_name }}
+                                {{ $row->deal_name }} <br>
+                                <span class="badge bg-secondary">{{ $row->deal_phone_1 }}</span>
                             </td>
                             <td>
-                                {{ $row->creator->name}}
+                                {{ $row->deal_email }}
                             </td>
                             <td>
-                                {{\Carbon\Carbon::parse($row->created_at)->format('d M Y H:i')}}
+                                {{ $row->deal_amount ? '$'.number_format($row->deal_amount, 2) : 'N/A' }}
+                            </td>
+                            <td>
+                                <span class="badge badge-success badge-circle w-15px h-15px me-1" style="background-color: {{ $row->stage->stage_color_code }};"></span>{{ $row->stage->stage_name }}
+                            </td>
+                            <td>
+                                {{ $row->creator->name}} <br>
+                                <span class="badge bg-secondary">{{\Carbon\Carbon::parse($row->created_at)->format('d M Y H:i')}}</span>
                             </td>
                             <td>
                                 <!-- Include action buttons -->
@@ -125,6 +135,8 @@
                                             </optgroup>
                                             @endforeach
                                         </select>
+                                        @error('project_administrator_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Deal Owner -->
@@ -132,26 +144,28 @@
                                         <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
                                         <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid">
                                             @foreach($roles as $role)
-                                                <optgroup label="{{ ucwords($role->name) }}">
-                                                    @foreach($users as $user)
-                                                    @if($user->roles->contains($role))
-                                                    <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
-                                                        {{ $user->name }}
-                                                    </option>
-                                                    @endif
-                                                    @endforeach
-                                                </optgroup>
+                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                @foreach($users as $user)
+                                                @if($user->roles->contains($role))
+                                                <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                                @endif
+                                                @endforeach
+                                            </optgroup>
                                             @endforeach
                                         </select>
+                                        @error('owner_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- lead -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Lead</label>
-                                        <select name="lead_id" id="lead_id" onchange="populateLeadAddress(this)" class="form-select" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Lead">
+                                        <select name="lead_id" id="lead_id" onchange="populateLeadAddress(this)" class="form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Lead">
                                             <option value="">--- Select a Lead ---</option>
                                             @foreach($leads as $lead)
-                                            <option value="{{$lead->id}}" data-name="{{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}" data-phone1="{{ $lead->phone }}" data-email="{{ $lead->email }}" data-address="{{(implode(', ', array_filter([
+                                            <option value="{{$lead->id}}" data-name="{{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}" data-phone1="{{ $lead->phone }}" data-email="{{ $lead->email }}" data-source="{{ $lead->lead_source_id }}" data-address="{{(implode(', ', array_filter([
                                                 optional($lead->country)->name,
                                                 optional($lead->state)->name,
                                                 optional($lead->city)->name,
@@ -160,9 +174,12 @@
                                                 $lead->street,
                                                 $lead->zip
                                             ])))}}">
-                                                {{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}</option>
+                                                {{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}
+                                            </option>
                                             @endforeach
                                         </select>
+                                        @error('lead_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Deal Name -->
@@ -177,18 +194,24 @@
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Address</label>
                                         <input type="text" name="deal_address" id="deal_address" class="form-control form-control-solid" />
+                                        @error('deal_address')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Phone 1 -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Phone 1</label>
                                         <input type="text" name="deal_phone_1" id="deal_phone_1" class="form-control form-control-solid" />
+                                        @error('deal_phone_1')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Email -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Email</label>
                                         <input type="email" name="deal_email" id="deal_email" class="form-control form-control-solid" />
+                                        @error('deal_email')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Financier -->
@@ -198,6 +221,8 @@
                                             <option value="">None</option>
                                             <!-- Dynamic options here -->
                                         </select>
+                                        @error('financier_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Type -->
@@ -206,11 +231,13 @@
                                         <select name="home_type_id" id="home_type_id" class="form-control form-select form-control-solid">
                                             <option value="">-- Select --</option>
                                             @foreach($homeTypes as $homeType)
-                                                <option value="{{ $homeType->id }}">
-                                                    {{ $homeType->home_type_name }}
-                                                </option>
+                                            <option value="{{ $homeType->id }}">
+                                                {{ $homeType->home_type_name }}
+                                            </option>
                                             @endforeach
                                         </select>
+                                        @error('home_type_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Lead Source -->
@@ -219,11 +246,45 @@
                                         <select name="source_id" id="source_id" class="form-control form-select form-control-solid">
                                             <option value="">-- Select --</option>
                                             @foreach($leadSources as $leadSource)
-                                                <option value="{{ $leadSource->id }}">
-                                                    {{ $leadSource->source_name }}
-                                                </option>
+                                            <option value="{{ $leadSource->id }}">
+                                                {{ $leadSource->source_name }}
+                                            </option>
                                             @endforeach
                                         </select>
+                                        @error('source_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Deal Account name -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Account Name</label>
+                                        <input type="text" name="deal_account_name" id="deal_account_name" class="form-control form-control-solid" />
+                                        @error('deal_account_name')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_contact_name -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Contact Name</label>
+                                        <input type="text" name="deal_contact_name" id="deal_contact_name" class="form-control form-control-solid" />
+                                        @error('deal_contact_name')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_phone_burner_last_call_outcome -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Outcome</label>
+                                        <input type="text" name="deal_phone_burner_last_call_outcome" id="deal_phone_burner_last_call_outcome" class="form-control form-control-solid" />
+                                        @error('deal_phone_burner_last_call_outcome')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_social_lead_id -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Social Lead Id</label>
+                                        <input type="text" name="deal_social_lead_id" id="deal_social_lead_id" class="form-control form-control-solid" />
+                                        @error('deal_social_lead_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
 
@@ -232,21 +293,43 @@
                                     <!-- Amount -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Amount</label>
-                                        <input type="text" name="deal_amount" id="deal_amount" class="form-control form-control-solid" />
+                                        <input type="number" name="deal_amount" id="deal_amount" class="form-control form-control-solid" />
+                                        @error('deal_amount')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Closing Date -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Closing Date</label>
                                         <input type="date" name="deal_closing_date" id="deal_closing_date" class="form-control form-control-solid" />
+                                        @error('deal_closing_date')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Pipeline -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Pipeline</label>
                                         <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
                                             <!-- Dynamic options here -->
                                         </select>
+                                        @error('deal_pipeline')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- communication_method_id -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                        <select name="communication_method_id" id="communication_method_id" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            @foreach($communicationMethods as $communicationMethod)
+                                            <option value="{{ $communicationMethod->id }}">
+                                                {{ $communicationMethod->method_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('communication_method_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Stage -->
@@ -255,39 +338,67 @@
                                         <select name="stage_id" id="stage_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Stage">
                                             <option value="">-- Select --</option>
                                             @foreach($dealStages as $dealStage)
-                                                <option value="{{ $dealStage->id }}" data-color="{{ $dealStage->stage_color_code }}">
-                                                    {{ $dealStage->stage_name }}
-                                                </option>
+                                            <option value="{{ $dealStage->id }}" data-color="{{ $dealStage->stage_color_code }}">
+                                                {{ $dealStage->stage_name }}
+                                            </option>
                                             @endforeach
                                         </select>
+                                        @error('stage_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Probability -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Probability (%)</label>
                                         <input type="number" name="deal_probability" id="deal_probability" class="form-control form-control-solid" value="100" />
+                                        @error('deal_probability')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Expected Revenue -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Expected Revenue</label>
-                                        <input type="text" name="deal_expected_revenue" id="deal_expected_revenue" class="form-control form-control-solid" />
+                                        <input type="number" name="deal_expected_revenue" id="deal_expected_revenue" class="form-control form-control-solid" />
+                                        @error('deal_expected_revenue')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Permit Number -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Permit No.</label>
                                         <input type="text" name="deal_permit_number" id="deal_permit_number" class="form-control form-control-solid" />
+                                        @error('deal_permit_number')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_phone_burner_followup_date -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Followup Date</label>
+                                        <input type="date" name="deal_phone_burner_followup_date" id="deal_phone_burner_followup_date" class="form-control form-control-solid" />
+                                        @error('deal_phone_burner_followup_date')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_phone_burner_last_call_time -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Time</label>
+                                        <input type="datetime-local" name="deal_phone_burner_last_call_time" id="deal_phone_burner_last_call_time" class="form-control form-control-solid" />
+                                        @error('deal_phone_burner_last_call_time')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Availability Start & End -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Availability Start</label>
                                         <input type="time" name="deal_availability_start" id="deal_availability_start" class="form-control form-control-solid" />
+                                        @error('deal_availability_start')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Availability End</label>
                                         <input type="time" name="deal_availability_end" id="deal_availability_end" class="form-control form-control-solid" />
+                                        @error('deal_availability_end')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                     <!-- Organization -->
@@ -297,6 +408,8 @@
                                             <option value="">None</option>
                                             <!-- Dynamic options here -->
                                         </select>
+                                        @error('organization_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>
@@ -324,7 +437,7 @@
 
     <!-- update modal -->
     <div class="modal fade" id="kt_modal_update_deal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-450px">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header" id="kt_modal_update_deal_header">
                     <h2 class="fw-bold">Update Deal</h2>
@@ -337,14 +450,305 @@
                         <input type="hidden" id="deal_id" name="deal_id" />
                         <!--begin::Scroll-->
                         <div class="d-flex flex-column scroll-y px-2 px-lg-10" id="kt_modal_update_deal_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_update_deal_header" data-kt-scroll-wrappers="#kt_modal_update_deal_scroll" data-kt-scroll-offset="300px">
+                            <!-- Begin: Row 1 (left and right) -->
                             <div class="row">
-                                <div class="fv-row mb-7 col-md-12">
-                                    <label class="required fw-semibold fs-6 mb-2">Deal Name</label>
-                                    <input type="text" name="update_deal_name" id="update_deal_name" class="form-control form-control-solid border mb-3 mb-lg-0">
-                                    @error('update_deal_name')
-                                    <span class="text-danger">{{ $message }}</span> @enderror
+                                <!-- Left Column -->
+                                <div class="col-md-6">
+                                    <!-- Project Administrator -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Project Administrator</label>
+                                        <select name="update_project_administrator_id" id="update_project_administrator_id" class="form-control form-select form-control-solid">
+                                            @foreach($roles as $role)
+                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                @foreach($users as $user)
+                                                @if($user->roles->contains($role))
+                                                <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                                @endif
+                                                @endforeach
+                                            </optgroup>
+                                            @endforeach
+                                        </select>
+                                        @error('update_project_administrator_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Deal Owner -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
+                                        <select name="update_owner_id" id="update_owner_id" class="form-control form-select form-control-solid">
+                                            @foreach($roles as $role)
+                                            <optgroup label="{{ ucwords($role->name) }}">
+                                                @foreach($users as $user)
+                                                @if($user->roles->contains($role))
+                                                <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                                @endif
+                                                @endforeach
+                                            </optgroup>
+                                            @endforeach
+                                        </select>
+                                        @error('update_owner_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- lead -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Lead</label>
+                                        <select name="update_lead_id" id="update_lead_id" onchange="updatePopulateLeadAddress(this)" class="form-select form-control-solid">
+                                            <option value="">--- Select a Lead ---</option>
+                                            @foreach($leads as $lead)
+                                            <option value="{{$lead->id}}" data-name="{{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}" data-phone1="{{ $lead->phone }}" data-email="{{ $lead->email }}" data-source="{{ $lead->lead_source_id }}" data-address="{{(implode(', ', array_filter([
+                                                optional($lead->country)->name,
+                                                optional($lead->state)->name,
+                                                optional($lead->city)->name,
+                                                $lead->address_1,
+                                                $lead->address_2,
+                                                $lead->street,
+                                                $lead->zip
+                                            ])))}}">
+                                                {{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('update_lead_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Deal Name -->
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Deal Name</label>
+                                        <input type="text" name="update_deal_name" id="update_deal_name" class="form-control form-control-solid" />
+                                        @error('update_deal_name')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Address</label>
+                                        <input type="text" name="update_deal_address" id="update_deal_address" class="form-control form-control-solid" />
+                                        @error('update_deal_address')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Phone 1 -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone 1</label>
+                                        <input type="text" name="update_deal_phone_1" id="update_deal_phone_1" class="form-control form-control-solid" />
+                                        @error('update_deal_phone_1')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Email</label>
+                                        <input type="email" name="update_deal_email" id="update_deal_email" class="form-control form-control-solid" />
+                                        @error('update_deal_email')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Financier -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Financier</label>
+                                        <select name="update_financier_id" id="update_financier_id" class="form-control form-select form-control-solid">
+                                            <option value="">None</option>
+                                            <!-- Dynamic options here -->
+                                        </select>
+                                        @error('update_financier_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Type -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Home Type</label>
+                                        <select name="update_home_type_id" id="update_home_type_id" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            @foreach($homeTypes as $homeType)
+                                            <option value="{{ $homeType->id }}">
+                                                {{ $homeType->home_type_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('update_home_type_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Lead Source -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Lead Source</label>
+                                        <select name="update_source_id" id="update_source_id" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            @foreach($leadSources as $leadSource)
+                                            <option value="{{ $leadSource->id }}">
+                                                {{ $leadSource->source_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('update_source_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Deal Account name -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Account Name</label>
+                                        <input type="text" name="update_deal_account_name" id="update_deal_account_name" class="form-control form-control-solid" />
+                                        @error('update_deal_account_name')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_contact_name -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Contact Name</label>
+                                        <input type="text" name="update_deal_contact_name" id="update_deal_contact_name" class="form-control form-control-solid" />
+                                        @error('update_deal_contact_name')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_phone_burner_last_call_outcome -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Outcome</label>
+                                        <input type="text" name="update_deal_phone_burner_last_call_outcome" id="update_deal_phone_burner_last_call_outcome" class="form-control form-control-solid" />
+                                        @error('update_deal_phone_burner_last_call_outcome')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- deal_social_lead_id -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Social Lead Id</label>
+                                        <input type="text" name="update_deal_social_lead_id" id="update_deal_social_lead_id" class="form-control form-control-solid" />
+                                        @error('update_deal_social_lead_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="col-md-6">
+                                    <!-- Amount -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Amount</label>
+                                        <input type="number" name="update_deal_amount" id="update_deal_amount" class="form-control form-control-solid" />
+                                        @error('update_deal_amount')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Closing Date -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Closing Date</label>
+                                        <input type="date" name="update_deal_closing_date" id="update_deal_closing_date" class="form-control form-control-solid" />
+                                        @error('update_deal_closing_date')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Pipeline -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Pipeline</label>
+                                        <select name="update_deal_pipeline" id="update_deal_pipeline" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            <!-- Dynamic options here -->
+                                        </select>
+                                        @error('update_deal_pipeline')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- update_communication_method_id -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                        <select name="update_communication_method_id" id="update_communication_method_id" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            @foreach($communicationMethods as $communicationMethod)
+                                            <option value="{{ $communicationMethod->id }}">
+                                                {{ $communicationMethod->method_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('update_communication_method_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Stage -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Stage</label>
+                                        <select name="update_stage_id" id="update_stage_id" class="form-control form-select form-control-solid">
+                                            <option value="">-- Select --</option>
+                                            @foreach($dealStages as $dealStage)
+                                            <option value="{{ $dealStage->id }}" data-color="{{ $dealStage->stage_color_code }}">
+                                                {{ $dealStage->stage_name }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('update_stage_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Probability -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Probability (%)</label>
+                                        <input type="number" name="update_deal_probability" id="update_deal_probability" class="form-control form-control-solid" value="100" />
+                                        @error('update_deal_probability')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Expected Revenue -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Expected Revenue</label>
+                                        <input type="number" name="update_deal_expected_revenue" id="update_deal_expected_revenue" class="form-control form-control-solid" />
+                                        @error('update_deal_expected_revenue')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Permit Number -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Permit No.</label>
+                                        <input type="text" name="update_deal_permit_number" id="update_deal_permit_number" class="form-control form-control-solid" />
+                                        @error('update_deal_permit_number')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- update_deal_phone_burner_followup_date -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Followup Date</label>
+                                        <input type="date" name="update_deal_phone_burner_followup_date" id="update_deal_phone_burner_followup_date" class="form-control form-control-solid" />
+                                        @error('update_deal_phone_burner_followup_date')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- update_deal_phone_burner_last_call_time -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Phone Burner Last Call Time</label>
+                                        <input type="datetime-local" name="update_deal_phone_burner_last_call_time" id="update_deal_phone_burner_last_call_time" class="form-control form-control-solid" />
+                                        @error('update_deal_phone_burner_last_call_time')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Availability Start & End -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Availability Start</label>
+                                        <input type="time" name="update_deal_availability_start" id="update_deal_availability_start" class="form-control form-control-solid" />
+                                        @error('update_deal_availability_start')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Availability End</label>
+                                        <input type="time" name="update_deal_availability_end" id="update_deal_availability_end" class="form-control form-control-solid" />
+                                        @error('update_deal_availability_end')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Organization -->
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Organization</label>
+                                        <select name="update_organization_id" id="update_organization_id" class="form-control form-select form-control-solid">
+                                            <option value="">None</option>
+                                            <!-- Dynamic options here -->
+                                        </select>
+                                        @error('update_organization_id')
+                                        <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
                                 </div>
                             </div>
+                            <!-- End: Row 1 -->
                         </div>
                         <!--end::Scroll-->
                         <!--begin::Actions-->
@@ -365,6 +769,20 @@
         </div>
     </div>
     <!-- end modal -->
+
+    <!--begin::Modal - View Deal Details-->
+    <div class="modal fade" id="kt_modal_update_deal_timeline" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body py-10 px-lg-17 kt_modal_attach_deal">
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - View Deal Details-->
+
     @push('scripts')
     <script>
         document.querySelectorAll('[data-kt-action="delete_row"]').forEach(function(element) {
@@ -527,29 +945,124 @@
                 this.reportValidity();
             }
         });
-
+        
         function update_deal_modal(element) {
             var dealId = $(element).data('kt-deal-id');
             if (dealId) {
-                var methodName = $(element).data('kt-deal-name');
+                var projectAdministratorId = $(element).data('kt-project-administrator-id');
+                var dealOwnerId = $(element).data('kt-owner-id');
+                var dealLeadId = $(element).data('kt-lead-id');
+                var dealName = $(element).data('kt-deal-name');
+                var dealAddress = $(element).data('kt-deal-address');
+                var dealPhone1 = $(element).data('kt-deal-phone-1');
+                var dealEmail = $(element).data('kt-deal-email');
+                var financierId = $(element).data('kt-financier-id');
+                var homeTypeId = $(element).data('kt-home-type-id');
+                var sourceId = $(element).data('kt-source-id');
+                var dealAccountName = $(element).data('kt-deal-account-name');
+                var dealContactName = $(element).data('kt-deal-contact-name');
+                var dealPhoneBurnerOutcome = $(element).data('kt-deal-phone-burner-last-call-outcome');
+                var dealSocialLeadId = $(element).data('kt-deal-social-lead-id');
+                var dealAmount = $(element).data('kt-deal-amount');
+                var dealClosingDate = $(element).data('kt-deal-closing-date');
+                var dealPipeline = $(element).data('kt-deal-pipeline');
+                var communicationMethodId = $(element).data('kt-communication-method-id');
+                var stageId = $(element).data('kt-stage-id');
+                var dealProbability = $(element).data('kt-deal-probability');
+                var dealExpectedRevenue = $(element).data('kt-deal-expected-revenue');
+                var dealPermitNumber = $(element).data('kt-deal-permit-number');
+                var dealFollowupDate = $(element).data('kt-deal-phone-burner-followup-date');
+                var dealLastCallTime = $(element).data('kt-deal-phone-burner-last-call-time');
+                var dealAvailabilityStart = $(element).data('kt-deal-availability-start');
+                var dealAvailabilityEnd = $(element).data('kt-deal-availability-end');
+                var organizationId = $(element).data('kt-organization-id');
 
                 $('#deal_id').val(dealId);
-                $('#update_deal_name').val(methodName);
+                $('#update_project_administrator_id').val(projectAdministratorId);
+                $('#update_owner_id').val(dealOwnerId);
+                $('#update_lead_id').val(dealLeadId).trigger('change');
+                $('#update_lead_id').select2({
+                        dropdownParent: $('#kt_modal_update_deal'),
+                    });
+                $('#update_deal_name').val(dealName);
+                $('#update_deal_address').val(dealAddress);
+                $('#update_deal_phone_1').val(dealPhone1);
+                $('#update_deal_email').val(dealEmail);
+                $('#update_financier_id').val(financierId);
+                $('#update_home_type_id').val(homeTypeId);
+                $('#update_source_id').val(sourceId);
+                $('#update_deal_account_name').val(dealAccountName);
+                $('#update_deal_contact_name').val(dealContactName);
+                $('#update_deal_phone_burner_last_call_outcome').val(dealPhoneBurnerOutcome);
+                $('#update_deal_social_lead_id').val(dealSocialLeadId);
+                $('#update_deal_amount').val(dealAmount);
+                $('#update_deal_closing_date').val(dealClosingDate);
+                $('#update_deal_pipeline').val(dealPipeline);
+                $('#update_communication_method_id').val(communicationMethodId);
+                $('#update_stage_id').val(stageId).trigger('change');
+                $('#update_stage_id').select2({
+                        dropdownParent: $('#kt_modal_update_deal'),
+                        templateResult: formatStageColour,
+                        templateSelection: formatStageColour
+                    });
+                $('#update_deal_probability').val(dealProbability);
+                $('#update_deal_expected_revenue').val(dealExpectedRevenue);
+                $('#update_deal_permit_number').val(dealPermitNumber);
+                $('#update_deal_phone_burner_followup_date').val(dealFollowupDate);
+                $('#update_deal_phone_burner_last_call_time').val(dealLastCallTime);
+                $('#update_deal_availability_start').val(dealAvailabilityStart);
+                $('#update_deal_availability_end').val(dealAvailabilityEnd);
+                $('#update_organization_id').val(organizationId);
 
                 $('#kt_modal_update_deal').modal('show');
             }
         }
 
+        $('#update_stage_id').select2({
+            templateResult: formatStageColour,
+            templateSelection: formatStageColour,
+            dropdownParent: $('#kt_modal_update_deal')
+        });
+
+        function formatStageColour(stage) {
+            if (!stage.id) {
+                return stage.text;
+            }
+
+            var color = $(stage.element).data('color'); // Get color from option data
+            var $stage = $(
+                '<span><span class="badge badge-circle w-15px h-15px me-1" style="background-color:' + color + '"></span>' + stage.text + '</span>'
+            );
+
+            return $stage;
+        }
+
         function populateLeadAddress(element) {
             var selectedOption = $(element).find('option:selected');
-            var leadName = selectedOption.data('name'); 
+            var leadName = selectedOption.data('name');
             var leadAddress = selectedOption.data('address');
             var leadPhone1 = selectedOption.data('phone1');
             var leadEmail = selectedOption.data('email');
-            $("#deal_name").val(leadName); 
+            var leadSource = selectedOption.data('source');
+            $("#deal_name").val(leadName);
             $("#deal_address").val(leadAddress);
             $("#deal_phone_1").val(leadPhone1);
             $("#deal_email").val(leadEmail);
+            $("#source_id").val(leadSource);
+        }
+        
+        function updatePopulateLeadAddress(element) {
+            var selectedOption = $(element).find('option:selected');
+            var leadName = selectedOption.data('name');
+            var leadAddress = selectedOption.data('address');
+            var leadPhone1 = selectedOption.data('phone1');
+            var leadEmail = selectedOption.data('email');
+            var leadSource = selectedOption.data('source');
+            $("#update_deal_name").val(leadName);
+            $("#update_deal_address").val(leadAddress);
+            $("#update_deal_phone_1").val(leadPhone1);
+            $("#update_deal_email").val(leadEmail);
+            $("#update_source_id").val(leadSource);
         }
 
         $(document).ready(function() {
@@ -579,6 +1092,40 @@
                 });
             });
         });
+
+        function viewDealTimeline(deal_id, activeCommentsTab = false) {
+            $.ajax({
+                url: "{{ route('deals.viewTimeline') }}", // Use the URL from the data attribute
+                method: 'post',
+                data: {
+                    deal_id: deal_id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                },
+                success: function(data) {
+                    $('.kt_modal_attach_deal').html(data);
+                    $('#kt_modal_update_deal_timeline').modal('show');
+                    if (activeCommentsTab) {
+                        $('#update_followup .nav-item a').removeClass('active');
+                        $('#update_followup .nav-item a').eq(1).addClass('active');
+                        $('#deal-note-content .tab-pane').removeClass('active show');
+                        $('#deal-note-content .tab-pane').eq(1).addClass('active show');
+                    }
+                },
+                error: function(data) {
+                    Swal.fire({
+                        text: 'Failed to view timeline for this deal!',
+                        icon: 'error',
+                        confirmButtonText: "Close",
+                        buttonsStyling: false,
+                        customClass: {
+                            confirmButton: "btn btn-light-danger"
+                        }
+                    });
+                }
+            });
+        }
     </script>
     @endpush
 
