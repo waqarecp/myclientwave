@@ -76,7 +76,7 @@ class CompanyController extends Controller
                 'email' => $company->email,
                 'email_verified_at' => now(),
                 'password' => Hash::make($request->password),
-                'password_plan' => $request->password,
+                'password_plain' => $request->password,
             ]);
 
             if ($user) {

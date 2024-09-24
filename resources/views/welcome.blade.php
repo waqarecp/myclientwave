@@ -50,7 +50,7 @@
                             <!--begin::Content container-->
                             <div id="kt_app_content_container" class="app-container container-xxl">
                                 <a href="/">
-                                    <img alt="Logo" src="assets/media/logos/favicon.ico" class="h-50px" />
+                                    <img alt="My Client Wave Logo" src="assets/media/logos/my-client-wave-black-logo.png" class="h-125px d-block mx-auto">
                                 </a>
                                 <!--begin::About-->
                                 <div class="mb-18">
