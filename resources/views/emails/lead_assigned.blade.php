@@ -12,6 +12,6 @@
         <li>Email: {{ $lead->email }}</li>
         <li>Phone: {{ $lead->phone }}</li>
     </ul>
-    <p>Click <a href="{{ env('APP_URL') }}/leads/{{ $lead->id }}">here</a> to view the lead.</p>
+    <p>Click <a href="{{ env('APP_URL') }}leads/{{ $lead->id }}">here</a> to view the lead.</p>
 </body>
 </html>
