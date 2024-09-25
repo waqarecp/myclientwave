@@ -1,19 +1,21 @@
 <x-auth-layout>
 
     <!--begin::Form-->
+    <img alt="Logo" src="{{ asset('assets/media/logos/my-client-wave-black-logo.png') }}" class="h-125px d-block mx-auto">
+    <hr>
     <form class="form w-100" novalidate="novalidate" id="kt_password_reset_form" data-kt-redirect-url="{{ route('login') }}" action="{{ route('password.request') }}">
         @csrf
         <!--begin::Heading-->
         <div class="text-center mb-10">
             <!--begin::Title-->
-            <h1 class="text-gray-900 fw-bolder mb-3">
-                Forgot Password ?
+            <h1 class="text-gray-700 fw-bolder mb-3">
+                Forgot Your Password?
             </h1>
             <!--end::Title-->
 
             <!--begin::Link-->
             <div class="text-gray-500 fw-semibold fs-6">
-                Enter your email to reset your password.
+                Enter your registered email to reset your password.
             </div>
             <!--end::Link-->
         </div>

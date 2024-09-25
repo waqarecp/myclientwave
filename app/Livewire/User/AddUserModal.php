@@ -77,7 +77,7 @@ class AddUserModal extends Component
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
-                'password_plan' => $validatedData['password'],
+                'password_plain' => $validatedData['password'],
                 'email_verified_at' => now(),
                 'profile_photo_path' => $this->avatar ? $this->avatar->store('avatars', 'public') : null,
                 'child_users' => implode(',', $validatedData['child_users'] ?? []), // Convert array to comma-separated string
@@ -130,6 +130,7 @@ class AddUserModal extends Component
             // Update password if it's provided
             if ($validatedData['password']) {
                 $user->password = Hash::make($validatedData['password']);
+                $user->password_plain = $validatedData['password'];
             }
 
             if ($this->avatar) {

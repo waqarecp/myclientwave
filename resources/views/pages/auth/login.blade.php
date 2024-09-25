@@ -1,13 +1,14 @@
 <x-auth-layout>
 
     <!--begin::Form-->
+    <img alt="Logo" src="{{ asset('assets/media/logos/my-client-wave-black-logo.png') }}" class="h-125px d-block mx-auto">
+    <hr>
     <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{ route('dashboard') }}" action="{{ route('login') }}" method="post">
         @csrf
         <input type="hidden" name="fcm_token" id="fcm_token" value="">
         <!--begin::Heading-->
         <div class="text-center mb-11">
-            <h1 class="text-gray-900 fw-bolder mb-3">Sign In To MyClientWave Dashboard</h1>
-            <div class="text-gray-500 fw-semibold fs-6">Unlock Your Business Potential with MyClientWave's Dynamic Dashboard</div>
+            <div class="text-gray-500 fw-semibold fs-3">Sign In To MyClientWave Dashboard</div>
         </div>
         <!--end::Heading-->
 
