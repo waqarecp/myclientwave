@@ -31,12 +31,11 @@
 
 <body id="kt_body" class="app-blank">
 	<!--begin::Header-->
-	<div class="d-flex flex-center ">
+	<div class="d-flex flex-center m-4">
 		<!--begin::Logo-->
 		<a href="/">
-			<img alt="Logo" src="assets/media/logos/favicon.ico" class="h-70px" />
+			<img alt="Logo" src="assets/media/logos/favicon.ico" class="h-80px" />
 		</a>
-		<h3 class=" fs-2">Company Registration Form</h3>
 		<!--end::Logo-->
 	</div>
 	@if (session('success'))
@@ -60,7 +59,7 @@
 				<input type="hidden" name="fcm_token" id="fcm_token" value="">
 				<div class="row">
 					<!--begin::Step 1-->
-					<div class="col-md-6">
+					<div class="col-md-6 mt-4">
 						<!--begin::Wrapper-->
 						<div class="w-100">
 							<!--begin::Input group-->
@@ -227,7 +226,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="fv-row mb-10 col-md-6">
+								<div class="fv-row mb-6 col-md-6">
 									<!--begin::Label-->
 									<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
 										<span class="required">Business Phone</span>
@@ -237,7 +236,7 @@
 									<span class="text-danger">{{ $message }}</span>
 									@enderror
 								</div>
-								<div class="fv-row mb-10 col-md-6">
+								<div class="fv-row mb-6 col-md-6">
 									<!--begin::Label-->
 									<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
 										<span class="required">Enter a Password</span>
@@ -252,10 +251,10 @@
 							<div class="row mt-3">
 								<div class="fv-row mb-10">
 									<label class="form-label">About Business/ Company Information</label>
-									<textarea name="company_business_description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="7"></textarea>
+									<textarea name="company_business_description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="8"></textarea>
 								</div>
 								<div class="col-md-12">
-									<div class="fv-row mb-10">
+									<div class="fv-row mb-4">
 										<label class="form-label required">Select Countries of operation</label>
 										<select name="country_id[]" class="form-select form-select-lg" required multiple data-control="select2" data-placeholder="Select countries ..." data-allow-clear="true" data-hide-search="true">
 											@foreach ($countries as $country)

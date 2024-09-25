@@ -71,7 +71,7 @@
                         <!--begin::Card title-->
                         <div class="card-title">
                             <h2 class="d-flex align-items-center">Users Assigned
-                                <span class="text-gray-600 fs-6 ms-1">({{ $role->users->count() }})</span>
+                                <span class="text-gray-600 fs-6 ms-1">({{ $role->users()->where('company_id', auth()->user()->company_id)->count() }})</span>
                             </h2>
                         </div>
                         <!--end::Card title-->

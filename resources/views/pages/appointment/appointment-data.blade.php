@@ -117,7 +117,7 @@
                                         <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
                                             <option value="all">Tag All Users</option>
                                             @foreach($users as $userId => $userName)
-                                            @if ($userId != auth()->user()->id)
+                                            @if (1==1)
                                             <option value="{{$userId}}">{{ucwords($userName)}}</option>
                                             @endif
                                             @endforeach

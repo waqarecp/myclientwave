@@ -3,7 +3,6 @@
 namespace App\DataTables;
 
 use App\Models\User;
-use App\Models\UsersAssingedRole;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
@@ -39,7 +38,7 @@ class UsersAssignedRoleDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery()->whereHas('roles', function (Builder $query) {
+        return $model->newQuery()->where('company_id', auth()->user()->company_id)->whereHas('roles', function (Builder $query) {
             $query->where('role_id', $this->role->getKey());
         });
     }
