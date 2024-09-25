@@ -39,7 +39,7 @@
                                         <div class="fw-bold mt-5">Email</div>
                                         <div class="text-gray-600">{{ $company->email }}</div>
                                         <div class="fw-bold mt-5">Description</div>
-                                        <div class="text-gray-600">{{ $company->company_business_description }}</div>
+                                        <div class="text-gray-600">{{ $company->description }}</div>
                                         <div class="fw-bold mt-5">Created At</div>
                                         <div class="text-gray-600">{{ \Carbon\Carbon::parse($company->created_at)->format('d F Y, g:i a') }}</div>
                                     </div>

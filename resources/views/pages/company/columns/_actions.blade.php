@@ -16,9 +16,9 @@
     @if(!$loop->first)
     <!--begin::Menu item-->
         <div class="menu-item px-3">
-            <a href="javascript:void(0)" class="menu-link px-3" data-kt-company-id="{{ $company->id }}" data-kt-company-name="{{ $company->name }}" data-kt-company-address="{{ $company->address }}" data-kt-company-account-type="{{ $company->company_account_type }}"
-                data-kt-company-employee-size="{{ $company->company_employee_size }}" data-kt-company-account-plan="{{ $company->company_account_plan }}" data-kt-company-business-type="{{ $company->company_business_type }}"
-                data-kt-company-business-description="{{ $company->company_business_description }}" onclick="update_company_modal(this)">
+            <a href="javascript:void(0)" class="menu-link px-3" data-kt-company-id="{{ $company->id }}" data-kt-company-name="{{ $company->name }}" data-kt-company-address="{{ $company->address }}" data-kt-company-account-type="{{ $company->account_type }}"
+                data-kt-company-employee-size="{{ $company->employee_size }}" data-kt-company-account-plan="{{ $company->account_plan }}" data-kt-company-business-type="{{ $company->business_type }}"
+                data-kt-company-business-description="{{ $company->description }}" onclick="update_company_modal(this)">
                 Edit
             </a>
         </div>
