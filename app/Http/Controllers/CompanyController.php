@@ -27,10 +27,24 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        
-        return view('pages/company.list');
+        $companyQuery = Company::whereNull('companies.deleted_at');
+        $searchTerm = $request->input('search', '');
+        if (!empty($searchTerm)) {
+            $companyQuery->where(function ($q) use ($searchTerm) {
+                if (is_numeric($searchTerm)) {
+                    $q->where('companies.id', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('companies.phone', 'LIKE', "%{$searchTerm}%");
+                } elseif (strpos($searchTerm, '@') !== false) {
+                    $q->where('companies.email', 'LIKE', "%{$searchTerm}%");
+                } elseif (preg_match('/^[a-zA-Z\s]+$/', $searchTerm)) {
+                    $q->where('companies.name', 'LIKE', "%{$searchTerm}%"); 
+                }
+            });
+        }
+        $rows = $companyQuery->paginate(15)->withQueryString();
+        return view('pages.company.index', compact('rows'));
     }
 
     /**
@@ -72,7 +86,7 @@ class CompanyController extends Controller
             }
             $user = User::create([
                 'company_id' => $company->id,
-                'name' => $company->name,
+                'name' => $request->input('name'),
                 'email' => $company->email,
                 'email_verified_at' => now(),
                 'password' => Hash::make($request->password),
@@ -216,7 +230,7 @@ class CompanyController extends Controller
         return Company::create([
             'company_account_type' => $request->input('company_account_type'),
             'company_employee_size' => $request->input('company_employee_size', 1),
-            'name' => $request->input('name'),
+            'name' => $request->input('company_business_name'),
             'company_account_plan' => $request->input('company_account_plan', 1),
             'company_business_name' => $request->input('company_business_name'),
             'company_address' => $request->input('company_address'),
@@ -226,7 +240,7 @@ class CompanyController extends Controller
             'phone' => $request->input('phone'),
             'logo' => $request->input('logo') ? $request->input('logo')->store('companies', 'public') : null,
             'website' => $request->input('website'),
-            'address' => $request->input('address'),
+            'address' => $request->input('company_address'),
         ]);
     }
 
@@ -249,16 +263,41 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Company $company)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'company_business_name' => 'required|string|max:255',
+            'company_account_type' => 'nullable|integer',
+            'company_address' => 'nullable|string',
+            'company_business_type' => 'nullable|integer',
+            'company_employee_size' => 'nullable|integer',
+            'company_business_description' => 'nullable|string',
+        ]);
+        if ($request->company_id) {
+            $company = Company::findOrFail($request->company_id);
+            $company->name = $request->company_business_name;
+            $company->company_account_type = $request->company_account_type;
+            $company->company_address = $request->company_address;
+            $company->company_employee_size = $request->company_employee_size;
+            $company->company_business_type = $request->company_business_type;
+            $company->company_business_description = $request->company_business_description;
+            if ($company->save()) {
+                return response()->json(['success' => 'Company updated successfully']);
+            } else {
+                return response()->json(['error' => 'Failed to update Company'], 500);
+            }
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Company $company)
+    public function destroy(Request $request)
     {
-        //
+        $company = Company::findorFail($request->companyId);
+        $company->deleted_by = Auth::user()->id;
+        $company->delete();
+
+        return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
     }
 }

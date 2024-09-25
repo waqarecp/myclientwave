@@ -190,31 +190,17 @@
 									<input name="company_address" placeholder="Write company address ..." class="form-control form-control-lg" required/>
 								</div>
 							</div>
-							<div class="row">
-								<div class="fv-row mb-10 col-md-6">
-									<label class="form-label required">Select Business Type</label>
-									<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
-										<option value=""></option>
-										<option value="1">S Corporation</option>
-										<option value="2">C Corporation</option>
-										<option value="3">Sole Proprietorship</option>
-										<option value="4">Non-profit</option>
-										<option value="5">Limited Liability</option>
-										<option value="6">General Partnership</option>
-									</select>
-								</div>
-								<div class="fv-row mb-10 col-md-6">
-										<label class="form-label">Select Corporation Type</label>
-										<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
-											<option value=""></option>
-											<option value="1">S Corporation</option>
-											<option value="2">C Corporation</option>
-											<option value="3">Sole Proprietorship</option>
-											<option value="4">Non-profit</option>
-											<option value="5">Limited Liability</option>
-											<option value="6">General Partnership</option>
-										</select>
-									</div>
+							<div class="fv-row mb-10">
+								<label class="form-label required">Select Business Type</label>
+								<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
+									<option value=""></option>
+									<option value="1">S Corporation</option>
+									<option value="2">C Corporation</option>
+									<option value="3">Sole Proprietorship</option>
+									<option value="4">Non-profit</option>
+									<option value="5">Limited Liability</option>
+									<option value="6">General Partnership</option>
+								</select>
 							</div>
 						</div>
 					</div>
