@@ -14,6 +14,11 @@
             <div class="card-title">
                 <form method="GET" action="{{ route('companies.index') }}" class="d-flex align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="form-control form-control-sm me-3">
+                    <select name="status" id="status" class="form-select form-select-sm me-3">
+                        <option value="">Filter By Status</option>
+                        <option {{ isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : ''}} value="1">Active</option>
+                        <option {{ isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : ''}} value="2">Disabled</option>
+                    </select>
                     <button type="submit" class="btn btn-primary btn-sm me-1">Search</button>
                     <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm me-1">Clear</a>
                 </form>
@@ -52,7 +57,7 @@
                             <td>
                                 {{ $row->email }}
                             </td>
-                            <td>
+                            <td  class="status-badge">
                                 @if($row->deleted_at)
                                     <span class="badge badge-danger">Disabled</span>
                                 @else
@@ -275,12 +280,19 @@
                                         confirmButton: 'btn btn-light-success'
                                     }
                                 });
-                                location.reload();
+
+                                // Find the row and update its status and button
+                                var rowElement = document.querySelector(`[data-kt-company-id="${companyId}"]`).closest('tr');
+                                rowElement.querySelector('.status-badge').innerHTML = '<span class="badge badge-danger">Disabled</span>'; // Update the badge
+
+                                var buttonElement = rowElement.querySelector('[data-kt-action="delete_row"]');
+                                buttonElement.setAttribute('data-kt-action', 'active_row'); // Change action to activate
+                                buttonElement.innerHTML = 'Active'; // Update button text
+                                buttonElement.classList.remove('menu-link-danger'); // Optional: adjust button styling if needed
+                                buttonElement.classList.add('menu-link-success'); // Optional: adjust button styling if needed
                             },
                             error: function(xhr) {
-                                // Parse the error response if any
                                 var errorMessage = xhr.responseJSON.error || 'Failed to delete the Company.';
-
                                 Swal.fire({
                                     text: errorMessage,
                                     icon: 'error',
@@ -295,6 +307,70 @@
                 });
             });
         });
+
+        document.querySelectorAll('[data-kt-action="active_row"]').forEach(function(element) {
+            element.addEventListener('click', function() {
+                Swal.fire({
+                    text: 'Are you sure you want to Active?',
+                    icon: 'warning',
+                    buttonsStyling: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var companyId = this.getAttribute('data-kt-company-id');
+                        var url = "{{ route('companies.active') }}";
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {
+                                companyId: companyId
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'btn btn-light-success'
+                                    }
+                                });
+
+                                // Find the row and update its status and button
+                                var rowElement = document.querySelector(`[data-kt-company-id="${companyId}"]`).closest('tr');
+                                rowElement.querySelector('.status-badge').innerHTML = '<span class="badge badge-success">Active</span>'; // Update the badge
+
+                                var buttonElement = rowElement.querySelector('[data-kt-action="active_row"]');
+                                buttonElement.setAttribute('data-kt-action', 'delete_row'); // Change action to delete
+                                buttonElement.innerHTML = 'Disabled'; // Update button text
+                                buttonElement.classList.remove('menu-link-success'); // Optional: adjust button styling if needed
+                                buttonElement.classList.add('menu-link-danger'); // Optional: adjust button styling if needed
+                            },
+                            error: function(xhr) {
+                                var errorMessage = xhr.responseJSON.error || 'Failed to active the Company.';
+                                Swal.fire({
+                                    text: errorMessage,
+                                    icon: 'error',
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'btn btn-light-danger'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
 
         $('#kt_modal_update_company_form').on('submit', function(e) {
             e.preventDefault();

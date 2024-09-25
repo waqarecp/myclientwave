@@ -197,10 +197,14 @@ class LeadController extends Controller
 
             // Send email to the appointment tagged users
             if($request->appointment_user_ids) { 
-                foreach ($request->appointment_user_ids as $userId) { 
-                    $user = User::find($userId); 
-                    Mail::send(new UserTagged($appointment, $user));
-                } 
+                $senderUser = auth()->user();
+                $receiverUsers = User::whereIn('id', $request->appointment_user_ids)->get();
+
+                foreach ($receiverUsers as $taggedUser) {
+                    if ($taggedUser && $taggedUser->email) {
+                        Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $senderUser, $taggedUser));
+                    }
+                }
             }
             return redirect()->back()->with('success', 'Lead has been created successfully.');
         }

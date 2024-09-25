@@ -43,6 +43,15 @@ class CompanyController extends Controller
                 }
             });
         }
+        // Apply filter by lead status
+        $filterStatus = $request->input('status');
+        if (!empty($filterStatus)) {
+            if ($filterStatus == '1') {
+                $companyQuery->where('companies.deleted_at', null);
+            }elseif ($filterStatus == '2') {
+                $companyQuery->where('companies.deleted_at', "!=", null);
+            }
+        }
         $rows = $companyQuery->paginate(15)->withQueryString();
         return view('pages.company.index', compact('rows'));
     }
@@ -292,10 +301,23 @@ class CompanyController extends Controller
      */
     public function destroy(Request $request)
     {
-        $company = Company::findorFail($request->companyId);
-        $company->deleted_by = Auth::user()->id;
+        $company = Company::findOrFail($request->companyId);
         $company->delete();
 
-        return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
+        return response()->json([
+            'status' => 'disabled',
+            'message' => 'Company deleted successfully.'
+        ]);
+    }
+    
+    public function active(Request $request)
+    {
+        $company = Company::withTrashed()->findOrFail($request->companyId);
+        $company->restore();
+
+        return response()->json([
+            'status' => 'active',
+            'message' => 'Company activated successfully.'
+        ]);
     }
 }

@@ -55,15 +55,12 @@
                                 <!--begin::About-->
                                 <div class="mb-18">
                                     <!--begin::Wrapper-->
-                                    <div class="mb-10">
+                                    <div class="mb-5">
                                         <!--begin::Top-->
-                                        <div class="text-center mb-15">
-                                            <!--begin::Title-->
-                                            <h3 class="fs-2hx text-gray-900 mb-5">Welcome to My Client Wave</h3>
-                                            <!--end::Title-->
+                                        <div class="text-center mb-5">
                                             <!--begin::Text-->
-                                            <div class="fs-5 text-muted fw-semibold">Are you ready to elevate your business operations and drive growth? My client Wave 
-                                                <br />is the ultimate customer relationship management solution designed to transform the way you interact with your clients and streamline your processes.
+                                            <div class="fs-5 text-gray-800 fw-semibold">Are you ready to elevate your business operations and drive growth?<br>
+                                            <a href="/" class="link-priamry">My client Wave</a> is the ultimate customer relationship management solution designed to transform the way you interact with your clients and streamline your processes.
                                             </div>
                                             <!--end::Text-->
                                         </div>
@@ -71,7 +68,7 @@
                                         <!--begin::Overlay-->
                                         <div class="overlay">
                                             <!--begin::Image-->
-                                            <img class="w-100 card-rounded" src="assets/media/stock/1600x800/img-1.jpg" alt="" />
+                                            <img class="w-100 card-rounded" src="assets/media/stock/1600x800/img-1.jpg" alt="CRM - My Client Wave" />
                                             <!--end::Image-->
                                             <!--begin::Links-->
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
@@ -84,24 +81,20 @@
                                     </div>
                                     <!--end::Wrapper-->
                                     <!--begin::Description-->
-                                    <div class="fs-5 fw-semibold text-gray-600">
-                                        <b>Why Choose My Client Wave?</b>
-                                        <!--begin::Text-->
-                                        <p class="mb-8">Seamless Integration: Effortlessly connect with your existing tools and platforms. Whether you use email, marketing software, or accounting systems, My Client Wave integrates smoothly to ensure all your data is in one place.
-                                        </p>
-                                        <!--end::Text-->
-                                        <!--begin::Text-->
-                                        <p class="mb-8">360-Degree Customer View: 
-                                            <span class="text-gray-800 pe-1">“Gain a comprehensive understanding of your customers with detailed profiles, interaction history, and real-time updates.”</span> Personalize your outreach and foster deeper connections.
-                                        </p>
-                                        <!--end::Text-->
-                                        <!--begin::Text-->
-                                        <p class="mb-8">Advanced Analytics and Reporting: Make informed decisions with powerful analytics and customizable reports. Track key metrics, identify trends, and measure your success to continuously refine your strategies.
-                                        </p>
-                                        <!--end::Text-->
-                                        <!--begin::Text-->
-                                        <p class="mb-17">Automated Workflows: Increase efficiency by automating repetitive tasks and processes. From lead nurturing to follow-ups, let My Client Wave handle the routine so you can focus on growing your business.</p>
-                                        <!--end::Text-->
+                                    <div class="fs-5 fw-semibold text-gray-800 row">
+                                        <h4 class="m-3 text-center">
+                                            <b>Why Choose My Client Wave?</b>
+                                        </h4>
+                                        <div class="col-md-6 mt-3">
+                                            <p class="mb-8"><b>Seamless Integration:</b> Effortlessly connect with your existing tools and platforms. Whether you use email, marketing software, or accounting systems, My Client Wave integrates smoothly to ensure all your data is in one place.</p>
+                                            <p class="mb-4"><b>360-Degree Customer View:</b> 
+                                                <span class="text-gray-800 pe-1">“Gain a comprehensive understanding of your customers with detailed profiles, interaction history, and real-time updates.”</span> Personalize your outreach and foster deeper connections.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 mt-3">
+                                            <p class="mb-8"><b>Advanced Analytics and Reporting:</b> Make informed decisions with powerful analytics and customizable reports. Track key metrics, identify trends, and measure your success to continuously refine your strategies.</p>
+                                            <p class="mb-4"><b>Automated Workflows:</b> Increase efficiency by automating repetitive tasks and processes. From lead nurturing to follow-ups, let My Client Wave handle the routine so you can focus on growing your business.</p>
+                                        </div>
                                     </div>
                                     <!--end::Description-->
                                 </div>
@@ -185,11 +178,11 @@
                                                         <div class="mt-1">
                                                             <!--begin::Animation-->
                                                             <div class="fs-lg-2hx fs-2x fw-bold text-gray-800 d-flex align-items-center">
-                                                                <div class="min-w-50px" data-kt-countup="true" data-kt-countup-value="35">0</div>M+
+                                                                <div class="min-w-50px" data-kt-countup="true" data-kt-countup-value="15">0</div>K+
                                                             </div>
                                                             <!--end::Animation-->
                                                             <!--begin::Label-->
-                                                            <span class="text-gray-600 fw-semibold fs-5 lh-0">Payments</span>
+                                                            <span class="text-gray-600 fw-semibold fs-5 lh-0">Customers</span>
                                                             <!--end::Label-->
                                                         </div>
                                                         <!--end::Text-->
@@ -202,14 +195,13 @@
                                         </div>
                                         <!--end::Wrapper-->
                                         <!--begin::Testimonial-->
-                                        <div class="fs-2 fw-semibold text-muted text-center mb-3">
-                                            <span class="fs-1 lh-1 text-gray-700">“</span>Unlock Your Business Potential with My Client Wave
-                                            <span class="fs-1 lh-1 text-gray-700">“</span>
+                                        <div class="fs-2 fw-semibold text-center mb-3">
+                                            <span class="fs-1 lh-1 text-gray-700">“</span>Unlock Your Business Potential with My Client Wave<span class="fs-1 lh-1 text-gray-700">“</span>
                                         </div>
                                         <!--end::Testimonial-->
                                         <!--begin::Author-->
-                                        <div class="fs-2 fw-semibold text-muted text-center">
-                                            <a href="{{route('login')}}" class="link-primary fs-4 fw-bold">Login My Client Wave</a>
+                                        <div class="fs-2 fw-semibold text-center">
+                                            <a href="{{route('login')}}" class="btn btn-primary fs-4 fw-bold">Login My Client Wave CRM</a>
                                         </div>
                                         <!--end::Author-->
                                     </div>

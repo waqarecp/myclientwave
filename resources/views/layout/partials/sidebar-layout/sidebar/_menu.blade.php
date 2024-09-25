@@ -1,3 +1,6 @@
+@php
+$user = auth()->user();
+@endphp
 <!--begin::sidebar menu-->
 <div class="app-sidebar-menu overflow-hidden flex-column-fluid">
     <!--begin::Menu wrapper-->
@@ -20,7 +23,7 @@
             
             <!--begin:Menu item-->
             @php
-                $hasPermissionLead = auth()->user()->can('read lead') || auth()->user()->can('write lead') || auth()->user()->can('create lead');
+                $hasPermissionLead = $user->can('read lead') || $user->can('write lead') || $user->can('create lead');
             @endphp
             @if($hasPermissionLead)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('leads')}}">
@@ -34,7 +37,7 @@
             
             <!--begin:Menu item-->
             @php
-                $hasPermissionAppointment = auth()->user()->can('read appointment') || auth()->user()->can('write appointment') || auth()->user()->can('create appointment');
+                $hasPermissionAppointment = $user->can('read appointment') || $user->can('write appointment') || $user->can('create appointment');
             @endphp
             @if($hasPermissionAppointment)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('appointments')}}">
@@ -48,7 +51,7 @@
             
             <!--begin:Menu item-->
             @php
-                $hasPermissionCalendar = auth()->user()->can('read appointment') || auth()->user()->can('write appointment') || auth()->user()->can('create appointment');
+                $hasPermissionCalendar = $user->can('read appointment') || $user->can('write appointment') || $user->can('create appointment');
             @endphp
             @if($hasPermissionCalendar)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('calendars')}}">
@@ -61,7 +64,7 @@
             <!--end:Menu item-->
 
             @php
-                $hasPermissionDeal = auth()->user()->can('read deal') || auth()->user()->can('write deal') || auth()->user()->can('create deal');
+                $hasPermissionDeal = $user->can('read deal') || $user->can('write deal') || $user->can('create deal');
             @endphp
             @if($hasPermissionDeal)
                 <div class="menu-item">
@@ -74,7 +77,7 @@
             
             <!--begin:Menu item-->
             @php
-                $hasPermissionUtilityCompanies = auth()->user()->can('read utility company') || auth()->user()->can('write utility company') || auth()->user()->can('create utility company');
+                $hasPermissionUtilityCompanies = $user->can('read utility company') || $user->can('write utility company') || $user->can('create utility company');
             @endphp
             @if($hasPermissionUtilityCompanies)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('utility-companies')}}">
@@ -88,9 +91,9 @@
 
             <!--begin:Menu item-->
             @php
-                $hasPermissionUser = auth()->user()->can('read user') || auth()->user()->can('write user') || auth()->user()->can('create user');
-                $hasPermissionRole = auth()->user()->can('read role') || auth()->user()->can('write role') || auth()->user()->can('create role');
-                $hasPermissionPermission = auth()->user()->can('read permission') || auth()->user()->can('write permission') || auth()->user()->can('create permission');
+                $hasPermissionUser = $user->can('read user') || $user->can('write user') || $user->can('create user');
+                $hasPermissionRole = $user->can('read role') || $user->can('write role') || $user->can('create role');
+                $hasPermissionPermission = $user->can('read permission') || $user->can('write permission') || $user->can('create permission');
                 $hasPermissionUserManagement = $hasPermissionUser || $hasPermissionRole || $hasPermissionPermission;
             @endphp
             @if($hasPermissionUserManagement)
@@ -131,13 +134,13 @@
             <!--end:Menu item-->
             
             @php
-                $hasPermissionLeadSources = auth()->user()->can('read lead source') || auth()->user()->can('write lead source') || auth()->user()->can('create lead source');
-                $hasPermissionStatus = auth()->user()->can('read status') || auth()->user()->can('write status') || auth()->user()->can('create status');
-                $hasPermissionState = auth()->user()->can('read state colour') || auth()->user()->can('write state colour') || auth()->user()->can('create state colour');
-                $hasPermissionStage = auth()->user()->can('read stage') || auth()->user()->can('write stage') || auth()->user()->can('create stage');
-                $hasPermissionHomeType = auth()->user()->can('read home type') || auth()->user()->can('write home type') || auth()->user()->can('create home type');
-                $hasPermissionCommunicationMethod = auth()->user()->can('read communication method') || auth()->user()->can('write communication method') || auth()->user()->can('create communication method');
-                $hasPermissionCountrySetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
+                $hasPermissionLeadSources = $user->can('read lead source') || $user->can('write lead source') || $user->can('create lead source');
+                $hasPermissionStatus = $user->can('read status') || $user->can('write status') || $user->can('create status');
+                $hasPermissionState = $user->can('read state colour') || $user->can('write state colour') || $user->can('create state colour');
+                $hasPermissionStage = $user->can('read stage') || $user->can('write stage') || $user->can('create stage');
+                $hasPermissionHomeType = $user->can('read home type') || $user->can('write home type') || $user->can('create home type');
+                $hasPermissionCommunicationMethod = $user->can('read communication method') || $user->can('write communication method') || $user->can('create communication method');
+                $hasPermissionCountrySetting = $user->can('read setting') || $user->can('write setting') || $user->can('create setting');
 
                 $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting;
                 $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
@@ -217,15 +220,13 @@
             @endif
             <!--begin:Menu item-->
             @php
-                $user = auth()->user();
-                $roleCheck = $user->roles()->where('company_id', 1)->first();
-                $hasPermissionGlobal = $user->id == 1 && $roleCheck && $roleCheck->id == 1;
+                $hasPermissionManageCompanies = $user->company_id == 1 && ($user->roles[0] && $user->roles[0]->id == 1);
             @endphp
 
-            @if($hasPermissionGlobal)
+            @if($hasPermissionManageCompanies)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('companies')}}">
                     <a class="menu-link {{ request()->routeIs('companies.*') ? 'active' : '' }}" href="{{ route('companies.index') }}">
-                        <span class="menu-icon">{!! getIcon('color-swatch', 'fs-2') !!}</span>
+                        <span class="menu-icon">{!! getIcon('home', 'fs-2') !!}</span>
                         <span class="menu-title">Manage Companies</span>
                     </a>
                 </div>

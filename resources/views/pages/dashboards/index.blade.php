@@ -37,7 +37,7 @@
                     <div class="m-0">
                         <div class="d-flex align-items-center mb-2">
                             <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countLeads}}</span>
-                            <span class="badge badge-light-success fs-base">Today</span>
+                            <span class="badge badge-light-success fs-base">Total</span>
                         </div>
                         <span class="fs-6 fw-semibold text-gray-500">Monthly Leads Summary</span>
                     </div>
@@ -56,7 +56,7 @@
                     <div class="m-0">
                         <div class="d-flex align-items-center mb-2">
                             <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countAppointments}}</span>
-                            <span class="badge badge-light-success fs-base">Today</span>
+                            <span class="badge badge-light-success fs-base">Total</span>
                         </div>
                         <span class="fs-6 fw-semibold text-gray-500">Appointments Monthly Summary</span>
                     </div>
