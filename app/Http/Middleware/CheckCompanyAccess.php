@@ -4,10 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
-use App\Models\Role;
-use App\Models\User;
 
 class CheckCompanyAccess
 {
@@ -18,11 +14,9 @@ class CheckCompanyAccess
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = Auth::user();
-        $roleCheck = $user->roles()->where('company_id', 1)->first(); // Adjust this query based on your roles model relationship
-        
-        // Check if the user is admin and belongs to company_id 1
-        if ($user->id == 1 && $roleCheck && $roleCheck->id == 1) {
+        $user = auth()->user();
+        // Check if company id is 1 and role is 1 (admin)
+        if ($user->company_id == 1 && ($user->roles[0] && $user->roles[0]->id == 1)) {
             return $next($request); // Allow access
         }
 
