@@ -24,10 +24,10 @@
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9">
                     <div class="accordion" id="accordion_lead_info">
-                        <div class="accordion-item border border-primary border-dashed">
+                        <div class="accordion-item border border-primary">
                             <h2 class="accordion-header">
                                 <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLeadInfo" aria-expanded="false" aria-controls="collapseLeadInfo">
-                                    {{ $lead->first_name }} {{ $lead->last_name }}
+                                    Lead - {{ $lead->first_name }} {{ $lead->last_name }}
                                 </button>
                             </h2>
                             <div id="collapseLeadInfo" class="{{isset($_GET['page']) ? '' : 'show'}} collapse" data-bs-parent="#accordion_lead_info">
@@ -100,24 +100,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="accordion" id="accordion_lead_comments">
-                        <div class="accordion-item border border-primary border-dashed">
+                    <div class="accordion mt-2" id="accordion_lead_comments">
+                        <div class="accordion-item border border-primary">
                             <h2 class="accordion-header">
                                 <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLeadComment" aria-expanded="false" aria-controls="collapseLeadComment">
-                                    Lead Comments
+                                    Lead Description & Comments
                                 </button>
                             </h2>
                             <div id="collapseLeadComment" class="{{isset($_GET['page']) ? 'show' : ''}} collapse" data-bs-parent="#accordion_lead_comments">
-                                <div class="card-body">
+                                <div class="p-2">
                                     <div class="accordion" id="accordion_new_comment">
-                                        <div class="accordion-item border border-primary border-dashed">
+                                        <div class="accordion-item border border-primary">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button fs-4 fw-semibold collapsed bg-light-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewComment" aria-expanded="false" aria-controls="collapseNewComment">
                                                     {!! getIcon('plus', 'fs-2', '', 'i') !!} Add New Comment
                                                 </button>
                                             </h2>
                                             <div id="collapseNewComment" class="collapse" data-bs-parent="#accordion_new_comment">
-                                                <div class="card-body p-2">
+                                                <div class="p-2">
                                                     <form method="post" enctype="multipart/form-data" id="AddLeadNote">
                                                         @csrf
                                                         <input type="hidden" name="appointment_id" id="new_comment_appointment_id" class="form-control" value="{{ $appointments->last()->id }}">
@@ -153,7 +153,7 @@
                                         <!--begin::Details content-->
                                         <div class="collapse show">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered">
+                                                <table class="table">
                                                     <tbody>
                                                         @if (count($rows))
                                                         @foreach($rows as $comment)
@@ -232,9 +232,9 @@
                             <thead>
                                 <tr class="bg-light-primary">
                                     <th>S.No</th>
-                                    <th width="12%">Date Time</th>
+                                    <th width="15%">Date Time</th>
                                     <th>Address</th>
-                                    <th>Created By</th>
+                                    <th>Created By & Date</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
