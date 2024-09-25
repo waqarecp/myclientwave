@@ -89,7 +89,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Utility Company routes
     Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
-    
+
+    Route::group(['middleware' => 'check.company.access'], function () {
+        Route::resource('companies', CompanyController::class)->except(['store', 'update', 'destroy']);
+        Route::post('/companies/update', [CompanyController::class, 'update'])->name('companies.update');
+        Route::post('/companies/destroy', [CompanyController::class, 'destroy'])->name('companies.destroy');
+    });
+
     Route::prefix('manage-settings')->group(function () {
         // Lead Sources routes
         Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');

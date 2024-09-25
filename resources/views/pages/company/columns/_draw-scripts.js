@@ -17,7 +17,7 @@ document.querySelectorAll('[data-kt-action="delete_row"]').forEach(function (ele
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.dispatch('delete_deal', [this.getAttribute('data-kt-deal-id')]);
+                Livewire.dispatch('delete_company', [this.getAttribute('data-kt-company-id')]);
             }
         });
     });
@@ -26,7 +26,7 @@ document.querySelectorAll('[data-kt-action="delete_row"]').forEach(function (ele
 // Add click event listener to update buttons
 document.querySelectorAll('[data-kt-action="update_row"]').forEach(function (element) {
     element.addEventListener('click', function () {
-        Livewire.dispatch('get_data', [this.getAttribute('data-kt-deal-id')]);
+        Livewire.dispatch('get_data', [this.getAttribute('data-kt-company-id')]);
     });
     
 });
@@ -34,5 +34,5 @@ document.querySelectorAll('[data-kt-action="update_row"]').forEach(function (ele
 // Listen for 'success' event emitted by Livewire
 Livewire.on('success', (message) => {
     // Reload the statecolour-table datatable
-    LaravelDataTables['deal-table'].ajax.reload();
+    LaravelDataTables['company-table'].ajax.reload();
 });

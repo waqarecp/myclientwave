@@ -8,6 +8,7 @@ use App\Models\LeadSource;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Appointment;
+use App\Models\Company;
 use App\Models\Setting;
 use App\Models\Status;
 use App\Models\StateColour;
@@ -153,8 +154,13 @@ Breadcrumbs::for('state-colours.index', function (BreadcrumbTrail $trail) {
 // Home > settings > Utility Company > index
 Breadcrumbs::for('utility-companies.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
-    $trail->push('Manage Settings', '#');
     $trail->push('Utility Company', route('utility-companies.index'));
+});
+
+// Home > settings >Utility Company > [Utility Company]
+Breadcrumbs::for('utility-companies.show', function (BreadcrumbTrail $trail, UtilityCompany $utilityCompany) {
+    $trail->parent('utility-companies.index');
+    $trail->push(ucwords($utilityCompany->utility_company_name), route('utility-companies.show', $utilityCompany));
 });
 
 // Home > Settings > Deals > index
@@ -167,11 +173,6 @@ Breadcrumbs::for('deals.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('deals.show', function (BreadcrumbTrail $trail, $deal) {
     $trail->parent('deals.index');
     $trail->push($deal->deal_name, route('deals.show', $deal));
-});
-// Home > settings >Utility Company > [Utility Company]
-Breadcrumbs::for('utility-companies.show', function (BreadcrumbTrail $trail, UtilityCompany $utilityCompany) {
-    $trail->parent('utility-companies.index');
-    $trail->push(ucwords($utilityCompany->utility_company_name), route('utility-companies.show', $utilityCompany));
 });
 
 // Home > Settings > Stages > index
@@ -218,4 +219,16 @@ Breadcrumbs::for('settings.index', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');
     $trail->push('Manage Settings', '#'); // The settings parent node
     $trail->push('Country', route('settings.index'));
+});
+
+// Home > settings > Company > index
+Breadcrumbs::for('companies.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push('Companies', route('companies.index'));
+});
+
+// Home > settings >Company > [manage Company]
+Breadcrumbs::for('companies.show', function (BreadcrumbTrail $trail, Company $company) {
+    $trail->parent('companies.index');
+    $trail->push(ucwords($company->name), route('companies.show', $company));
 });

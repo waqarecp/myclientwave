@@ -78,7 +78,7 @@
             @endphp
             @if($hasPermissionUtilityCompanies)
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('utility-companies')}}">
-                    <a class="menu-link {{ request()->routeIs('utility-companies') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
+                    <a class="menu-link {{ request()->routeIs('utility-companies.*') ? 'active' : '' }}" href="{{ route('utility-companies.index') }}">
                         <span class="menu-icon">{!! getIcon('color-swatch', 'fs-2') !!}</span>
                         <span class="menu-title">Utility Companies</span>
                     </a>
@@ -140,7 +140,7 @@
                 $hasPermissionCountrySetting = auth()->user()->can('read setting') || auth()->user()->can('write setting') || auth()->user()->can('create setting');
 
                 $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting;
-                $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'utility-companies.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
+                $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
 
             <!--end:Menu item-->
@@ -215,8 +215,23 @@
                     </div>
                 </div>
             @endif
+            <!--begin:Menu item-->
+            @php
+                $user = auth()->user();
+                $roleCheck = $user->roles()->where('company_id', 1)->first();
+                $hasPermissionGlobal = $user->id == 1 && $roleCheck && $roleCheck->id == 1;
+            @endphp
 
-
+            @if($hasPermissionGlobal)
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('companies')}}">
+                    <a class="menu-link {{ request()->routeIs('companies.*') ? 'active' : '' }}" href="{{ route('companies.index') }}">
+                        <span class="menu-icon">{!! getIcon('color-swatch', 'fs-2') !!}</span>
+                        <span class="menu-title">Manage Companies</span>
+                    </a>
+                </div>
+            @endif
+            <!--end:Menu item-->
+            
         </div>
         <!--end::Menu-->
     </div>
