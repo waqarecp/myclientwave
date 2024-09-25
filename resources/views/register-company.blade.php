@@ -69,7 +69,7 @@
 									<!--begin::Col-->
 									<div class="col-lg-6">
 										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="company_account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
+										<input type="radio" class="btn-check" name="account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-10" for="kt_create_account_form_account_type_personal">
 											<i class="ki-duotone ki-badge fs-3x me-5">
 												<span class="path1"></span>
@@ -91,7 +91,7 @@
 									<!--begin::Col-->
 									<div class="col-lg-6">
 										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="company_account_type" value="2" id="kt_create_account_form_account_type_corporate" />
+										<input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_corporate" />
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_corporate">
 											<i class="ki-duotone ki-briefcase fs-3x me-5">
 												<span class="path1"></span>
@@ -130,7 +130,7 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="1" />
+											<input type="radio" class="btn-check" name="employee_size" value="1" />
 											<span class="fw-bold fs-3">1-10</span>
 										</label>
 										<!--end::Option-->
@@ -140,7 +140,7 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4 active">
-											<input type="radio" class="btn-check" name="company_employee_size" checked="checked" value="2" />
+											<input type="radio" class="btn-check" name="employee_size" checked="checked" value="2" />
 											<span class="fw-bold fs-3">10-50</span>
 										</label>
 										<!--end::Option-->
@@ -150,7 +150,7 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="3" />
+											<input type="radio" class="btn-check" name="employee_size" value="3" />
 											<span class="fw-bold fs-3">50-100</span>
 										</label>
 										<!--end::Option-->
@@ -160,7 +160,7 @@
 									<div class="col">
 										<!--begin::Option-->
 										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary w-100 p-4">
-											<input type="radio" class="btn-check" name="company_employee_size" value="4" />
+											<input type="radio" class="btn-check" name="employee_size" value="4" />
 											<span class="fw-bold fs-3">100+</span>
 										</label>
 										<!--end::Option-->
@@ -170,8 +170,8 @@
 								<!--end::Row-->
 								<div class="fv-row mb-10">
 									<label class="form-label required">Write Business Name</label>
-									<input name="company_business_name" required class="form-control form-control-lg" placeholder="Enter Company/Business Name" />
-									@error('company_business_name')
+									<input name="name" required class="form-control form-control-lg" placeholder="Enter Company/Business Name" />
+									@error('name')
 									<span class="text-danger">{{ $message }}</span>
 									@enderror
 								</div>
@@ -186,12 +186,12 @@
 											</i>
 										</span>
 									</label>
-									<input name="company_address" placeholder="Write company address ..." class="form-control form-control-lg" required/>
+									<input name="address" placeholder="Write company address ..." class="form-control form-control-lg" required/>
 								</div>
 							</div>
 							<div class="fv-row mb-10">
 								<label class="form-label required">Select Business Type</label>
-								<select name="company_business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
+								<select name="business_type" class="form-select form-select-lg" data-control="select2" data-placeholder="Select an option ..." data-allow-clear="true" data-hide-search="true">
 									<option value=""></option>
 									<option value="1">S Corporation</option>
 									<option value="2">C Corporation</option>
@@ -208,7 +208,7 @@
 							<div class="row">
 								<div class="fv-row mb-10 col-md-6">
 									<label class="form-label">Contact Person Name</label>
-									<input type="text" class="form-control form-control-lg" name="name" placeholder="Your Name or Contact Person Name" required />
+									<input type="text" class="form-control form-control-lg" name="contact_person_name" placeholder="Your Name or Contact Person Name" required />
 									@error('name')
 									<span class="text-danger">{{ $message }}</span>
 									@enderror
@@ -218,7 +218,7 @@
 									<label class="fs-6 fw-semibold form-label required">Contact Email</label>
 									<!--end::Label-->
 									<!--begin::Input-->
-									<input id="company_business_email" name="email" required class="form-control form-control-lg" placeholder="Enter Email Address" />
+									<input id="email" name="email" required class="form-control form-control-lg" placeholder="Enter Email Address" />
 									@error('email')
 									<span class="text-danger">{{ $message }}</span>
 									@enderror
@@ -251,7 +251,7 @@
 							<div class="row mt-3">
 								<div class="fv-row mb-10">
 									<label class="form-label">About Business/ Company Information</label>
-									<textarea name="company_business_description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="8"></textarea>
+									<textarea name="description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="8"></textarea>
 								</div>
 								<div class="col-md-12">
 									<div class="fv-row mb-4">

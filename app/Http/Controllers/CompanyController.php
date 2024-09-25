@@ -29,7 +29,7 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $companyQuery = Company::whereNull('companies.deleted_at');
+        $companyQuery = Company::withTrashed();
         $searchTerm = $request->input('search', '');
         if (!empty($searchTerm)) {
             $companyQuery->where(function ($q) use ($searchTerm) {
@@ -42,6 +42,15 @@ class CompanyController extends Controller
                     $q->where('companies.name', 'LIKE', "%{$searchTerm}%"); 
                 }
             });
+        }
+        // Apply filter by lead status
+        $filterStatus = $request->input('status');
+        if (!empty($filterStatus)) {
+            if ($filterStatus == '1') {
+                $companyQuery->where('companies.deleted_at', null);
+            }elseif ($filterStatus == '2') {
+                $companyQuery->where('companies.deleted_at', "!=", null);
+            }
         }
         $rows = $companyQuery->paginate(15)->withQueryString();
         return view('pages.company.index', compact('rows'));
@@ -86,11 +95,11 @@ class CompanyController extends Controller
             }
             $user = User::create([
                 'company_id' => $company->id,
-                'name' => $request->input('name'),
+                'name' => $company->contact_person_name,
                 'email' => $company->email,
                 'email_verified_at' => now(),
                 'password' => Hash::make($request->password),
-                'password_plain' => $request->password,
+                'password_plane' => $request->password,
             ]);
 
             if ($user) {
@@ -204,14 +213,13 @@ class CompanyController extends Controller
     protected function validateRequest($request)
     {
         $request->validate([
-            'company_account_type' => 'nullable|integer',
-            'company_employee_size' => 'nullable|int',
+            'account_type' => 'nullable|integer',
+            'employee_size' => 'nullable|int',
             'name' => 'required|string|max:255',
-            'company_account_plan' => 'nullable|integer',
-            'company_business_name' => 'required|string|max:255',
-            'company_address' => 'string',
-            'company_business_type' => 'nullable|integer',
-            'company_business_description' => 'string',
+            'contact_person_name' => 'required|string|max:255',
+            'account_plan' => 'nullable|integer',
+            'business_type' => 'nullable|integer',
+            'description' => 'string',
             'email' => [
                 'required',
                 'email',
@@ -228,19 +236,18 @@ class CompanyController extends Controller
     protected function createCompany($request)
     {
         return Company::create([
-            'company_account_type' => $request->input('company_account_type'),
-            'company_employee_size' => $request->input('company_employee_size', 1),
-            'name' => $request->input('company_business_name'),
-            'company_account_plan' => $request->input('company_account_plan', 1),
-            'company_business_name' => $request->input('company_business_name'),
-            'company_address' => $request->input('company_address'),
-            'company_business_type' => $request->input('company_business_type'),
-            'company_business_description' => $request->input('company_business_description'),
+            'account_type' => $request->input('account_type'),
+            'employee_size' => $request->input('employee_size', 1),
+            'name' => $request->input('name'),
+            'contact_person_name' => $request->input('contact_person_name'),
+            'account_plan' => $request->input('account_plan', 1),
+            'address' => $request->input('address'),
+            'business_type' => $request->input('business_type'),
+            'description' => $request->input('description'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'logo' => $request->input('logo') ? $request->input('logo')->store('companies', 'public') : null,
             'website' => $request->input('website'),
-            'address' => $request->input('company_address'),
         ]);
     }
 
@@ -266,21 +273,21 @@ class CompanyController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'company_business_name' => 'required|string|max:255',
-            'company_account_type' => 'nullable|integer',
-            'company_address' => 'nullable|string',
-            'company_business_type' => 'nullable|integer',
-            'company_employee_size' => 'nullable|integer',
-            'company_business_description' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'account_type' => 'nullable|integer',
+            'address' => 'nullable|string',
+            'business_type' => 'nullable|integer',
+            'employee_size' => 'nullable|integer',
+            'description' => 'nullable|string',
         ]);
         if ($request->company_id) {
             $company = Company::findOrFail($request->company_id);
-            $company->name = $request->company_business_name;
-            $company->company_account_type = $request->company_account_type;
-            $company->company_address = $request->company_address;
-            $company->company_employee_size = $request->company_employee_size;
-            $company->company_business_type = $request->company_business_type;
-            $company->company_business_description = $request->company_business_description;
+            $company->name = $request->name;
+            $company->account_type = $request->account_type;
+            $company->address = $request->address;
+            $company->employee_size = $request->employee_size;
+            $company->business_type = $request->business_type;
+            $company->description = $request->description;
             if ($company->save()) {
                 return response()->json(['success' => 'Company updated successfully']);
             } else {
@@ -294,10 +301,23 @@ class CompanyController extends Controller
      */
     public function destroy(Request $request)
     {
-        $company = Company::findorFail($request->companyId);
-        $company->deleted_by = Auth::user()->id;
+        $company = Company::findOrFail($request->companyId);
         $company->delete();
 
-        return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
+        return response()->json([
+            'status' => 'disabled',
+            'message' => 'Company deleted successfully.'
+        ]);
+    }
+    
+    public function active(Request $request)
+    {
+        $company = Company::withTrashed()->findOrFail($request->companyId);
+        $company->restore();
+
+        return response()->json([
+            'status' => 'active',
+            'message' => 'Company activated successfully.'
+        ]);
     }
 }

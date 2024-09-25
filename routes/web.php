@@ -94,6 +94,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('companies', CompanyController::class)->except(['store', 'update', 'destroy']);
         Route::post('/companies/update', [CompanyController::class, 'update'])->name('companies.update');
         Route::post('/companies/destroy', [CompanyController::class, 'destroy'])->name('companies.destroy');
+        Route::post('/companies/active', [CompanyController::class, 'active'])->name('companies.active');
     });
 
     Route::prefix('manage-settings')->group(function () {

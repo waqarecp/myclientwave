@@ -14,6 +14,11 @@
             <div class="card-title">
                 <form method="GET" action="{{ route('companies.index') }}" class="d-flex align-items-center">
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="form-control form-control-sm me-3">
+                    <select name="status" id="status" class="form-select form-select-sm me-3">
+                        <option value="">Filter By Status</option>
+                        <option {{ isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : ''}} value="1">Active</option>
+                        <option {{ isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : ''}} value="2">Disabled</option>
+                    </select>
                     <button type="submit" class="btn btn-primary btn-sm me-1">Search</button>
                     <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm me-1">Clear</a>
                 </form>
@@ -33,6 +38,7 @@
                             <th>Company Name</th>
                             <th>Company Phone</th>
                             <th>Company Email</th>
+                            <th>Company Status</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -51,6 +57,14 @@
                             <td>
                                 {{ $row->email }}
                             </td>
+                            <td  class="status-badge">
+                                @if($row->deleted_at)
+                                    <span class="badge badge-danger">Disabled</span>
+                                @else
+                                    <span class="badge badge-success">Active</span>
+                                @endif
+                            </td>
+
                             <td>
                                 {{\Carbon\Carbon::parse($row->created_at)->format('d M Y H:i')}}
                             </td>
@@ -103,7 +117,7 @@
                                                 <!--begin::Col-->
                                                 <div class="col-lg-6">
                                                     <!--begin::Option-->
-                                                    <input type="radio" class="btn-check" name="company_account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
+                                                    <input type="radio" class="btn-check" name="account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
                                                     <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-10" for="kt_create_account_form_account_type_personal">
                                                         <i class="ki-duotone ki-badge fs-3x me-5">
                                                             <span class="path1"></span>
@@ -125,7 +139,7 @@
                                                 <!--begin::Col-->
                                                 <div class="col-lg-6">
                                                     <!--begin::Option-->
-                                                    <input type="radio" class="btn-check" name="company_account_type" value="2" id="kt_create_account_form_account_type_corporate" />
+                                                    <input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_corporate" />
                                                     <label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_corporate">
                                                         <i class="ki-duotone ki-briefcase fs-3x me-5">
                                                             <span class="path1"></span>
@@ -150,8 +164,8 @@
                                         <div class="row">
                                             <div class="fv-row mb-10">
                                                 <label class="form-label required">Write Business Name</label>
-                                                <input name="company_business_name" id="company_business_name" required class="form-control form-control-lg" placeholder="Enter Company/Business Name" />
-                                                @error('company_business_name')
+                                                <input name="name" id="name" required class="form-control form-control-lg" placeholder="Enter Company/Business Name" />
+                                                @error('name')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -166,13 +180,13 @@
                                                         </i>
                                                     </span>
                                                 </label>
-                                                <input name="company_address" id="company_address" placeholder="Write company address ..." class="form-control form-control-lg" required />
+                                                <input name="address" id="address" placeholder="Write company address ..." class="form-control form-control-lg" required />
                                             </div>
                                             <div class="row">
                                                 <!--begin::Row-->
                                                 <div class="row mb-10 col-md-6">
                                                     <label class="form-label required">Select Company Size</label>
-                                                    <select name="company_employee_size" id="company_employee_size" class="form-select form-select-lg">
+                                                    <select name="employee_size" id="employee_size" class="form-select form-select-lg">
                                                         <option value="">select</option>
                                                         <option value="1">1-10</option>
                                                         <option value="2">10-50</option>
@@ -183,7 +197,7 @@
                                                 <!--end::Row-->
                                                 <div class="fv-row mb-10 col-md-6">
                                                     <label class="form-label required">Select Business Type</label>
-                                                    <select name="company_business_type" id="company_business_type" class="form-select form-select-lg">
+                                                    <select name="business_type" id="business_type" class="form-select form-select-lg">
                                                         <option value="">---select---</option>
                                                         <option value="1">S Corporation</option>
                                                         <option value="2">C Corporation</option>
@@ -199,7 +213,7 @@
                                             <div class="row mt-3">
                                                 <div class="fv-row mb-10">
                                                     <label class="form-label">About Business/ Company Information</label>
-                                                    <textarea name="company_business_description" id="company_business_description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="7"></textarea>
+                                                    <textarea name="description" id="description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="7"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -266,12 +280,19 @@
                                         confirmButton: 'btn btn-light-success'
                                     }
                                 });
-                                location.reload();
+
+                                // Find the row and update its status and button
+                                var rowElement = document.querySelector(`[data-kt-company-id="${companyId}"]`).closest('tr');
+                                rowElement.querySelector('.status-badge').innerHTML = '<span class="badge badge-danger">Disabled</span>'; // Update the badge
+
+                                var buttonElement = rowElement.querySelector('[data-kt-action="delete_row"]');
+                                buttonElement.setAttribute('data-kt-action', 'active_row'); // Change action to activate
+                                buttonElement.innerHTML = 'Active'; // Update button text
+                                buttonElement.classList.remove('menu-link-danger'); // Optional: adjust button styling if needed
+                                buttonElement.classList.add('menu-link-success'); // Optional: adjust button styling if needed
                             },
                             error: function(xhr) {
-                                // Parse the error response if any
                                 var errorMessage = xhr.responseJSON.error || 'Failed to delete the Company.';
-
                                 Swal.fire({
                                     text: errorMessage,
                                     icon: 'error',
@@ -286,6 +307,70 @@
                 });
             });
         });
+
+        document.querySelectorAll('[data-kt-action="active_row"]').forEach(function(element) {
+            element.addEventListener('click', function() {
+                Swal.fire({
+                    text: 'Are you sure you want to Active?',
+                    icon: 'warning',
+                    buttonsStyling: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var companyId = this.getAttribute('data-kt-company-id');
+                        var url = "{{ route('companies.active') }}";
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {
+                                companyId: companyId
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'btn btn-light-success'
+                                    }
+                                });
+
+                                // Find the row and update its status and button
+                                var rowElement = document.querySelector(`[data-kt-company-id="${companyId}"]`).closest('tr');
+                                rowElement.querySelector('.status-badge').innerHTML = '<span class="badge badge-success">Active</span>'; // Update the badge
+
+                                var buttonElement = rowElement.querySelector('[data-kt-action="active_row"]');
+                                buttonElement.setAttribute('data-kt-action', 'delete_row'); // Change action to delete
+                                buttonElement.innerHTML = 'Disabled'; // Update button text
+                                buttonElement.classList.remove('menu-link-success'); // Optional: adjust button styling if needed
+                                buttonElement.classList.add('menu-link-danger'); // Optional: adjust button styling if needed
+                            },
+                            error: function(xhr) {
+                                var errorMessage = xhr.responseJSON.error || 'Failed to active the Company.';
+                                Swal.fire({
+                                    text: errorMessage,
+                                    icon: 'error',
+                                    confirmButtonText: 'Close',
+                                    customClass: {
+                                        confirmButton: 'btn btn-light-danger'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
 
         $('#kt_modal_update_company_form').on('submit', function(e) {
             e.preventDefault();
@@ -350,15 +435,15 @@
 
                 // Set the values in the modal form
                 $('#company_id').val(companyId);
-                $('#company_business_name').val(companyName);
-                $('#company_address').val(companyAddress);
-                $('#company_employee_size').val(companyEmployeeSize);
-                $('#company_business_type').val(companyBusinessType).trigger('change'); // for select2 dropdown
-                $('#company_business_description').val(companyBusinessDescription);
+                $('#name').val(companyName);
+                $('#address').val(companyAddress);
+                $('#employee_size').val(companyEmployeeSize);
+                $('#business_type').val(companyBusinessType).trigger('change'); // for select2 dropdown
+                $('#description').val(companyBusinessDescription);
 
                 // Set the company account type radio button
-                $('input[name="company_account_type"]').prop('checked', false); // uncheck all first
-                $('input[name="company_account_type"][value="' + companyAccountType + '"]').prop('checked', true);
+                $('input[name="account_type"]').prop('checked', false); // uncheck all first
+                $('input[name="account_type"][value="' + companyAccountType + '"]').prop('checked', true);
 
                 // Show the modal
                 $('#kt_modal_update_company').modal('show');

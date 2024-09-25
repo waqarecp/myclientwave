@@ -63,27 +63,44 @@ class LoginRequest extends FormRequest
         if (! $this->userCanLogin($authenticatedUser)) {
             Auth::logout(); // Logout the user
 
+            session()->flush(); // Clear all session data
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'error' => "You cannot login to your account. Contact Admin!",
             ]);
-        } else {
-            $company = Company::where('id', $authenticatedUser->company_id)->first();
-            // Set session variables
-            session(['company' => $company]);
-            // Save the FCM token
-            if ($this->has('fcm_token') && $this->input('fcm_token')) {
-                FirebaseToken::updateOrCreate(
-                    ['user_id' => $authenticatedUser->id, 'fcm_token' => $this->input('fcm_token')],
-                    ['ip_address' => request()->ip()]
-                );
-                session(['fcm_token' => $this->input('fcm_token')]);
-            }
+        }
+
+        // Retrieve the company associated with the authenticated user
+        $company = Company::withTrashed()->where('id', $authenticatedUser->company_id)->first();
+
+        // Check if the company is soft-deleted (deleted_at is not null)
+        if ($company && $company->trashed()) {
+            Auth::logout(); // Logout the user
+
+            session()->flush(); // Clear all session data
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'error' => "Your company is disabled. Contact Admin for more details.",
+            ]);
+        }
+
+        // Set session variables
+        session(['company' => $company]);
+
+        // Save the FCM token
+        if ($this->has('fcm_token') && $this->input('fcm_token')) {
+            FirebaseToken::updateOrCreate(
+                ['user_id' => $authenticatedUser->id, 'fcm_token' => $this->input('fcm_token')],
+                ['ip_address' => request()->ip()]
+            );
+            session(['fcm_token' => $this->input('fcm_token')]);
         }
 
         RateLimiter::clear($this->throttleKey());
     }
+
 
     /**
      * Ensure the login request is not rate limited.

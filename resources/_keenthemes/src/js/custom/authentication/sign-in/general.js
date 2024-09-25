@@ -112,68 +112,94 @@ var KTSigninGeneral = function () {
         submitButton.addEventListener('click', function (e) {
             // Prevent button default action
             e.preventDefault();
-
+    
             // Validate form
             validator.validate().then(function (status) {
                 if (status == 'Valid') {
                     // Show loading indication
                     submitButton.setAttribute('data-kt-indicator', 'on');
-
-                    // Disable button to avoid multiple click
+    
+                    // Disable button to avoid multiple clicks
                     submitButton.disabled = true;
-
+    
                     // Check axios library docs: https://axios-http.com/docs/intro
-                    axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form)).then(function (response) {
-                        if (response) {
-                            form.reset();
-
-                            // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
-                            Swal.fire({
-                                text: "You have successfully logged in!",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary"
+                    axios.post(submitButton.closest('form').getAttribute('action'), new FormData(form))
+                        .then(function (response) {
+                            if (response.data.error) {
+                                // If there's an error in the response
+                                Swal.fire({
+                                    text: response.data.message || "Sorry, the email or password is incorrect, please try again.",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                }).then(() => {
+                                    form.reset();
+                                     // Optionally clear session data if you suspect it's lingering
+                                    localStorage.clear(); // Clear local storage if applicable
+                                    sessionStorage.clear(); // Clear session storage if applicable
+                                    location.reload();
+                                });
+                            } else {
+                                // Assuming a successful response structure
+                                form.reset();
+    
+                                // Show success message
+                                Swal.fire({
+                                    text: "You have successfully logged in!",
+                                    icon: "success",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                });
+    
+                                const redirectUrl = form.getAttribute('data-kt-redirect-url');
+                                if (redirectUrl) {
+                                    location.href = redirectUrl;
                                 }
-                            });
-
-                            const redirectUrl = form.getAttribute('data-kt-redirect-url');
-
-                            if (redirectUrl) {
-                                location.href = redirectUrl;
                             }
-                        } else {
-                            // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+                        })
+                        .catch(function (error) {
+                            // Check if the error has a specific message from the server
+                            let errorMessage = "Sorry, looks like there are some errors detected, please try again.";
+                            
+                            if (error.response && error.response.data && error.response.data.errors) {
+                                // Access the specific error message, for example:
+                                errorMessage = error.response.data.errors.error ? error.response.data.errors.error[0] : errorMessage;
+                            } else if (error.response && error.response.data && error.response.data.message) {
+                                errorMessage = error.response.data.message;
+                            }
+    
+                            // Show error message popup
                             Swal.fire({
-                                text: "Sorry, the email or password is incorrect, please try again.",
+                                text: errorMessage,
                                 icon: "error",
                                 buttonsStyling: false,
                                 confirmButtonText: "Ok, got it!",
                                 customClass: {
                                     confirmButton: "btn btn-primary"
                                 }
+                            }).then(() => {
+                                form.reset();
+                                 // Optionally clear session data if you suspect it's lingering
+                                localStorage.clear(); // Clear local storage if applicable
+                                sessionStorage.clear(); // Clear session storage if applicable
+                                location.reload();
                             });
-                        }
-                    }).catch(function (error) {
-                        Swal.fire({
-                            text: "Sorry, looks like there are some errors detected, please try again.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
+                        })
+                        .finally(() => {
+                            // Hide loading indication
+                            submitButton.removeAttribute('data-kt-indicator');
+    
+                            // Enable button
+                            submitButton.disabled = false;
                         });
-                    }).then(() => {
-                        // Hide loading indication
-                        submitButton.removeAttribute('data-kt-indicator');
-
-                        // Enable button
-                        submitButton.disabled = false;
-                    });
                 } else {
-                    // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+                    // Show validation error popup
                     Swal.fire({
                         text: "Sorry, looks like there are some errors detected, please try again.",
                         icon: "error",
@@ -182,6 +208,12 @@ var KTSigninGeneral = function () {
                         customClass: {
                             confirmButton: "btn btn-primary"
                         }
+                    }).then(() => {
+                        form.reset();
+                         // Optionally clear session data if you suspect it's lingering
+                        localStorage.clear(); // Clear local storage if applicable
+                        sessionStorage.clear(); // Clear session storage if applicable
+                        location.reload();
                     });
                 }
             });
