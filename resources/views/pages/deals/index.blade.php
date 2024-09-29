@@ -12,28 +12,102 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <form method="GET" action="{{ route('deals.index') }}" class="d-flex align-items-center">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="form-control form-control-sm me-3">
-                    <button type="submit" class="btn btn-primary btn-sm me-1">Search</button>
-                    <a href="{{ route('deals.index') }}" class="btn btn-secondary btn-sm me-1">Clear</a>
+                <form action="{{ route('deals.export') }}" method="POST" class="d-flex align-items-center">
+                    @csrf
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="amount" value="{{ request('amount') }}">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <input type="hidden" name="filter_stage" value="{{ request('filter_stage') }}">
+                    <button type="submit" class="btn btn-primary btn-sm me-1">Export</button>
                 </form>
             </div>
             <!--begin::Card title-->
-
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <!--begin::Toolbar-->
-                <div class="d-flex justify-content-end" data-kt-deal-table-toolbar="base">
-                    <!--begin::Add deal-->
-                    @if(auth()->user()->can('create deal'))
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_deal">
-                        {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                        Create New Deal
-                    </button>
-                    @endif
-                    <!--end::Add stage-->
+
+                <!--begin::Actions-->
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <!--begin::Filter menu-->
+                    <div class="m-0">
+                        <!--begin::Menu toggle-->
+                        <a href="#" class="btn btn-sm btn-flex btn-secondary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <i class="ki-duotone ki-filter fs-6 text-muted me-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>Filter</a>
+                        <!--end::Menu toggle-->
+                        <!--begin::Menu 1-->
+                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_6606385758292">
+                            <!--begin::Header-->
+                            <div class="px-7 py-5">
+                                <div class="fs-5 text-gray-900 fw-bold">Filter Options</div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Menu separator-->
+                            <div class="separator border-gray-200"></div>
+                            <!--end::Menu separator-->
+                            <!--begin::Form-->
+                            <form method="GET" action="{{ route('deals.index') }}">
+                                <div class="px-7 py-5">
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Search Deal:</label>
+                                        <div>
+                                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Name,Phone,Email" class="form-control form-control-sm me-3">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Deal Amount:</label>
+                                        <div>
+                                            <input type="number" name="amount" value="{{ request('amount') }}" placeholder="Amount..." class="form-control form-control-sm me-3">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date From:</label>
+                                        <div>
+                                            <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" placeholder="Date From..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date To:</label>
+                                        <div>
+                                            <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" placeholder="Date To..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Stage:</label>
+                                        <div>
+                                            <select name="filter_stage" class="form-select form-select-solid" data-kt-select2="true" data-close-on-select="false" data-placeholder="Select Stage" data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
+                                                <option value="">--- Filter By Stage ---</option>
+                                                @foreach($dealStages as $stage)
+                                                <option {{ (isset($_GET['filter_stage']) && $_GET['filter_stage'] == $stage->id) ? 'selected' : ''}} value="{{$stage->id}}">{{$stage->stage_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--begin::Actions-->
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{route('deals.index')}}" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</a>
+                                        <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Menu 1-->
+                        <!--begin::Add deal-->
+                        @if(auth()->user()->can('create deal'))
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_deal">
+                                {!! getIcon('plus', 'fs-2', '', 'i') !!}
+                                Create New Deal
+                            </button>
+                        @endif
+                        <!--end::Add deal-->
+                    </div>
+                    <!--end::Filter menu-->
                 </div>
-                <!--end::Toolbar-->
+                <!--end::Actions-->
             </div>
             <!--end::Card toolbar-->
         </div>
@@ -46,7 +120,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr class="bg-light-primary">
-                            <th>ID</th>
+                            <th>Sr. No.</th>
                             <th>Deal Name</th>
                             <th>Deal Email</th>
                             <th>Deal Amount</th>
@@ -57,9 +131,10 @@
                     </thead>
                     <tbody>
                         @if (count($rows))
+                        <?php $counter = 1; ?>
                         @foreach($rows as $row)
                         <tr>
-                            <td>{{ $row->id }}</td>
+                            <td>{{ $counter++ }}</td>
                             <td>
                                 {{ $row->deal_name }} <br>
                                 <span class="badge bg-secondary">{{ $row->deal_phone_1 }}</span>

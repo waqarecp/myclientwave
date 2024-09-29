@@ -21,6 +21,7 @@ use App\Models\Stage;
 use App\Models\Status;
 use App\Models\LeadSource;
 use App\Models\HomeType;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompanyController extends Controller
 {
@@ -34,8 +35,7 @@ class CompanyController extends Controller
         if (!empty($searchTerm)) {
             $companyQuery->where(function ($q) use ($searchTerm) {
                 if (is_numeric($searchTerm)) {
-                    $q->where('companies.id', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('companies.phone', 'LIKE', "%{$searchTerm}%");
+                    $q->Where('companies.phone', 'LIKE', "%{$searchTerm}%");
                 } elseif (strpos($searchTerm, '@') !== false) {
                     $q->where('companies.email', 'LIKE', "%{$searchTerm}%");
                 } elseif (preg_match('/^[a-zA-Z\s]+$/', $searchTerm)) {
@@ -43,8 +43,18 @@ class CompanyController extends Controller
                 }
             });
         }
-        // Apply filter by lead status
-        $filterStatus = $request->input('status');
+        // Apply date filters
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        if (!empty($dateFrom) && !empty($dateTo)) {
+            $companyQuery->whereBetween('companies.created_at', [$dateFrom, $dateTo]);
+        } elseif (!empty($dateFrom)) {
+            $companyQuery->where('companies.created_at', '>=', $dateFrom);
+        } elseif (!empty($dateTo)) {
+            $companyQuery->where('companies.created_at', '<=', $dateTo);
+        }
+        // Apply filter by company status
+        $filterStatus = $request->input('filter_status');
         if (!empty($filterStatus)) {
             if ($filterStatus == '1') {
                 $companyQuery->where('companies.deleted_at', null);
@@ -97,9 +107,8 @@ class CompanyController extends Controller
                 'company_id' => $company->id,
                 'name' => $company->contact_person_name,
                 'email' => $company->email,
-                'email_verified_at' => now(),
                 'password' => Hash::make($request->password),
-                'password_plane' => $request->password,
+                'password_plain' => $request->password,
             ]);
 
             if ($user) {
@@ -206,8 +215,9 @@ class CompanyController extends Controller
             // Clear cache
             cache()->clear(); // Clear the application cache
             return redirect()->intended(RouteServiceProvider::HOME);
+        }else{
+            return redirect()->back()->with('error', 'Failed to registered Company.');
         }
-        return redirect()->back()->with('error', 'Failed to registered Company.');
     }
 
     protected function validateRequest($request)
@@ -319,5 +329,69 @@ class CompanyController extends Controller
             'status' => 'active',
             'message' => 'Company activated successfully.'
         ]);
+    }
+    
+    public function export(Request $request)
+    {
+        $dateTime = Carbon::now()->format('Y-m-d_h-i-s-a');
+        $fileName = 'companies_'.$dateTime.'.csv';
+        
+        $companies = Company::query();
+        if ($request->has('search') && !empty($request->search)) {
+            $companies->where(function($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+    
+        if ($request->has('date_from') && !empty($request->date_from)) {
+            $companies->whereDate('created_at', '>=', $request->date_from);
+        }
+    
+        if ($request->has('date_to') && !empty($request->date_to)) {
+            $companies->whereDate('created_at', '<=', $request->date_to);
+        }
+    
+        $filterStatus = $request->filter_status;
+        if (!empty($filterStatus)) {
+            if ($filterStatus == '1') {
+                $companies->whereNull('deleted_at');
+            }elseif ($filterStatus == '2') {
+                $companies->whereNotNull('deleted_at');
+            }
+        }
+
+        $companies = $companies->withTrashed()->get();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function() use ($companies) {
+            $file = fopen('php://output', 'w');
+
+            // Set the header row
+            fputcsv($file, ['Sr. No.', 'Company Name', 'Company Email', 'Company Phone', 'Company Address', 'Company Description', 'Company Status', 'Created At']);
+            
+            // Set the data rows
+            $counter = 1;
+            foreach ($companies as $company) {
+                fputcsv($file, [
+                    $counter++,
+                    $company->name,
+                    $company->email,
+                    $company->phone,
+                    $company->address,
+                    $company->description,
+                    $company->deleted_at ? "Disabled" : "Active",
+                    Carbon::parse($company->created_at)->format('d M Y H:i'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 }

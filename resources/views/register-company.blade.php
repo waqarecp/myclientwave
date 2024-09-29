@@ -91,15 +91,35 @@
 									<!--begin::Col-->
 									<div class="col-lg-6">
 										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_corporate" />
-										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_corporate">
+										<input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_deluxe" />
+										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_deluxe">
 											<i class="ki-duotone ki-briefcase fs-3x me-5">
 												<span class="path1"></span>
 												<span class="path2"></span>
 											</i>
 											<!--begin::Info-->
 											<span class="d-block fw-semibold text-start">
-												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Advance Account</span>
+												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Deluxe Account</span>
+												<span class="text-muted fw-semibold fs-6">Full access to CRM</span>
+											</span>
+											<!--end::Info-->
+										</label>
+										<!--end::Option-->
+									</div>
+									<!--end::Col-->
+									
+									<!--begin::Col-->
+									<div class="col-lg-6">
+										<!--begin::Option-->
+										<input type="radio" class="btn-check" name="account_type" value="3" id="kt_create_account_form_account_type_exclusive" />
+										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_exclusive">
+											<i class="ki-duotone ki-briefcase fs-3x me-5">
+												<span class="path1"></span>
+												<span class="path2"></span>
+											</i>
+											<!--begin::Info-->
+											<span class="d-block fw-semibold text-start">
+												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Exclusive Account</span>
 												<span class="text-muted fw-semibold fs-6">Full access to CRM</span>
 											</span>
 											<!--end::Info-->

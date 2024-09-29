@@ -12,18 +12,89 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <form method="GET" action="{{ route('companies.index') }}" class="d-flex align-items-center">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..." class="form-control form-control-sm me-3">
-                    <select name="status" id="status" class="form-select form-select-sm me-3">
-                        <option value="">Filter By Status</option>
-                        <option {{ isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : ''}} value="1">Active</option>
-                        <option {{ isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : ''}} value="2">Disabled</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary btn-sm me-1">Search</button>
-                    <a href="{{ route('companies.index') }}" class="btn btn-secondary btn-sm me-1">Clear</a>
+                <form method="POST" action="{{ route('companies.export') }}" class="d-flex align-items-center">
+                    @csrf
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <input type="hidden" name="filter_status" value="{{ request('filter_status') }}">
+                    <button type="submit" class="btn btn-primary btn-sm me-1">Export</button>
                 </form>
             </div>
             <!--begin::Card title-->
+            
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar">
+
+                <!--begin::Actions-->
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <!--begin::Filter menu-->
+                    <div class="m-0">
+                        <!--begin::Menu toggle-->
+                        <a href="#" class="btn btn-sm btn-flex btn-secondary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <i class="ki-duotone ki-filter fs-6 text-muted me-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>Filter</a>
+                        <!--end::Menu toggle-->
+                        <!--begin::Menu 1-->
+                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_6606385758292">
+                            <!--begin::Header-->
+                            <div class="px-7 py-5">
+                                <div class="fs-5 text-gray-900 fw-bold">Filter Options</div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Menu separator-->
+                            <div class="separator border-gray-200"></div>
+                            <!--end::Menu separator-->
+                            <!--begin::Form-->
+                            <form method="GET" action="{{ route('companies.index') }}">
+                                <div class="px-7 py-5">
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Search Company:</label>
+                                        <div>
+                                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Name,Phone,Email" class="form-control form-control-sm me-3">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date From:</label>
+                                        <div>
+                                            <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" placeholder="Date From..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date To:</label>
+                                        <div>
+                                            <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" placeholder="Date To..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Status:</label>
+                                        <div>
+                                            <select name="filter_status" class="form-select form-select-solid" data-kt-select2="true" data-close-on-select="false" data-placeholder="Select Status" data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
+                                                <option value="">--- Filter By Status ---</option>
+                                                <option {{ isset($_GET['filter_status']) && $_GET['filter_status'] == '1' ? 'selected' : ''}} value="1">Active</option>
+                                                <option {{ isset($_GET['filter_status']) && $_GET['filter_status'] == '2' ? 'selected' : ''}} value="2">Disabled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--begin::Actions-->
+                                    <div class="d-flex justify-content-end">
+                                        <a href="{{ route('companies.index') }}" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</a>
+                                        <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Menu 1-->
+                    </div>
+                    <!--end::Filter menu-->
+                </div>
+                <!--end::Actions-->
+            </div>
+            <!--end::Card toolbar-->
         </div>
         <!--end::Card header-->
 

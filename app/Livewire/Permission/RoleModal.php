@@ -35,7 +35,7 @@ class RoleModal extends Component
         }
 
         // Get the role by name.
-        $role = Role::where('name', $role_name)->first();
+        $role = Role::where('name', $role_name)->where("company_id", "=", auth()->user()->company_id)->first();
         if (is_null($role)) {
             $this->dispatch('error', 'The selected role [' . $role_name . '] is not found');
             return;
@@ -75,20 +75,38 @@ class RoleModal extends Component
 
     // This function submits the form and updates the role's permissions.
     public function submit()
-    {
-        $this->validate();
+{
+    $this->validate();
 
-        $this->role->name = $this->name;
-        if ($this->role->isDirty()) {
-            $this->role->save();
-        }
+    // Check if the role with the same name, guard_name, and company_id already exists
+    $existingRole = Role::where('name', $this->name)
+                        ->where('guard_name', 'web') // assuming you're using the 'web' guard
+                        ->where('company_id', auth()->user()->company_id) // Check based on current user's company
+                        ->first();
 
-        // Sync the role's permissions with the checked permissions property.
-        $this->role->syncPermissions($this->checked_permissions);
-
-        // Emit a success event with a message indicating that the permissions have been updated.
-        $this->dispatch('success', 'Permissions for ' . ucwords($this->role->name) . ' role updated');
+    if ($existingRole && $existingRole->id != $this->role->id) {
+        // If a role exists and it's not the current one, return an error
+        $this->dispatch('error', 'A role with the name "' . $this->name . '" already exists for this company.');
+        return;
     }
+
+    // Proceed with saving the role
+    $this->role->name = $this->name;
+    $this->role->guard_name = 'web'; // Ensure you're setting the guard_name as well
+
+    // Set the company_id to the logged-in user's company_id
+    $this->role->company_id = auth()->user()->company_id;
+    // Save the role if it has changed
+    if ($this->role->isDirty()) {
+        $this->role->save();
+    }
+
+    // Sync the role's permissions with the checked permissions property
+    $this->role->syncPermissions($this->checked_permissions);
+
+    // Emit a success event with a message indicating that the permissions have been updated
+    $this->dispatch('success', 'Permissions for ' . ucwords($this->role->name) . ' role updated');
+}
 
     // This function checks all of the permissions.
     public function checkAll()

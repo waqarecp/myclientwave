@@ -17,15 +17,19 @@ class UserTagged extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $appointment;
+    public $appointmentComment;
+    public $appointmentCreatedAt;
     public $senderUser;
     public $taggedUser;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Appointment $appointment, $senderUser, $taggedUser)
+    public function __construct(Appointment $appointment, $appointmentComment, $appointmentCreatedAt, $senderUser, $taggedUser)
     {
         $this->appointment = $appointment;
+        $this->appointmentComment = $appointmentComment;
+        $this->appointmentCreatedAt = $appointmentCreatedAt;
         $this->senderUser = $senderUser;
         $this->taggedUser = $taggedUser;
     }
@@ -42,7 +46,7 @@ class UserTagged extends Mailable implements ShouldQueue
             to: $this->taggedUser->email,
             replyTo: 
                 [
-                    new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'))
+                    new Address(env('MAIL_NOREPLY_ADDRESS'), env('MAIL_FROM_NAME'))
                 ]
         );
     }
@@ -56,6 +60,8 @@ class UserTagged extends Mailable implements ShouldQueue
             view: 'emails.user_tagged',
             with: [
                 'appointment' => $this->appointment,
+                'comment' => $this->appointmentComment,
+                'createdAt' => $this->appointmentCreatedAt,
                 'senderUser' => $this->senderUser,
                 'taggedUser' => $this->taggedUser,
             ]

@@ -46,7 +46,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr class="bg-light-primary">
-                            <th>ID</th>
+                            <th>Sr. No.</th>
                             <th>Communication Method</th>
                             <th>Created By</th>
                             <th>Created Date</th>
@@ -55,9 +55,10 @@
                     </thead>
                     <tbody>
                         @if (count($rows))
+                        <?php $counter = 1; ?>
                         @foreach($rows as $row)
                         <tr>
-                            <td>{{ $row->id }}</td>
+                            <td>{{ $counter++ }}</td>
                             <td>
                                 {{ $row->method_name }}
                             </td>

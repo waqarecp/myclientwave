@@ -20,6 +20,7 @@ class StateColourDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['state_name', 'created_by', 'created_at'])
             ->editColumn('state_name', function (StateColour $statecolour) {
                 return view('pages/statecolour.columns._statecolour', compact('statecolour'));
@@ -65,7 +66,11 @@ class StateColourDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('state_name')->addClass('align-items-center')->name('state_name')->title('State Name')->searchable(true),
             Column::make('created_by')->title('Created By')->addClass('text-nowrap'),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),

@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AppointmentController extends Controller
 {
@@ -33,6 +35,7 @@ class AppointmentController extends Controller
         $users = User::where('deleted_at', null)->where('company_id', $companyId)->get();
         $leads = Lead::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $roles = Role::where('company_id', Auth::user()->company_id)->get();
+        $statuses = Status::where('company_id', Auth::user()->company_id)->get();
 
         // Get assigned countries for the company
         $assignedCountryIds = Setting::where('company_id', $companyId)
@@ -48,7 +51,7 @@ class AppointmentController extends Controller
         $countries = Country::whereIn('id', $assignedCountryIds)->pluck('name', 'id');
 
         $searchTerm = $request->input('search', '');
-        $query = Appointment::join('leads', 'appointments.lead_id', '=', 'leads.id')
+        $appointmentsQuery = Appointment::join('leads', 'appointments.lead_id', '=', 'leads.id')
             ->join('status', 'appointments.status_id', '=', 'status.id')
             ->select(
                 'appointments.*',
@@ -67,23 +70,44 @@ class AppointmentController extends Controller
 
         // Apply search filter only if searchTerm is provided
         if (!empty($searchTerm)) {
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('appointments.id', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('leads.first_name', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('leads.last_name', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('leads.phone', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('leads.email', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status.status_name', 'LIKE', "%{$searchTerm}%");
-            });
+            if (!empty($searchTerm)) {
+                $appointmentsQuery->where(function($q) use ($searchTerm) {
+                    // If the search term is numeric, search by ID and phone number
+                    if (is_numeric($searchTerm)) {
+                        $q->Where('leads.phone', 'LIKE', "%{$searchTerm}%");
+                    } elseif (strpos($searchTerm, '@') !== false) {
+                        $q->where('leads.email', 'LIKE', "%{$searchTerm}%");
+                    } elseif (preg_match('/^[a-zA-Z\s]+$/', $searchTerm)) {
+                        $q->where('leads.first_name', 'LIKE', "{$searchTerm}%")
+                        ->orWhere('leads.last_name', 'LIKE', "{$searchTerm}%")
+                        ->orWhere(DB::raw("CONCAT(leads.first_name, ' ', leads.last_name)"), 'LIKE', "%{$searchTerm}%");
+                    }
+                });
+            }
         }
 
-        $query->where("leads.company_id", "=", $companyId);
+        $appointmentsQuery->where("leads.company_id", "=", $companyId);
+        // Apply date filters
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        if (!empty($dateFrom) && !empty($dateTo)) {
+            $appointmentsQuery->whereBetween('appointments.created_at', [$dateFrom, $dateTo]);
+        } elseif (!empty($dateFrom)) {
+            $appointmentsQuery->where('appointments.created_at', '>=', $dateFrom);
+        } elseif (!empty($dateTo)) {
+            $appointmentsQuery->where('appointments.created_at', '<=', $dateTo);
+        }
 
+        // Apply filter by appointment status
+        $filterStatus = $request->input('filter_status');
+        if (!empty($filterStatus)) {
+            $appointmentsQuery->where('appointments.status_id', '=', $filterStatus);
+        }
         // Paginate the results
-        $rows = $query->paginate(15)->withQueryString();
+        $rows = $appointmentsQuery->paginate(15)->withQueryString();
 
         // Return the view with paginated data
-        return view('pages.appointment.list', compact('users', 'leads', 'roles', 'countries', 'rows'));
+        return view('pages.appointment.list', compact('users', 'leads', 'roles', 'countries', 'rows', 'statuses'));
     }
 
     /**
@@ -306,7 +330,7 @@ class AppointmentController extends Controller
         if ($request->appointment_notes && $request->appointment_notes != Null) {
             $implodedUserIds = $request->user_ids ? implode(',', $request->user_ids) : null;
             $userIds = $request->user_ids ?: null;
-            AppointmentNote::create([
+            $appointmentNote = AppointmentNote::create([
                 'appointment_id' => $request->appointment_id,
                 'status_id' => $request->current_status_id,
                 'user_id' => Auth::user()->id,
@@ -336,12 +360,12 @@ class AppointmentController extends Controller
                 DB::beginTransaction();
                 try {
                     // Set comment in appointment variable
-                    $appointment->comment = $request->appointment_notes;
-
+                    $appointmentComment = $request->appointment_notes;
+                    $appointmentNoteCreatedAt = \Carbon\Carbon::parse($appointmentNote->created_at)->format('d M Y h:i a');
                     foreach ($receiverUsers as $taggedUser) {
                         if ($taggedUser && $taggedUser->email) {
                             // Queue the email for sending
-                            Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $senderUser, $taggedUser));
+                            Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $appointmentComment, $appointmentNoteCreatedAt, $senderUser, $taggedUser));
                             // Log::info("Queued email successfully for user Name: {$taggedUser->name}, Email: {$taggedUser->email}");
                         } else {
                             // Log::error("Receiver user or email is missing for user ID: " . ($taggedUser->id ?: 'unknown'));
@@ -421,5 +445,86 @@ class AppointmentController extends Controller
             ]);
         }
         return response()->json(['lead' => '']);
+    }
+    
+    public function export(Request $request)
+    {
+        $dateTime = Carbon::now()->format('Y-m-d_h-i-s-a');
+        $fileName = 'appointments_'.$dateTime.'.csv';
+        
+        $appointments = Appointment::join('leads', 'appointments.lead_id', '=', 'leads.id')
+        ->select(
+            'appointments.*',
+            'leads.first_name',
+            'leads.last_name',
+            'leads.phone',
+            'leads.email',
+            'leads.mobile',
+            'leads.company_id'
+        );
+        if ($request->has('search') && !empty($request->search)) {
+            $appointments->where(function($query) use ($request) {
+                $query->where('leads.first_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('leads.last_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere(DB::raw("CONCAT(leads.first_name, ' ', leads.last_name)"), 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('leads.phone', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('leads.email', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+    
+        if ($request->has('date_from') && !empty($request->date_from)) {
+            $appointments->whereDate('appointments.created_at', '>=', $request->date_from);
+        }
+    
+        if ($request->has('date_to') && !empty($request->date_to)) {
+            $appointments->whereDate('appointments.created_at', '<=', $request->date_to);
+        }
+    
+        if ($request->has('filter_status') && !empty($request->filter_status)) {
+            $appointments->where('appointments.status_id', $request->filter_status);
+        }
+    
+        $appointments = $appointments->whereNull('appointments.deleted_at')->where("leads.company_id", "=", Auth::user()->company_id)->get();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function() use ($appointments) {
+            $file = fopen('php://output', 'w');
+
+            // Set the header row
+            fputcsv($file, ['Sr. No.', 'Lead Name', 'Lead Email', 'Lead Phone', 'Appointment Date', 'Appointment Time', 'Appointment Address', 'Appointment Status', 'Created By', 'Created At']);
+
+            // Set the data rows
+            $counter = 1;
+            foreach ($appointments as $appointment) {
+                $appointmentAddress = implode(', ', array_filter([
+                        optional($appointment->country)->name,
+                        optional($appointment->state)->name,
+                        optional($appointment->city)->name,
+                        $appointment->appointment_address_1,
+                        $appointment->appointment_address_2,
+                        $appointment->appointment_street,
+                        $appointment->appointment_zip
+                    ]));
+                fputcsv($file, [
+                    $counter++,
+                    optional($appointment->lead)->first_name . ' ' . optional($appointment->lead)->last_name,
+                    optional($appointment->lead)->email,
+                    optional($appointment->lead)->phone,
+                    Carbon::parse($appointment->appointment_date)->format('d M Y'),
+                    $appointment->appointment_time,
+                    $appointmentAddress,
+                    optional($appointment->status)->status_name,
+                    optional($appointment->user)->name,
+                    Carbon::parse($appointment->created_at)->format('d M Y H:i'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 }

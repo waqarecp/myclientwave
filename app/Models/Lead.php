@@ -49,6 +49,21 @@ class Lead extends Model
         return $this->belongsTo(UtilityCompany::class, 'utility_company_id');
     }
     
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+    
+    public function saleRepresentative()
+    {
+        return $this->belongsTo(User::class, 'sale_representative');
+    }
+    
+    public function callCenterRepresentative()
+    {
+        return $this->belongsTo(User::class, 'call_center_representative');
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'created_by');

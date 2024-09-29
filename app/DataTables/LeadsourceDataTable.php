@@ -20,6 +20,7 @@ class LeadsourceDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['source_name', 'created_at'])
             ->editColumn('source_name', function (LeadSource $leadsource) {
                 return view('pages/leadsource.columns._leadsource', compact('leadsource'));
@@ -62,7 +63,11 @@ class LeadsourceDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('source_name')->addClass('align-items-center')->name('source_name')->title('Name')->searchable(true),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),
             Column::computed('action')

@@ -21,8 +21,9 @@ class UtilitycompanyDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->rawColumns(['source_name', 'created_at'])
-            ->editColumn('source_name', function (UtilityCompany $utilitycompany) {
+            ->addIndexColumn() // Add the index column for serial number
+            ->rawColumns(['utility_company_name', 'created_at'])
+            ->editColumn('utility_company_name', function (UtilityCompany $utilitycompany) {
                 return view('pages/utilitycompany.columns._utilitycompany', compact('utilitycompany'));
             })
             ->editColumn('created_at', function (UtilityCompany $utilitycompany) {
@@ -40,7 +41,7 @@ class UtilitycompanyDataTable extends DataTable
      */
     public function query(UtilityCompany $model): QueryBuilder
     {
-        return $model->newQuery()->whereNull('deleted_at')->where('company_id', Auth::user()->company_id);
+        return $model->newQuery()->where('company_id', auth()->user()->company_id);
     }
 
     /**
@@ -63,8 +64,12 @@ class UtilitycompanyDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
-            Column::make('source_name')->addClass('align-items-center')->name('source_name')->title('Name')->searchable(true),
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
+            Column::make('utility_company_name')->addClass('align-items-center')->name('utility_company_name')->title('Name')->searchable(true),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),
             Column::computed('action')
                 ->addClass('text-end text-nowrap')

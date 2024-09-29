@@ -20,6 +20,7 @@ class LeadDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['first_name', 'mobile', 'email', 'lead_source_id', 'created_by'])
             ->editColumn('first_name',  function (Lead $lead) {
                 return view('pages/lead.columns._lead', compact('lead'));
@@ -81,6 +82,11 @@ class LeadDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('first_name')->addClass('align-items-center')->name('first_name')->searchable(true),
             Column::make('mobile')->title('Mobile')->searchable(true),
             Column::make('email')->title('Email')->searchable(true),

@@ -19,11 +19,12 @@ class PermissionsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->editColumn('name', function (Permission $permission) {
                 return ucwords($permission->name);
             })
             ->addColumn('assigned_to', function (Permission $permission) {
-                $roles = $permission->roles;
+                $roles = $permission->roles->where('company_id', '=', auth()->user()->company_id);
                 return view('pages/apps.user-management.permissions.columns._assign-to', compact('roles'));
             })
             ->editColumn('created_at', function (Permission $permission) {
@@ -64,6 +65,11 @@ class PermissionsDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('name'),
             Column::make('assigned_to'),
             Column::make('created_at')->addClass('text-nowrap'),

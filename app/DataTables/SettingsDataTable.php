@@ -19,6 +19,7 @@ class SettingsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['platform_name', 'created_at', 'api_key', 'api_url', 'username', 'password', 'status'])
             ->editColumn('platform_name', function (Setting $setting) {
                 return view('pages/setting.columns._setting', compact('setting'));
@@ -77,6 +78,11 @@ class SettingsDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('platform_name')->addClass('align-items-center')->name('platform_name')->title('Platform')->searchable(true),
             Column::make('dealerName')->title('Dealer Name')->searchable(true),
             Column::make('api_key')->title('API Key')->addClass('text-nowrap'),

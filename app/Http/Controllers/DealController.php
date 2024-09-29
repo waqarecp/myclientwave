@@ -12,7 +12,9 @@ use App\Models\Role;
 use App\Models\Stage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DealController extends Controller
 {
@@ -20,38 +22,70 @@ class DealController extends Controller
     public function index(Request $request)
     {
         $companyId = Auth::user()->company_id;
-        $users = User::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $roles = Role::where('company_id', Auth::user()->company_id)->get();
-        $leads = Lead::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $homeTypes = HomeType::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $leadSources = LeadSource::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $dealStages = Stage::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $communicationMethods = CommunicationMethod::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
-        $dealQuery = Deal::join('users', 'deals.created_by', '=', 'users.id')
+
+        // Retrieve necessary data for filters
+        $users = User::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $roles = Role::where('company_id', $companyId)->get();
+        $leads = Lead::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $homeTypes = HomeType::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $leadSources = LeadSource::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $dealStages = Stage::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $communicationMethods = CommunicationMethod::whereNull('deleted_at')->where('company_id', $companyId)->get();
+
+        // Initialize the deal query with necessary joins and filters
+        $dealQuery = Deal::query()
+            ->join('users', 'deals.created_by', '=', 'users.id')
             ->join('stages', 'deals.stage_id', '=', 'stages.id')
-            ->whereNull('deals.deleted_at');
+            ->whereNull('deals.deleted_at')
+            ->select('deals.*', 'deals.id as deal_id');
+
+        // Apply search filters (deal name, user name, phone, or email)
         $searchTerm = $request->input('search', '');
         if (!empty($searchTerm)) {
             $dealQuery->where(function ($q) use ($searchTerm) {
                 if (is_numeric($searchTerm)) {
-                    $q->where('deals.id', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('deals.deal_amount', 'LIKE', "%{$searchTerm}%");
+                    $q->where('deals.phone', 'LIKE', "%{$searchTerm}%");
                 } elseif (strpos($searchTerm, '@') !== false) {
                     $q->where('deals.deal_email', 'LIKE', "%{$searchTerm}%");
                 } elseif (preg_match('/^[a-zA-Z\s]+$/', $searchTerm)) {
                     $q->where('deals.deal_name', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('stages.stage_name', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('users.name', 'LIKE', "%{$searchTerm}%"); 
+                    ->orWhere('users.name', 'LIKE', "%{$searchTerm}%");
                 }
             });
         }
-        $dealQuery->select(
-            'deals.*',
-            'deals.id as deal_id'
-        );
+
+        // Apply date range filters
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        if (!empty($dateFrom) && !empty($dateTo)) {
+            $dealQuery->whereBetween('deals.created_at', [$dateFrom, $dateTo]);
+        } elseif (!empty($dateFrom)) {
+            $dealQuery->where('deals.created_at', '>=', $dateFrom);
+        } elseif (!empty($dateTo)) {
+            $dealQuery->where('deals.created_at', '<=', $dateTo);
+        }
+
+        // Apply amount filter
+        $filterAmount = $request->input('amount');
+        if (!empty($filterAmount) && is_numeric($filterAmount)) {
+            $dealQuery->where('deals.deal_amount', '=', $filterAmount);
+        }
+
+        // Apply stage filter
+        $filterStage = $request->input('filter_stage');
+        if (!empty($filterStage)) {
+            $dealQuery->where('deals.stage_id', '=', $filterStage);
+        }
+
+        // Fetch results with pagination
         $rows = $dealQuery->paginate(15)->withQueryString();
-        return view('pages.deals.index', compact('rows', 'users', 'roles', 'leads', 'homeTypes', 'leadSources', 'dealStages', 'communicationMethods'));
+
+        // Return the view with all necessary data
+        return view('pages.deals.index', compact(
+            'rows', 'users', 'roles', 'leads', 'homeTypes', 'leadSources', 'dealStages', 'communicationMethods'
+        ));
     }
+
 
     // Show the form for creating a new deal
     public function create()
@@ -309,4 +343,85 @@ class DealController extends Controller
         }
         return redirect()->back()->with('error', 'Failed to Update Deal stage timeline!');
     }
+
+    public function export(Request $request)
+    {
+        $dateTime = Carbon::now()->format('Y-m-d_h-i-s-a');
+        $fileName = 'deals_' . $dateTime . '.csv';
+    
+        // Build the deal query with eager loading to optimize related models fetching
+        $deals = Deal::with(['projectAdministrator', 'owner', 'stage', 'homeType', 'source', 'communicationMethod', 'creator'])
+            ->when($request->has('search') && !empty($request->search), function($query) use ($request) {
+                $searchTerm = $request->search;
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('deal_name', 'LIKE', "%{$searchTerm}%")
+                      ->orWhere('deal_phone_1', 'LIKE', "%{$searchTerm}%")
+                      ->orWhere('deal_email', 'LIKE', "%{$searchTerm}%");
+                });
+            })
+            ->when($request->has('amount') && !empty($request->amount), function ($query) use ($request) {
+                $query->where('deal_amount', '>=', $request->amount);
+            })
+            ->when($request->has('date_from') && !empty($request->date_from), function ($query) use ($request) {
+                $query->whereDate('created_at', '>=', $request->date_from);
+            })
+            ->when($request->has('date_to') && !empty($request->date_to), function ($query) use ($request) {
+                $query->whereDate('created_at', '<=', $request->date_to);
+            })
+            ->when($request->has('filter_stage') && !empty($request->filter_stage), function ($query) use ($request) {
+                $query->where('stage_id', $request->filter_stage);
+            })
+            ->whereNull('deals.deleted_at')
+            ->get();
+    
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+    
+        $callback = function() use ($deals) {
+            $file = fopen('php://output', 'w');
+    
+            // CSV header row
+            $csvHeader = [
+                'Sr. No.', 'Deal Name', 'Deal Email', 'Deal Phone', 'Account Name', 'Contact Name', 
+                'Deal Amount', 'Project Administrator', 'Owner', 'Deal Stage', 'Home Type', 
+                'Communication Method', 'Source', 'Closing Date', 'Probability', 'Expected Revenue', 
+                'Availability Start', 'Availability End', 'Created By', 'Created At'
+            ];
+            fputcsv($file, $csvHeader);
+    
+            // CSV data rows
+            $counter = 1;
+            foreach ($deals as $deal) {
+                fputcsv($file, [
+                    $counter++,
+                    $deal->deal_name,
+                    $deal->deal_email,
+                    $deal->deal_phone_1,
+                    $deal->deal_account_name,
+                    $deal->deal_contact_name,
+                    $deal->deal_amount ? '$' . number_format($deal->deal_amount, 2) : 'N/A',
+                    optional($deal->projectAdministrator)->name,
+                    optional($deal->owner)->name,
+                    optional($deal->stage)->stage_name,
+                    optional($deal->homeType)->home_type_name,
+                    optional($deal->source)->source_name,
+                    optional($deal->communicationMethod)->method_name,
+                    $deal->deal_closing_date,
+                    $deal->deal_probability,
+                    $deal->deal_expected_revenue,
+                    $deal->deal_availability_start,
+                    $deal->deal_availability_end,
+                    optional($deal->creator)->name,
+                    Carbon::parse($deal->created_at)->format('d M Y H:i'),
+                ]);
+            }
+    
+            fclose($file);
+        };
+    
+        return new StreamedResponse($callback, 200, $headers);
+    }
+    
 }

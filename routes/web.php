@@ -64,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/leads/get-cities', [LeadController::class, 'getCities'])->name('leads.getCities');
     Route::post('/leads/destroy', [LeadController::class, 'destroy'])->name('leads.destroy');
     Route::post('/leads/covert-lead-to-deal', [LeadController::class, 'convertLeadToDeal'])->name('leads.convertLeadToDeal');
+    Route::post('/leads/export', [LeadController::class, 'export'])->name('leads.export');
 
     // appointments routes
     Route::resource('appointments', AppointmentController::class)->middleware('check.dynamic.route.permissions:appointment');
@@ -76,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/appointments/note-store', [AppointmentController::class, 'noteStore'])->name('appointments.noteStore');
     Route::post('/appointments/view-status-comments', [AppointmentController::class, 'viewStatusComments'])->name('appointments.viewStatusComments');
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments');
+    Route::post('/appointments/export', [AppointmentController::class, 'export'])->name('appointments.export');
 
     // calendars routes
     Route::resource('calendars', CalendarController::class)->middleware('check.dynamic.route.permissions:appointment');
@@ -86,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/destroy', [DealController::class, 'destroy'])->name('deals.destroy');
     Route::post('/deals/view-deal-timeline', [DealController::class, 'viewDealTimeline'])->name('deals.viewTimeline');
     Route::post('/deals/update-deal-timeline', [DealController::class, 'updateDealTimeline'])->name('deals.updateTimeline');
+    Route::post('/deals/export', [DealController::class, 'export'])->name('deals.export');
     
     // Utility Company routes
     Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
@@ -95,6 +98,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/companies/update', [CompanyController::class, 'update'])->name('companies.update');
         Route::post('/companies/destroy', [CompanyController::class, 'destroy'])->name('companies.destroy');
         Route::post('/companies/active', [CompanyController::class, 'active'])->name('companies.active');
+        Route::post('/companies/export', [CompanyController::class, 'export'])->name('companies.export');
     });
 
     Route::prefix('manage-settings')->group(function () {

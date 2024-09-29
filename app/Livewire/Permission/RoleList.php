@@ -21,7 +21,7 @@ class RoleList extends Component
 
     public function updateRoleList()
     {
-        $this->roles = Role::with('permissions')->get();
+        $this->roles = Role::with('permissions')->where("company_id", "=", auth()->user()->company_id)->get();
     }
 
     public function hydrate()

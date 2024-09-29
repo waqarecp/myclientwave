@@ -28,7 +28,9 @@ use App\Models\CommunicationMethod;
 use App\Models\Deal;
 use App\Models\HomeType;
 use App\Models\Stage;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LeadController extends Controller
 {
@@ -92,15 +94,15 @@ class LeadController extends Controller
             $leadsQuery->where(function($q) use ($searchTerm) {
                 // If the search term is numeric, search by ID and phone number
                 if (is_numeric($searchTerm)) {
-                    $q->where('leads.id', 'LIKE', "{$searchTerm}%")
-                    ->orWhere('leads.phone', 'LIKE', "%{$searchTerm}%")
+                    $q->Where('leads.phone', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('leads.mobile', 'LIKE', "%{$searchTerm}%");
                 } elseif (strpos($searchTerm, '@') !== false) {
                     $q->where('leads.email', 'LIKE', "%{$searchTerm}%");
-                } elseif (preg_match('/^[a-zA-Z]+$/', $searchTerm)) {
+                } elseif (preg_match('/^[a-zA-Z\s]+$/', $searchTerm)) {
                     $q->where('leads.first_name', 'LIKE', "{$searchTerm}%")
                     ->orWhere('leads.last_name', 'LIKE', "{$searchTerm}%")
-                    ->orWhere('leads.email', 'LIKE', "{$searchTerm}%");
+                    ->orWhere('leads.email', 'LIKE', "{$searchTerm}%")
+                    ->orWhere(DB::raw("CONCAT(leads.first_name, ' ', leads.last_name)"), 'LIKE', "%{$searchTerm}%");
                 }
             });
         }
@@ -177,12 +179,24 @@ class LeadController extends Controller
                 }
             }
 
-            // Send notification to the sales representative
-            $this->sendFirebaseNotification([$request->input('sale_representative')], [
-                'title' => 'New Lead Created',
-                'body' => 'A new lead has been assigned to you.',
-                'click_action' => env('APP_URL') . "leads/" . $lead->id
-            ]);
+            $senderUser = auth()->user();
+
+            if ($request->input('sale_representative')) {
+                $salesRepresentativeId = $request->input('sale_representative');
+                $saleRepresentativeUser = User::where('id', $salesRepresentativeId)->first();
+
+                // Send notification to the sales representative
+                $this->sendFirebaseNotification([$request->input('sale_representative')], [
+                    'title' => 'New Lead Created',
+                    'body' => 'A new lead has been assigned to you.',
+                    'click_action' => env('APP_URL') . "leads/" . $lead->id
+                ]);
+                // Send email notification to the sales representative
+                if ($saleRepresentativeUser->email) {
+                    $leadCreatedAt = \Carbon\Carbon::parse($lead->created_at)->format('d M Y h:i a');
+                    Mail::to($saleRepresentativeUser->email)->queue(new LeadAssigned($lead, $leadCreatedAt, $senderUser, $saleRepresentativeUser));
+                }
+            }
 
             // Send notification to the appointment tagged users
             if ($request->appointment_user_ids) {
@@ -191,21 +205,18 @@ class LeadController extends Controller
                     'body' => ucwords(Auth::user()->name) . ' has mentioned you in a comment.',
                     'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
                 ]);
-            }
-            // Send email to the assigned sales representative
-            Mail::send(new LeadAssigned($lead, $lead->saleRepresentative));
 
-            // Send email to the appointment tagged users
-            if($request->appointment_user_ids) { 
-                $senderUser = auth()->user();
+                // Send email to the assigned sales representative
                 $receiverUsers = User::whereIn('id', $request->appointment_user_ids)->get();
-
+                $appointmentComment = $request->input('appointment_notes');
+                $appointmentCreatedAt = \Carbon\Carbon::parse($appointment->created_at)->format('d M Y h:i a');
                 foreach ($receiverUsers as $taggedUser) {
                     if ($taggedUser && $taggedUser->email) {
-                        Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $senderUser, $taggedUser));
+                        Mail::to($taggedUser->email)->queue(new UserTagged($appointment, $appointmentComment, $appointmentCreatedAt, $senderUser, $taggedUser));
                     }
                 }
             }
+
             return redirect()->back()->with('success', 'Lead has been created successfully.');
         }
 
@@ -601,6 +612,85 @@ class LeadController extends Controller
         } else {
             return response()->json(['error' => 'Failed to convert Lead to Deal'], 500);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $dateTime = Carbon::now()->format('Y-m-d_h-i-s-a');
+        $fileName = 'leads_'.$dateTime.'.csv';
+        
+        $leads = Lead::query();
+        if ($request->has('search') && !empty($request->search)) {
+            $leads->where(function($query) use ($request) {
+                $query->where('first_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere(DB::raw("CONCAT(leads.first_name, ' ', leads.last_name)"), 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('phone', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+    
+        if ($request->has('date_from') && !empty($request->date_from)) {
+            $leads->whereDate('created_at', '>=', $request->date_from);
+        }
+    
+        if ($request->has('date_to') && !empty($request->date_to)) {
+            $leads->whereDate('created_at', '<=', $request->date_to);
+        }
+    
+        if ($request->has('filter_source') && !empty($request->filter_source)) {
+            $leads->where('source_id', $request->filter_source);
+        }
+        
+        if ($request->has('filter_utility') && !empty($request->filter_utility)) {
+            $leads->where('utility_company_id', $request->filter_utility);
+        }
+    
+        $leads = $leads->whereNull('leads.deleted_at')->get();
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function() use ($leads) {
+            $file = fopen('php://output', 'w');
+
+            // Set the header row
+            fputcsv($file, ['Sr. No.', 'Company Name', 'Lead Name', 'Lead Email', 'Lead Phone', 'Lead Address', 'Owner', 'Sale Representative', 'Utility Company', 'Source', 'Call Center Representative', 'Created By', 'Created At']);
+
+            // Set the data rows
+            $counter = 1;
+            foreach ($leads as $lead) {
+                $leadAddress = implode(', ', array_filter([
+                    optional($lead->country)->name,
+                    optional($lead->state)->name,
+                    optional($lead->city)->name,
+                    $lead->address_1,
+                    $lead->address_2,
+                    $lead->street,
+                    $lead->zip
+                ]));
+                fputcsv($file, [
+                    $counter++,
+                    optional($lead->company)->name,
+                    $lead->first_name . ' ' . $lead->last_name,
+                    $lead->email,
+                    $lead->phone,
+                    $leadAddress,
+                    optional($lead->owner)->name,
+                    optional($lead->saleRepresentative)->name,
+                    optional($lead->utilityCompany)->utility_company_name,
+                    optional($lead->leadSource)->source_name,
+                    optional($lead->callCenterRepresentative)->name,
+                    optional($lead->user)->name,
+                    Carbon::parse($lead->created_at)->format('d M Y H:i'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 
 }

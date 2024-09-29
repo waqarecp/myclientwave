@@ -10,46 +10,104 @@
     <div class="card">
         <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
+            
             <!--begin::Card title-->
             <div class="card-title">
-                <form method="GET" action="{{ route('leads.index') }}" class="d-flex align-items-center">
-                    <div class="m-1">
-                        <small for="search">Search Lead</small>
-                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search Lead" class="form-control form-control-sm me-3">
-                    </div>
-                    <div class="m-1">
-                        <small for="date_from">Date From</small>
-                        <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" placeholder="Date From..." class="form-control form-control-sm">
-                    </div>
-                    <div class="m-1">
-                        <small for="date_to">Date To</small>
-                        <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" placeholder="Date To..." class="form-control form-control-sm">
-                    </div>
-                    <div class="m-1">
-                        <small for="filter_source">Source</small>
-                        <select id="filter_source" name="filter_source" class="filter_source form-select form-select-sm">
-                            <option value="">--- Filter By Source ---</option>
-                            @foreach($sources as $source)
-                            <option {{$request->filter_source == $source->id ? 'selected' : ''}} value="{{$source->id}}">{{$source->source_name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="m-1">
-                        <small for="filter_utility">Utility Company</small>
-                        <select id="filter_utility" name="filter_utility" class="filter_utility form-select form-select-sm">
-                            <option value="">--- Filter By Utility Company ---</option>
-                            @foreach($utilityCompanies as $ucompany)
-                            <option {{$request->filter_utility == $ucompany->id ? 'selected' : ''}} value="{{$ucompany->id}}">{{$ucompany->utility_company_name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="m-1">
-                        <br>
-                        <button type="submit" class="btn btn-primary btn-sm">Search</button>
-                        <a href="/leads" class="btn btn-secondary btn-sm border">Clear</a>
-                    </div>
+                <form method="POST" action="{{ route('leads.export') }}" class="d-flex align-items-center">
+                    @csrf
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <input type="hidden" name="filter_source" value="{{ request('filter_source') }}">
+                    <input type="hidden" name="filter_utility" value="{{ request('filter_utility') }}">
+                    <button type="submit" class="btn btn-primary btn-sm me-1">Export</button>
                 </form>
             </div>
+            <!--begin::Card title-->
+            <!--begin::Card toolbar-->
+            <div class="card-toolbar">
+
+                <!--begin::Actions-->
+                <div class="d-flex align-items-center gap-2 gap-lg-3">
+                    <!--begin::Filter menu-->
+                    <div class="m-0">
+                        <!--begin::Menu toggle-->
+                        <a href="#" class="btn btn-sm btn-flex btn-secondary fw-bold" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <i class="ki-duotone ki-filter fs-6 text-muted me-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>Filter</a>
+                        <!--end::Menu toggle-->
+                        <!--begin::Menu 1-->
+                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_6606385758292">
+                            <!--begin::Header-->
+                            <div class="px-7 py-5">
+                                <div class="fs-5 text-gray-900 fw-bold">Filter Options</div>
+                            </div>
+                            <!--end::Header-->
+                            <!--begin::Menu separator-->
+                            <div class="separator border-gray-200"></div>
+                            <!--end::Menu separator-->
+                            <!--begin::Form-->
+                            <form method="GET" action="{{ route('leads.index') }}">
+                                <div class="px-7 py-5">
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Search Lead:</label>
+                                        <div>
+                                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Name,Phone,Email" class="form-control form-control-sm me-3">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date From:</label>
+                                        <div>
+                                            <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" placeholder="Date From..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Date To:</label>
+                                        <div>
+                                            <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" placeholder="Date To..." class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Source:</label>
+                                        <div>
+                                            <select name="filter_source" class="form-select form-select-solid" data-kt-select2="true" data-close-on-select="false" data-placeholder="Select Source" data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
+                                                <option value="">--- Filter By Source ---</option>
+                                                @foreach($sources as $source)
+                                                    <option {{$request->filter_source == $source->id ? 'selected' : ''}} value="{{$source->id}}">{{$source->source_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-10">
+                                        <label class="form-label fw-semibold">Utility Company:</label>
+                                        <div>
+                                            <select name="filter_utility" class="form-select form-select-solid" data-kt-select2="true" data-close-on-select="false" data-placeholder="Select Source" data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
+                                                <option value="">--- Filter By Utility Company ---</option>
+                                                @foreach($utilityCompanies as $ucompany)
+                                                <option {{$request->filter_utility == $ucompany->id ? 'selected' : ''}} value="{{$ucompany->id}}">{{$ucompany->utility_company_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--begin::Actions-->
+                                    <div class="d-flex justify-content-end">
+                                        <a href="/leads" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</a>
+                                        <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
+                                    </div>
+                                    <!--end::Actions-->
+                                </div>
+                            </form>
+                            <!--end::Form-->
+                        </div>
+                        <!--end::Menu 1-->
+                    </div>
+                    <!--end::Filter menu-->
+                </div>
+                <!--end::Actions-->
+            </div>
+            <!--end::Card toolbar-->
         </div>
         <!--end::Card header-->
         @if (session('success'))
@@ -70,7 +128,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr class="bg-light-primary">
-                            <th>ID</th>
+                            <th>Sr. No.</th>
                             <th>Lead Name</th>
                             <th>Email</th>
                             <th>Phone</th>
@@ -83,9 +141,10 @@
                     </thead>
                     <tbody>
                         @if (count($rows))
+                        <?php $counter = 1; ?>
                         @foreach($rows as $row)
                         <tr>
-                            <td>{{ $row->id }}</td>
+                            <td>{{ $counter++ }}</td>
                             <td>{{ $row->first_name . ' ' . $row->last_name }}</td>
                             <td>{{ $row->email}}</td>
                             <td>{{ $row->phone}}</td>

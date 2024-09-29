@@ -21,6 +21,7 @@ class StatusDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['status_name', 'created_at'])
             ->editColumn('status_name', function (Status $status) {
                 return view('pages/status.columns._status', compact('status'));
@@ -63,7 +64,11 @@ class StatusDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('status_name')->addClass('align-items-center')->name('status_name')->title('Name')->searchable(true),
             Column::make('created_at')->title('Created Date')->addClass('text-nowrap'),
             Column::computed('action')

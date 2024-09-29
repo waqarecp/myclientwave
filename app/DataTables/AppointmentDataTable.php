@@ -19,6 +19,7 @@ class AppointmentDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
+            ->addIndexColumn() // Add the index column for serial number
             ->rawColumns(['full_name', 'appointment_date', 'appointment_time', 'status_name'])
             ->editColumn('appointment_date', function (ViewGlobalData $appointment) {
                 return view('pages/appointment.columns._appointment', compact('appointment'));
@@ -75,7 +76,11 @@ class AppointmentDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('id')->addClass('align-items-center')->name('id')->title('ID')->searchable(true),
+            Column::computed('DT_RowIndex') // Use computed index for Sr. No.
+            ->title('Sr. No.')
+            ->searchable(false)
+            ->orderable(false)
+            ->addClass('align-items-center'),
             Column::make('full_name')->addClass('align-items-center')->title('Lead Info')->searchable(true),
             Column::make('appointment_date')->title('Appointment Date')->searchable(true),
             Column::make('appointment_time')->title('Appointment Time')->searchable(true),
