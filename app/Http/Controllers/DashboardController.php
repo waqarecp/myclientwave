@@ -58,7 +58,7 @@ class DashboardController extends Controller
         $utilitycompanies = UtilityCompany::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
-        $companies = Company::where('deleted_at', null)->get();
+        $company = Company::where('id', Auth::user()->company_id)->where('deleted_at', null)->first();
         $sources = LeadSource::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
@@ -97,7 +97,7 @@ class DashboardController extends Controller
             'pages/dashboards.index',
             compact(
                 'users',
-                'companies',
+                'company',
                 'sources',
                 'utilitycompanies',
                 'statuses',

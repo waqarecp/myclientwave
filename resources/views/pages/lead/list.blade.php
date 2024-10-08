@@ -449,7 +449,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Convert <span class="badge badge-lg bg-secondary" id="convert_lead_name_header"></span> to Deal</h2>
+                    <h2>Convert <span class="badge badge-lg bg-secondary" id="convert_lead_name_header"></span>lead to Deal</h2>
                 </div>
                 <div class="modal-body py-10 px-lg-17">
                 <form id="kt_modal_convert_lead_to_deal_form" class="form" action="#" enctype="multipart/form-data">

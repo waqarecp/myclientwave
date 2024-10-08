@@ -64,76 +64,54 @@
 						<div class="w-100">
 							<!--begin::Input group-->
 							<div class="fv-row">
-								<!--begin::Row-->
 								<div class="row">
-									<!--begin::Col-->
-									<div class="col-lg-6">
-										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
-										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-10" for="kt_create_account_form_account_type_personal">
-											<i class="ki-duotone ki-badge fs-3x me-5">
+									<!--begin::Label-->
+									<label class="d-flex align-items-center form-label mb-3">Choose Plan
+										<span class="ms-1" data-bs-toggle="tooltip" title="Select the package for your company">
+											<i class="ki-duotone ki-information-5 text-gray-500 fs-6">
 												<span class="path1"></span>
 												<span class="path2"></span>
 												<span class="path3"></span>
-												<span class="path4"></span>
-												<span class="path5"></span>
 											</i>
-											<!--begin::Info-->
-											<span class="d-block fw-semibold text-start">
-												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Basic Account</span>
-												<span class="text-muted fw-semibold fs-6">Limited access to CRM</span>
-											</span>
-											<!--end::Info-->
-										</label>
-										<!--end::Option-->
+										</span>
+									</label>
+									<!--begin::Row-->
+									<div class="row">
+										<div class="col-lg-4">
+											<input type="radio" class="btn-check" name="account_type" value="1" checked="checked" id="kt_create_account_form_account_type_personal" />
+											<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center mb-10" for="kt_create_account_form_account_type_personal">
+												<span class="d-block fw-semibold text-start">
+													<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Basic-$15/Mo</span>
+												</span>
+											</label>
+										</div>
+										<div class="col-lg-4">
+											<input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_deluxe" />
+											<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_deluxe">
+												<span class="d-block fw-semibold text-start">
+													<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Deluxe-$35/Mo</span>
+												</span>
+											</label>
+										</div>
+										<div class="col-lg-4">
+											<input type="radio" class="btn-check" name="account_type" value="3" id="kt_create_account_form_account_type_exclusive" />
+											<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_exclusive">
+												<span class="d-block fw-semibold text-start">
+													<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Exclusive-$50/Mo</span>
+												</span>
+											</label>
+										</div>
 									</div>
-									<!--end::Col-->
-									<!--begin::Col-->
-									<div class="col-lg-6">
-										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="account_type" value="2" id="kt_create_account_form_account_type_deluxe" />
-										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_deluxe">
-											<i class="ki-duotone ki-briefcase fs-3x me-5">
-												<span class="path1"></span>
-												<span class="path2"></span>
-											</i>
-											<!--begin::Info-->
-											<span class="d-block fw-semibold text-start">
-												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Deluxe Account</span>
-												<span class="text-muted fw-semibold fs-6">Full access to CRM</span>
-											</span>
-											<!--end::Info-->
-										</label>
-										<!--end::Option-->
-									</div>
-									<!--end::Col-->
-									
-									<!--begin::Col-->
-									<div class="col-lg-6">
-										<!--begin::Option-->
-										<input type="radio" class="btn-check" name="account_type" value="3" id="kt_create_account_form_account_type_exclusive" />
-										<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="kt_create_account_form_account_type_exclusive">
-											<i class="ki-duotone ki-briefcase fs-3x me-5">
-												<span class="path1"></span>
-												<span class="path2"></span>
-											</i>
-											<!--begin::Info-->
-											<span class="d-block fw-semibold text-start">
-												<span class="text-gray-900 fw-bold d-block fs-4 mb-2">Exclusive Account</span>
-												<span class="text-muted fw-semibold fs-6">Full access to CRM</span>
-											</span>
-											<!--end::Info-->
-										</label>
-										<!--end::Option-->
-									</div>
-									<!--end::Col-->
+									<!--end::Row-->
 								</div>
-								<!--end::Row-->
 							</div>
 							<!--end::Input group-->
+							<div class="row">
+								<label for="start_trial" class="btn btn-outline-primary"><input type="checkbox" name="start_trial" id="start_trial" value="1"> Start 14-day free trial</label>
+							</div>
 
 							<!--begin::Input group-->
-							<div class="row">
+							<div class="row mt-4">
 								<!--begin::Label-->
 								<label class="d-flex align-items-center form-label mb-3">Specify Company Size
 									<span class="ms-1" data-bs-toggle="tooltip" title="Provide company team size/ total employees count">
@@ -142,7 +120,8 @@
 											<span class="path2"></span>
 											<span class="path3"></span>
 										</i>
-									</span></label>
+									</span>
+								</label>
 								<!--end::Label-->
 								<!--begin::Row-->
 								<div class="row mb-10" data-kt-buttons="true">
@@ -206,7 +185,7 @@
 											</i>
 										</span>
 									</label>
-									<input name="address" placeholder="Write company address ..." class="form-control form-control-lg" required/>
+									<input name="address" placeholder="Write company address ..." class="form-control form-control-lg" required />
 								</div>
 							</div>
 							<div class="fv-row mb-10">
@@ -251,7 +230,7 @@
 									<label class="d-flex align-items-center fs-6 fw-semibold form-label mb-2">
 										<span class="required">Business Phone</span>
 									</label>
-									<input type="text" class="form-control" name="phone" placeholder="Enter Phone Number" required/>
+									<input type="text" class="form-control" name="phone" placeholder="Enter Phone Number" required />
 									@error('phone')
 									<span class="text-danger">{{ $message }}</span>
 									@enderror
@@ -262,7 +241,7 @@
 										<span class="required">Enter a Password</span>
 									</label>
 									<!--end::Label-->
-									<input type="text" class="form-control" placeholder="Enter your password" name="password" required/>
+									<input type="text" class="form-control" placeholder="Enter your password" name="password" required />
 									@error('password')
 									<span class="text-danger">{{ $message }}</span>
 									@enderror

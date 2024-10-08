@@ -361,6 +361,7 @@ class LeadController extends Controller
             ->Join('appointments', 'appointment_notes.appointment_id', 'appointments.id')
             ->leftJoin('users', 'appointment_notes.created_by', 'users.id')
             ->leftJoin('leads', 'appointments.lead_id', 'leads.id')
+            ->where('leads.id', $lead->id)
             ->whereNull('appointment_notes.deleted_at')
             ->orderBy('appointment_notes.created_at', 'DESC') // Order by latest
             ->paginate(10) // Adjust the pagination limit as needed
