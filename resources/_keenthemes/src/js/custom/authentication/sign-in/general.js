@@ -167,9 +167,14 @@ var KTSigninGeneral = function () {
                             // Check if the error has a specific message from the server
                             let errorMessage = "Sorry, looks like there are some errors detected, please try again.";
                             
+                            // Check if the error has specific messages from the server
                             if (error.response && error.response.data && error.response.data.errors) {
-                                // Access the specific error message, for example:
-                                errorMessage = error.response.data.errors.error ? error.response.data.errors.error[0] : errorMessage;
+                                if (error.response.data.errors.email) {
+                                    errorMessage = error.response.data.errors.email[0]; // Use the specific error message for email
+                                }
+                                if (error.response.data.errors.error) {
+                                    errorMessage = error.response.data.errors.error[0]; // Use the specific error message for email
+                                }
                             } else if (error.response && error.response.data && error.response.data.message) {
                                 errorMessage = error.response.data.message;
                             }

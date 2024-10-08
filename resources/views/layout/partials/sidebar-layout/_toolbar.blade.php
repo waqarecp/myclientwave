@@ -24,8 +24,14 @@
                         </div>
                     @endif
                 <!--end::Daterangepicker-->
-                @if(auth()->user()->can('create lead'))
-                    <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
+                <?php
+                    $company = App\Models\Company::where('id', \Illuminate\Support\Facades\Auth::user()->company_id)->first(); 
+                    $subscription = $company->subscription('default');
+                ?>
+                @if ($subscription && ($company->onTrial('default') || $subscription->active()) && $subscription->ends_at === null) 
+                    @if(auth()->user()->can('create lead'))
+                        <a href="javascript:void(0)" class="btn fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_lead">{!! getIcon('plus', 'fs-2', '', 'i') !!} Create New Lead</a>
+                    @endif
                 @endif
             </div>
         @endIf

@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "guzzlehttp/promises": "1.5",
         "kreait/laravel-firebase": "*",
+        "laravel/cashier": "^15.4",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.6",

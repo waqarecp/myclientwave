@@ -360,6 +360,7 @@ class LeadController extends Controller
             ->Join('appointments', 'appointment_notes.appointment_id', 'appointments.id')
             ->leftJoin('users', 'appointment_notes.created_by', 'users.id')
             ->leftJoin('leads', 'appointments.lead_id', 'leads.id')
+            ->where('leads.id', $lead->id)
             ->whereNull('appointment_notes.deleted_at')
             ->orderBy('appointment_notes.created_at', 'DESC') // Order by latest
             ->paginate(10) // Adjust the pagination limit as needed
@@ -539,7 +540,7 @@ class LeadController extends Controller
             'convert_lead_id' => 'nullable|integer|exists:leads,id',
             'project_administrator_id' => 'nullable|integer|exists:users,id',
             'owner_id' => 'nullable|integer|exists:users,id',
-            'financier_id' => 'nullable|integer|exists:financiers,id',
+            'financier_id' => 'nullable|integer|exists:users,id',
             'home_type_id' => 'nullable|integer|exists:home_types,id',
             'deal_account_name' => 'nullable|string|max:255',
             'deal_contact_name' => 'nullable|string|max:255',

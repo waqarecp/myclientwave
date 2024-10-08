@@ -11,7 +11,7 @@
     <!-- Display the comment -->
     @if($comment)
         <h3>Comment:</h3>
-        "{!! $comment !!}"
+        {!! $comment !!}
     @endif
     <p>Click <a href="{{ env('APP_URL') }}appointments/{{ $appointment->id }}?show_comments">here</a> to view the appointment.</p>
 </body>

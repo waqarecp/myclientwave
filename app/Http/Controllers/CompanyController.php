@@ -211,15 +211,42 @@ class CompanyController extends Controller
                     'created_by' => $authenticatedUser->id,
                 ]);
             }
+            // Get the selected plan and free trial option
+            $selectedPlan = $request->account_type;
+            $startTrial = $request->start_trial == 1;
+
+            // Redirect to Stripe checkout or trial logic
+            $planId = $this->getPlanId($selectedPlan); // Fetch Stripe Plan ID based on selection
 
             // Clear cache
             cache()->clear(); // Clear the application cache
+            if ($startTrial) {
+                // Logic to handle the free trial if required
+                return redirect()->route('subscription.StripeCheckout', ['plan' => $planId, 'trial' => true]);
+            } else {
+                // Proceed to Stripe checkout directly
+                return redirect()->route('subscription.StripeCheckout', ['plan' => $planId]);
+            }
             return redirect()->intended(RouteServiceProvider::HOME);
         }else{
             return redirect()->back()->with('error', 'Failed to registered Company.');
         }
     }
 
+    private function getPlanId($accountType)
+    {
+        switch ($accountType) {
+            case 1:
+                return 'price_1Q7IocLaW8b3mxPpiwNdtXH2'; // Basic Plan
+            case 2:
+                return 'price_1Q7Ip5LaW8b3mxPp0j6a0bGA'; // Deluxe Plan
+            case 3:
+                return 'price_1Q7IpiLaW8b3mxPpV8h0r2fO'; // Exclusive Plan
+            default:
+                return 'price_1Q7IocLaW8b3mxPpiwNdtXH2'; // Default Basic Plan
+        }
+    }
+    
     protected function validateRequest($request)
     {
         $request->validate([

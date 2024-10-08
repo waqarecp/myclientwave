@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-
+use Laravel\Cashier\Billable;
 class Company extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Billable;
     protected $table = 'companies';
     /**
      * The attributes that are mass assignable.
@@ -32,5 +32,9 @@ class Company extends Model
         'business_status',
         'created_by',
         'deleted_by',
+        'stripe_id',
+        'pm_type',
+        'pm_last_four',
+        'trial_ends_at',
     ];
 }

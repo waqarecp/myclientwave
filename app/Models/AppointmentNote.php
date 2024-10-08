@@ -23,7 +23,8 @@ class AppointmentNote extends Model
         'unread_ids',
         'notes',
         'is_read',
-        'created_by'
+        'created_by',
+        'reactions'
     ];
 
     public function appointment()

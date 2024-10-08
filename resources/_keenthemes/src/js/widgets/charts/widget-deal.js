@@ -1,7 +1,7 @@
 "use strict";
 
 // Class definition
-var KTChartsWidget27 = function () {
+var KTChartsWidgetdeal = function () {
     var chart = {
         self: null,
         rendered: false
@@ -9,15 +9,15 @@ var KTChartsWidget27 = function () {
     
     // Private methods
     var initChart = function(chart) {
-        var element = document.getElementById("kt_charts_widget_27");
+        var element = document.getElementById("kt_charts_widget_deal");
 
         if (!element) {
             return;
         }
 
         // Get the data from the hidden input field
-        var leadHiddenInput = document.getElementById('lead_data');
-        var data = JSON.parse(leadHiddenInput.value);
+        var hiddenInput = document.getElementById('deal_data');
+        var data = JSON.parse(hiddenInput.value);
 
         // Parse dates and values for the chart
         var categories = Object.keys(data); // Dates
@@ -26,11 +26,11 @@ var KTChartsWidget27 = function () {
         var height = parseInt(KTUtil.css(element, 'height'));
         var labelColor = KTUtil.getCssVariableValue('--bs-gray-500');
         var borderColor = KTUtil.getCssVariableValue('--bs-border-dashed-color');
-        var baseColor = KTUtil.getCssVariableValue('--bs-success');         
+        var baseColor = KTUtil.getCssVariableValue('--bs-primary');         
 
         var options = {
             series: [{
-                name: 'Leads',
+                name: 'Deals',
                 data: values  // Set values from hidden input
             }],            
             chart: {
@@ -186,10 +186,10 @@ var KTChartsWidget27 = function () {
 
 // Webpack support
 if (typeof module !== 'undefined') {
-    module.exports = KTChartsWidget27;
+    module.exports = KTChartsWidgetdeal;
 }
 
 // On document ready
 KTUtil.onDOMContentLoaded(function() {
-    KTChartsWidget27.init();
+    KTChartsWidgetdeal.init();
 });

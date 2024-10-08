@@ -197,7 +197,8 @@
                                     <!-- Project Administrator -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Project Administrator</label>
-                                        <select name="project_administrator_id" id="project_administrator_id" class="form-control form-select form-control-solid">
+                                        <select name="project_administrator_id" id="project_administrator_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Administrator">
+                                            <option value="">Select</option>
                                             @foreach($roles as $role)
                                             <optgroup label="{{ ucwords($role->name) }}">
                                                 @foreach($users as $user)
@@ -217,7 +218,8 @@
                                     <!-- Deal Owner -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
-                                        <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid">
+                                        <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Deal Owner">
+                                            <option value="">Select</option>
                                             @foreach($roles as $role)
                                             <optgroup label="{{ ucwords($role->name) }}">
                                                 @foreach($users as $user)
@@ -292,9 +294,19 @@
                                     <!-- Financier -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Financier</label>
-                                        <select name="financier_id" id="financier_id" class="form-control form-select form-control-solid">
-                                            <option value="">None</option>
-                                            <!-- Dynamic options here -->
+                                        <select name="financier_id" id="financier_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select a Financier">
+                                            <option value="">Select</option>
+                                                @foreach($roles as $role)
+                                                    <optgroup label="{{ ucwords($role->name) }}">
+                                                        @foreach($users as $user)
+                                                        @if($user->roles->contains($role))
+                                                        <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                            {{ $user->name }}
+                                                        </option>
+                                                        @endif
+                                                        @endforeach
+                                                    </optgroup>
+                                                @endforeach
                                         </select>
                                         @error('financier_id')
                                         <span class="text-danger">{{ $message }}</span> @enderror
@@ -542,7 +554,8 @@
                                     <!-- Project Administrator -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Project Administrator</label>
-                                        <select name="update_project_administrator_id" id="update_project_administrator_id" class="form-control form-select form-control-solid">
+                                        <select name="update_project_administrator_id" id="update_project_administrator_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select a Administrator">
+                                            <option value="">Select</option>
                                             @foreach($roles as $role)
                                             <optgroup label="{{ ucwords($role->name) }}">
                                                 @foreach($users as $user)
@@ -562,7 +575,8 @@
                                     <!-- Deal Owner -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
-                                        <select name="update_owner_id" id="update_owner_id" class="form-control form-select form-control-solid">
+                                        <select name="update_owner_id" id="update_owner_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select a Owner">
+                                            <option value="">Select</option>
                                             @foreach($roles as $role)
                                             <optgroup label="{{ ucwords($role->name) }}">
                                                 @foreach($users as $user)
@@ -582,7 +596,7 @@
                                     <!-- lead -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Lead</label>
-                                        <select name="update_lead_id" id="update_lead_id" onchange="updatePopulateLeadAddress(this)" class="form-select form-control-solid">
+                                        <select name="update_lead_id" id="update_lead_id" onchange="updatePopulateLeadAddress(this)" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select a Lead">
                                             <option value="">--- Select a Lead ---</option>
                                             @foreach($leads as $lead)
                                             <option value="{{$lead->id}}" data-name="{{(implode(' ', array_filter([$lead->first_name, $lead->last_name])))}}" data-phone1="{{ $lead->phone }}" data-email="{{ $lead->email }}" data-source="{{ $lead->lead_source_id }}" data-address="{{(implode(', ', array_filter([
@@ -637,9 +651,19 @@
                                     <!-- Financier -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Financier</label>
-                                        <select name="update_financier_id" id="update_financier_id" class="form-control form-select form-control-solid">
-                                            <option value="">None</option>
-                                            <!-- Dynamic options here -->
+                                        <select name="update_financier_id" id="update_financier_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select a Financier">
+                                            <option value="">Select</option>
+                                            @foreach($roles as $role)
+                                                <optgroup label="{{ ucwords($role->name) }}">
+                                                    @foreach($users as $user)
+                                                    @if($user->roles->contains($role))
+                                                    <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                        {{ $user->name }}
+                                                    </option>
+                                                    @endif
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
                                         </select>
                                         @error('update_financier_id')
                                         <span class="text-danger">{{ $message }}</span> @enderror
@@ -1071,17 +1095,14 @@
                 var organizationId = $(element).data('kt-organization-id');
 
                 $('#deal_id').val(dealId);
-                $('#update_project_administrator_id').val(projectAdministratorId);
-                $('#update_owner_id').val(dealOwnerId);
+                $('#update_project_administrator_id').val(projectAdministratorId).trigger('change');
+                $('#update_owner_id').val(dealOwnerId).trigger('change');
                 $('#update_lead_id').val(dealLeadId).trigger('change');
-                $('#update_lead_id').select2({
-                        dropdownParent: $('#kt_modal_update_deal'),
-                    });
                 $('#update_deal_name').val(dealName);
                 $('#update_deal_address').val(dealAddress);
                 $('#update_deal_phone_1').val(dealPhone1);
                 $('#update_deal_email').val(dealEmail);
-                $('#update_financier_id').val(financierId);
+                $('#update_financier_id').val(financierId).trigger('change');
                 $('#update_home_type_id').val(homeTypeId);
                 $('#update_source_id').val(sourceId);
                 $('#update_deal_account_name').val(dealAccountName);

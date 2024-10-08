@@ -449,7 +449,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Convert <span class="badge badge-lg bg-secondary" id="convert_lead_name_header"></span> to Deal</h2>
+                    <h2>Convert <span class="badge badge-lg bg-secondary" id="convert_lead_name_header"></span>lead to Deal</h2>
                 </div>
                 <div class="modal-body py-10 px-lg-17">
                 <form id="kt_modal_convert_lead_to_deal_form" class="form" action="#" enctype="multipart/form-data">
@@ -465,7 +465,8 @@
                                         <!-- Project Administrator -->
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Project Administrator</label>
-                                            <select name="project_administrator_id" id="project_administrator_id" class="form-control form-select form-control-solid">
+                                            <select name="project_administrator_id" id="project_administrator_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_convert_lead_to_deal" data-placeholder="Select a Administrator">
+                                                <option value="">Select</option>
                                                 @foreach($roles as $role)
                                                 <optgroup label="{{ ucwords($role->name) }}">
                                                     @foreach($users as $user)
@@ -486,7 +487,8 @@
                                         <!-- Deal Owner -->
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Deal Owner</label>
-                                            <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid">
+                                            <select name="owner_id" id="owner_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_convert_lead_to_deal" data-placeholder="Select a Deal Owner">
+                                                <option value="">Select</option>
                                                 @foreach($roles as $role)
                                                 <optgroup label="{{ ucwords($role->name) }}">
                                                     @foreach($users as $user)
@@ -507,9 +509,19 @@
                                         <!-- Financier -->
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Financier</label>
-                                            <select name="financier_id" id="financier_id" class="form-control form-select form-control-solid">
-                                                <option value="">None</option>
-                                                <!-- Dynamic options here -->
+                                            <select name="financier_id" id="financier_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_convert_lead_to_deal" data-placeholder="Select a Financier">
+                                                <option value="">Select</option>
+                                                @foreach($roles as $role)
+                                                    <optgroup label="{{ ucwords($role->name) }}">
+                                                        @foreach($users as $user)
+                                                        @if($user->roles->contains($role))
+                                                        <option data-child-users="{{ $user->child_users }}" value="{{ $user->id }}">
+                                                            {{ $user->name }}
+                                                        </option>
+                                                        @endif
+                                                        @endforeach
+                                                    </optgroup>
+                                                @endforeach
                                             </select>
                                             @error('financier_id')
                                             <span class="text-danger">{{ $message }}</span> @enderror
@@ -611,7 +623,7 @@
                                     <div class="col-md-4">
                                         <!-- communication_method_id -->
                                         <div class="fv-row mb-7">
-                                            <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                            <label class="fw-semibold fs-6 mb-2">Communication Method</label>
                                             <select name="communication_method_id" id="communication_method_id" class="form-control form-select form-control-solid">
                                                 <option value="">-- Select --</option>
                                                 @foreach($communicationMethods as $communicationMethod)

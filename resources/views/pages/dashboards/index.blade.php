@@ -30,44 +30,81 @@
             {{ session('error') }}
         </div>
         @endif
-        <!--begin::Col-->
-        <div class="col-md-6 mb-5 mb-xl-10">
-            <div class="card card-flush h-xl-100">
-                <div class="card-header py-7">
-                    <div class="m-0">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countLeads}}</span>
-                            <span class="badge badge-light-success fs-base">Total</span>
+        <?php
+            $subscription = $company->subscription('default');
+        ?>
+        @if ($subscription && ($company->onTrial('default') || $subscription->active()) && $subscription->ends_at === null)
+            <!-- Display charts when the company is either on trial or has an active subscription -->
+            <!--begin::Col-->
+            <div class="col-md-6 mb-5 mb-xl-10">
+                <div class="card card-flush h-xl-100">
+                    <div class="card-header py-7">
+                        <div class="m-0">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ $countLeads }}</span>
+                                <span class="badge badge-light-success fs-base">Total</span>
+                            </div>
+                            <span class="fs-6 fw-semibold text-gray-500">Leads Monthly Summary</span>
                         </div>
-                        <span class="fs-6 fw-semibold text-gray-500">Monthly Leads Summary</span>
                     </div>
-                </div>
-                <div class="card-body pt-0 pb-1">
                     <input type="hidden" id="lead_data" value='{{ $leadData }}' />
-                    <div id="kt_charts_widget_27" class="min-h-auto"></div>
-                </div>
-            </div>
-        </div>
-        <!--end::Col-->
-        <!--begin::Col-->
-        <div class="col-md-6 mb-5 mb-xl-10">
-            <div class="card card-flush h-xl-100">
-                <div class="card-header py-7">
-                    <div class="m-0">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{$countAppointments}}</span>
-                            <span class="badge badge-light-success fs-base">Total</span>
-                        </div>
-                        <span class="fs-6 fw-semibold text-gray-500">Appointments Monthly Summary</span>
+                    <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
+                        <div id="kt_charts_widget_27" class="h-300px w-100 min-h-auto"></div>
                     </div>
                 </div>
-                <input type="hidden" id="appointment_data" value='{{ $appointmentData }}' />
-                <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
-                    <div id="kt_charts_widget_28" class="h-300px w-100 min-h-auto"></div>
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 mb-5 mb-xl-10">
+                <div class="card card-flush h-xl-100">
+                    <div class="card-header py-7">
+                        <div class="m-0">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ $countAppointments }}</span>
+                                <span class="badge badge-light-info fs-base">Total</span>
+                            </div>
+                            <span class="fs-6 fw-semibold text-gray-500">Appointments Monthly Summary</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="appointment_data" value='{{ $appointmentData }}' />
+                    <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
+                        <div id="kt_charts_widget_28" class="h-300px w-100 min-h-auto"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!--end::Col-->
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 mb-5 mb-xl-10">
+                <div class="card card-flush h-xl-100">
+                    <div class="card-header py-7">
+                        <div class="m-0">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="fs-2hx fw-bold text-gray-800 me-2 lh-1 ls-n2">{{ $countDeals }}</span>
+                                <span class="badge badge-light-primary fs-base">Total</span>
+                            </div>
+                            <span class="fs-6 fw-semibold text-gray-500">Deals Monthly Summary</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="deal_data" value='{{ $dealData }}' />
+                    <div class="card-body d-flex align-items-end ps-4 pe-0 pb-4">
+                        <div id="kt_charts_widget_deal" class="h-300px w-100 min-h-auto"></div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Col-->
+        @else
+            <!-- Display a message if the subscription has ended or has been canceled -->
+            <div class="col-md-12 mb-5 mb-xl-10">
+                <div class="card card-flush h-xl-100">
+                    <div class="card-body py-7">
+                        <div class="m-0">
+                            <h2 class="text-danger">Please Activate Your Subscription To Access More Pages..!</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
     <!--end::Row-->
 

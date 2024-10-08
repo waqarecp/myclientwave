@@ -53,7 +53,7 @@
                                     <div class="mb-10">
                                         <label class="form-label fw-semibold">Search Lead:</label>
                                         <div>
-                                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Name,Phone,Email" class="form-control form-control-sm me-3">
+                                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Name" class="form-control form-control-sm me-3">
                                         </div>
                                     </div>
                                     <div class="mb-10">
@@ -125,9 +125,9 @@
                     <thead>
                         <tr class="bg-light-primary">
                             <th>Sr. No.</th>
-                            <th>Lead Info</th>
+                            <th>Lead</th>
                             <th>Appointment Info</th>
-                            <th>Status</th>
+                            <th width="10%">Status</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
@@ -138,7 +138,7 @@
                         @foreach($rows as $row)
                         <tr>
                             <td>{{ $counter++ }}</td>
-                            <td>{{ $row->first_name . ' ' . $row->last_name }}<br><small class="badge badge-secondary"><i class="fa fa-phone"></i>&nbsp;{{ $row->phone}}</small><br> <small class="badge badge-secondary"><i class="fa fa-envelope"></i>&nbsp;{{ $row->email}}</small></td>
+                            <td>{{ $row->first_name . ' ' . $row->last_name }}</td>
                             <td><b>{{\Carbon\Carbon::parse($row->appointment_date . ' ' . $row->appointment_time)->format('d F Y H:i')}}</b>
                                 <br><small>{{(implode(', ', array_filter([
                                             optional($row->country)->name,

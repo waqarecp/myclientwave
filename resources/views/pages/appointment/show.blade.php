@@ -69,16 +69,16 @@
                             <h2>{{ $appointment->lead->first_name }} {{ $appointment->lead->last_name }}</h2>
                             <div class="fs-6 fw-semibold text-muted">Appointment status timeline</div>
                         </div>
-                        <button type="button" class="btn btn-sm btn-primary align-self-center text-nowrap d-none">Show All Comments</button>
+                        <button type="button" class="btn btn-sm btn-primary align-self-center text-nowrap" data-kt-appointment-id="{{ $appointment->id }}" onclick="viewComments(this)" data-url="{{ route('appointments.viewComments') }}">Show All Comments</button>
                         <!--end::Card title-->
                     </div>
                     <div class="card-body">
 
                         <!--begin::Timeline-->
                         <div class="timeline timeline-border-dashed">
-                            @foreach ($timelines as $timeline)
+                            @foreach ($timelines as $timeline)                                                
                             <!--begin::Timeline item-->
-                            <div class="timeline-item">
+                            <div class="timeline-item ">
                                 <!--begin::Timeline line-->
                                 <div class="timeline-line"></div>
                                 <!--end::Timeline line-->
@@ -111,7 +111,15 @@
                                         <!--begin::Description-->
                                         <div class="d-flex align-items-center mt-1 fs-6">
                                             <!--begin::Info-->
-                                            <div class="text-muted me-2 fs-7">Added at {{\Carbon\Carbon::parse($timeline->created_at)->format('d F Y, g:i A')}} by <b>{{ $timeline->user->name }}</b></div>
+                                            <div class="me-2 fs-7">
+                                                <span class="text-muted">
+                                                    Added by
+                                                </span>
+                                                <b>{{ $timeline->user->name }}</b>
+                                                <span class="text-muted">
+                                                at {{\Carbon\Carbon::parse($timeline->created_at)->format('d F Y, g:i A')}}
+                                                </span>
+                                            </div>
                                             <!--end::Info-->
                                         </div>
                                         <!--end::Description-->
@@ -120,7 +128,7 @@
                                     <!--begin::Timeline details-->
                                     <div class="overflow-auto pb-5">
                                         <!--begin::Notice-->
-                                        <div class="notice d-flex {{$loop->last ? 'bg-light-primary border-primary' : 'border-gray-300'}} rounded border border-dashed min-w-lg-600px flex-shrink-0 p-6">
+                                        <div class="d-none notice d-flex {{$loop->last ? 'bg-light-primary border-primary' : 'border-gray-300'}} rounded border border-dashed min-w-lg-600px flex-shrink-0 p-6">
                                             <!--begin::Icon-->
                                             <i class="ki-duotone ki-devices-2 fs-2tx text-primary me-4">
                                                 <span class="path1"></span>
@@ -134,7 +142,6 @@
                                                     <h4 class="text-gray-900 fw-bold">Comments for {{$timeline->status->status_name}}</h4>
                                                     <div class="fs-6 text-gray-700 pe-7">Click to view comments while lead was at this stage!</div>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-primary align-self-center text-nowrap" data-kt-status-id="{{ $timeline->status_id }}" data-kt-status-name="{{ $timeline->status->status_name }}" data-kt-appointment-id="{{ $timeline->appointment_id }}" onclick="viewStatusComments(this)" data-url="{{ route('appointments.viewStatusComments') }}">View Comments</button>
                                             </div>
                                             <!--end::Comments-->
                                         </div>
@@ -201,20 +208,17 @@
     </div>
     <!--end::Content-->
     <!--begin::Modal - View Lead Details-->
-    <div class="modal fade" id="kt_modal_view_status_comments" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="kt_modal_view_comments" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-body py-10 px-lg-17 kt_modal_attach_comments">
-
                 </div>
-                <!--end::Modal body-->
             </div>
         </div>
     </div>
     <!--end::Modal - New Address-->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to get URL parameters
             function getUrlParameter(name) {
                 name = name.replace(/[\[\]]/g, '\\$&');
                 const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
@@ -223,20 +227,13 @@
                 if (!results[2]) return '';
                 return decodeURIComponent(results[2].replace(/\+/g, ' '));
             }
-
-            // Check if 'show_comments' exists in the URL
             const showComments = getUrlParameter('show_comments');
             if (showComments !== null) {
-                // Activate the "Appointment Timeline" tab
                 document.querySelector('a[data-bs-target="#kt_status_timeline"]').classList.add('active');
                 document.querySelector('a[data-bs-target="#kt_appointment_information"]').classList.remove('active');
-
-                // Show the "kt_status_timeline" content
                 document.getElementById('kt_status_timeline').classList.add('show', 'active');
                 document.getElementById('kt_appointment_information').classList.remove('show', 'active');
-
-                // Trigger the "View Comments" button click to popup the modal
-                const buttons = document.querySelectorAll('button[data-kt-status-id]');
+                const buttons = document.querySelectorAll('button[data-kt-appointment-id]');
                 if (buttons.length > 0) {
                     const lastButton = buttons[buttons.length - 1];
                     lastButton.click();
@@ -244,26 +241,21 @@
             }
         });
 
-        function viewStatusComments(element) {
-            var status_id = $(element).attr('data-kt-status-id');
-            var status_name = $(element).attr('data-kt-status-name');
+        function viewComments(element) {
             var appointment_id = $(element).attr('data-kt-appointment-id');
             var url = $(element).data('url'); // Get the URL from the data-url attribute
-
             $.ajax({
-                url: url, // Use the URL from the data attribute
+                url: url,
                 method: 'post',
                 data: {
-                    status_id: status_id,
                     appointment_id: appointment_id,
-                    status_name: status_name,
                 },
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token in headers
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 success: function(data) {
                     $('.kt_modal_attach_comments').html(data);
-                    $('#kt_modal_view_status_comments').modal('show');
+                    $('#kt_modal_view_comments').modal('show');
                 },
                 error: function(data) {
                     alert("Error code : " + data.status + " , Error message : " + data.statusText);

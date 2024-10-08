@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendFirebaseNotification;
 use App\Http\Controllers\Controller;
+use App\Mail\CommentReaction;
 use App\Mail\UserTagged;
 use App\Models\Appointment;
 use App\Models\AppointmentNote;
@@ -345,7 +346,7 @@ class AppointmentController extends Controller
             $appointment->save();
 
             // Send notification to the appointment tagged users
-            if ($userIds && isset($request->nofity)) {
+            if ($userIds && isset($request->notify)) {
                 $senderUser = auth()->user();
                 $receiverUsers = User::whereIn('id', $userIds)->get();
             
@@ -411,20 +412,70 @@ class AppointmentController extends Controller
         return response()->json(['failed' => true, 'message' => 'Failed to Appointment Note marked as read']);
     }
 
-    public function viewStatusComments(Request $request)
+    public function reactToComment(Request $request)
     {
-        if ($request->appointment_id && $request->status_id) {
+        $appointmentNote = AppointmentNote::findOrFail($request->commentId);
+        $reactions = $appointmentNote->reactions ? json_decode($appointmentNote->reactions, true) : [];
+        $isFirstTimeReaction = true;
+        $userReactionExists = false;
+        foreach ($reactions as $key => $reaction) {
+            if ($reaction['user_id'] == Auth::user()->id) {
+                $reactions[$key]['reactionType'] = $request->reactionType;
+                $userReactionExists = true;
+                $isFirstTimeReaction = false;
+            }
+        }
+        if (!$userReactionExists) {
+            $reactions[] = [
+                'user_id' => Auth::user()->id,
+                'reactionType' => $request->reactionType
+            ];
+        }
+        $appointmentNote->reactions = json_encode($reactions);
+        if ($appointmentNote->save()) {
+            if ($isFirstTimeReaction) {
+                $appointment = Appointment::find($appointmentNote->appointment_id);
+                $comment = strip_tags($appointmentNote->notes);
+                $senderUser = Auth::user();
+                $receiverUser = $appointmentNote->created_by;
+                $reactionType = $request->reactionType;
+                $this->sendFirebaseNotification([$receiverUser], [
+                    'title' => ucwords($senderUser->name) . getReactionEmojis()[$reactionType] . ' reacted to your comment',
+                    'body' => $comment,
+                    'click_action' => env('APP_URL') . "appointments/" . $appointment->id . "?show_comments"
+                ]);
+                DB::beginTransaction();
+                try {
+                    $appointmentComment = $appointmentNote->notes;
+                    $appointmentNoteCreatedAt = Carbon::parse($appointmentNote->created_at)->format('d M Y h:i a');
+                    $receiver = User::find($receiverUser);
+                    if ($receiver && $receiver->email) {
+                        Mail::to($receiver->email)->queue(new CommentReaction($appointment, $appointmentComment, $reactionType, $appointmentNoteCreatedAt, $senderUser, $receiver));
+                    }
+                    DB::commit();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error("Failed to send email for reaction. Error: " . $e->getMessage());
+                }
+            }
+
+            return response()->json(['success' => true, 'reactions' => $reactions, 'message' => 'Reaction added successfully']);
+        }
+
+        return response()->json(['failed' => true, 'message' => 'Failed to add reaction']);
+    }
+
+    public function viewComments(Request $request)
+    {
+        if ($request->appointment_id) {
             $users = User::where('deleted_at', null)
                 ->where('company_id', Auth::user()->company_id)
                 ->get();
             $users = array_column($users->toArray(), 'name', 'id');
-            $statusName = $request->status_name;
             $appointmentNotes = AppointmentNote::where('appointment_id', $request->appointment_id)
-            ->where('status_id', $request->status_id)
-            ->with('status')
             ->whereNull('deleted_at')
                 ->get();
-            return view('pages.appointment.status-comment', compact('users', 'appointmentNotes', 'statusName'))->render();
+            return view('pages.appointment.comment', compact('users', 'appointmentNotes'))->render();
         }
     }
 

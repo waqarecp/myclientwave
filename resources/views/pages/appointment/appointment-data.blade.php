@@ -4,7 +4,7 @@
             <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" data-bs-target="#tab_timeline" href="javascript:void(0)">Update Appointment Timeline</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" data-bs-target="#tab_notes" href="javascript:void(0)">Timeline Comments</a>
+            <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" data-bs-target="#tab_notes" href="javascript:void(0)">Appointment Comments</a>
         </li>
     </ul>
     <div class="tab-content" id="appointment-note-content">
@@ -113,7 +113,7 @@
                                     <input type="hidden" name="lead_id" id="lead_id" value="{{ $appointment->lead_id }}">
                                     <div class="fv-row mb-3">
                                         <label class="fw-semibold m-4">Tag users in comment</label>
-                                        <label for="notify" class="btn btn-sm btn-secondary border p-2 float-end m-2"><input type="checkbox" name="nofity" id="notify" value="1"> Notify Tagged Users</label>
+                                        <label for="notify" class="btn btn-sm btn-secondary border p-2 float-end m-2"><input type="checkbox" name="notify" id="notify" value="1"> Notify Tagged Users</label>
                                         <select onchange="selectAll(this)" id="tag_users" name="user_ids[]" class="form-select select2" data-control="select2" data-search="true" multiple>
                                             <option value="all">Tag All Users</option>
                                             @foreach($users as $userId => $userName)
@@ -137,50 +137,131 @@
                         </div>
                     </div>
                 </div>
+                <style>
+                    /* Styling the comment box */
+                    .comment-box {
+                        background-color: #f8f9fa !important; /* Light background */
+                        transition: background-color 0.3s ease !important; /* Smooth transition for hover */
+                        border-radius: 8px !important; /* Rounded corners */
+                        padding: 20px !important;
+                        position: relative !important;
+                    }
+
+                    .comment-box:hover {
+                        background-color: #e2e6ea !important; /* Change background on hover */
+                    }
+
+                    .reaction-icon {
+                        position: absolute; 
+                        margin: -12px;
+                        padding: 2px;
+                        border-radius: 100%;
+                    }
+
+                    /* For reactions */
+                    .reactions-container {
+                        margin-top: 10px !important;
+                    }
+
+                    .reactions-container .badge {
+                        margin-right: 5px !important;
+                    }
+
+                    .emoji-menu {
+                        display: inline;
+                        gap: 10px;
+                    }
+
+                    .emoji-item {
+                        font-size: 20px;
+                        cursor: pointer;
+                        transition: transform 0.2s ease;
+                    }
+
+                    .emoji-item:hover {
+                        transform: scale(1.2);
+                    }
+                </style>
                 <!-- Comments -->
                 <div class="mt-2" id="accordion_view_comments">
                     <div>
                         <div id="collapseViewComment" class="show active-timeline-comments" data-bs-parent="#accordion_view_comments">
                             @if (count($allAppointmentNotes) > 0)
-                            @foreach ($allAppointmentNotes as $comment)
-                            <?php
-                            $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
-                            $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
-                            ?>
-                            <div class="ms-3">
-                                <a href="javascript:void(0)" class="fs-5 text-gray-900 text-hover-primary me-1"><small class="text-muted">Comment added by </small><i>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</i></a>
-                                <span class="text-muted fs-7 mb-1 float-end">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
-                            </div>
-                            <div data-note-comment="{{ $comment->id }}" class="p-3 rounded {{ in_array(Auth::user()->id, $unreadUsers) ? 'bg-light-primary' : 'bg-light-secondary' }} text-gray-900 fw-semibold border" data-kt-element="message-text">
-                                <div class="d-inline-block">{!! $comment->notes !!}</div>
-                                @if (in_array(Auth::user()->id, $unreadUsers))
-                                <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
-                                @endif
-                            </div>
-                            <div class="mt-2">
-                                @if (in_array(Auth::user()->id, $unreadUsers))
-                                <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
-                                    <i class="ki-duotone ki-check fs-3"></i> Mark as read
-                                </a>
-                                @endif
-                                <div class="float-end">
-                                    @if($taggedUsers)
-                                    <small class="text-muted">Tagged Users </small>
-                                    @foreach ($taggedUsers as $taggedUser)
-                                    <span class="badge bg-light-warning">{{ ucwords($users[$taggedUser] ?? 'Unknown User') }}</span>
-                                    @endforeach
-                                    @endif
-                                </div><br><br>
-                            </div>
-                            @endforeach
+                                @foreach ($allAppointmentNotes as $comment)
+                                    <?php
+                                        $taggedUsers = $comment->user_ids ? explode(",", $comment->user_ids) : [];
+                                        $unreadUsers = $comment->unread_ids ? explode(",", $comment->unread_ids) : [];
+                                        $reactions = json_decode($comment->reactions, true) ?? [];
+                                        $userReacted = false;
+                                        foreach ($reactions as $reaction) {
+                                            if ($reaction['user_id'] == auth()->user()->id) {
+                                                $userReacted = true;
+                                                break;
+                                            }
+                                        }
+                                    ?>
+                                    <div class="comment-box mt-1 ms-3 p-3 rounded bg-light-secondary position-relative">
+                                        <!-- Comment Header -->
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <a href="javascript:void(0)" class="fs-6 text-gray-900 text-hover-primary me-1">
+                                                <small class="text-muted">Comment added by </small>
+                                                <i>{{ ucwords($users[$comment->created_by] ?? 'Unknown User') }}</i>
+                                            </a>
+                                            <span class="text-muted fs-7">{{ \Carbon\Carbon::parse($comment->created_at)->format('d F Y, g:i A') }}</span>
+                                        </div>
+                                        <div data-note-comment="{{ $comment->id }}" class="p-2 rounded text-gray-900 fw-semibold mt-2">
+                                            <div class="d-inline-block">{!! $comment->notes !!}</div>
+                                            @if (in_array(Auth::user()->id, $unreadUsers))
+                                                <div data-unread-id="{{ $comment->id }}" class="badge badge-light-danger border border-danger float-end">Unread</div>
+                                            @endif
+                                        </div>
+                                        <div class="mt-1">
+                                            @if (in_array(Auth::user()->id, $unreadUsers))
+                                                <a data-note-id="{{ $comment->id }}" href="javascript:void(0)" class="float-start badge bg-light-success" onclick="markAsRead(this, {{ $comment->id }})">
+                                                    <i class="ki-duotone ki-check fs-3"></i> Mark as read
+                                                </a><br><br>
+                                            @endif
+                                            <div class="float-end">
+                                                @if($taggedUsers)
+                                                    <small class="text-muted">Tagged Users: </small>
+                                                    @foreach ($taggedUsers as $taggedUser)
+                                                        <span class="badge bg-light-warning">
+                                                            {{ ucwords($users[$taggedUser] ?? 'Unknown User') }}
+                                                        </span>
+                                                        @foreach($reactions as $reaction)
+                                                            @if($reaction['user_id'] == $taggedUser)
+                                                                <i class="reaction-icon text-primary bg-white border border-dark">
+                                                                    {{ getReactionEmojis()[$reaction['reactionType']] }}
+                                                                </i>
+                                                            @endif
+                                                        @endforeach
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @if (!$userReacted)
+                                            <div class="reaction-options position-relative">
+                                                <a href="javascript:void(0)" class="text-dark me-2" onclick="toggleEmojiMenu(this)">
+                                                    More Actions <i class="fa fa-ellipsis-h"></i>
+                                                </a>
+                                                <div class="emoji-menu position-absolute d-none" style="top: 20px; right: 0; background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 6px; z-index: 100;">
+                                                    @foreach (getReactionEmojis() as $emojiKey => $emojiIcon)
+                                                        <a href="javascript:void(0)" onclick="reactToComment(this, {{ $comment->id }}, '{{ $emojiKey }}')" class="emoji-item">
+                                                            {!! $emojiIcon !!}
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
                             @else
-                            <div class="alert alert-danger">
-                                <h4 class="text-center">There are no comments added for this appointment! Thank you</h4>
-                            </div>
+                                <div class="alert alert-danger">
+                                    <h4 class="text-center">There are no comments added for this appointment! Thank you</h4>
+                                </div>
                             @endif
                         </div>
                     </div>
-                    <!-- Comments -->
                 </div>
             </div>
         </div>
@@ -331,4 +412,60 @@
             }
         });
     }
+    var users = @json($users);
+    var reactionEmojis = @json(getReactionEmojis());
+
+    function reactToComment(element, commentId, reactionType) {
+        $.ajax({
+            url: "{{ route('appointments.reactToComment') }}",
+            method: 'post',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            data: {
+                commentId: commentId,
+                reactionType: reactionType
+            },
+            success: function(response) {
+                if (response.success) {
+                    var reactionContainer = $(element).closest('.comment-box').find('.float-end');
+                    reactionContainer.find('.reaction-icon').remove();
+                    response.reactions.forEach(function(reaction) {
+                        var userBadge = reactionContainer.find('.badge').filter(function() {
+                            return $(this).text().trim() === users[reaction.user_id];
+                        });
+
+                        if (userBadge.length) {
+                            var emoji = reactionEmojis[reaction.reactionType];
+                            var iconHtml = '<i class="reaction-icon text-primary bg-white border border-dark" style="position: absolute; margin: -12px;padding: 2px;border-radius: 100%;">' + emoji + '</i>';
+                            userBadge.after(iconHtml);
+                        }
+                    });
+                    var emojiMenu = $(element).closest('.emoji-menu');
+                    emojiMenu.addClass('d-none');
+                    var moreActionsLink = $(element).closest('.reaction-options').find('a.text-dark');
+                    moreActionsLink.addClass('d-none');
+                } else {
+                    console.error('Failed to add reaction for comment ID:', commentId);
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    text: 'Failed to add reaction! Try again later',
+                    icon: 'error',
+                    confirmButtonText: "Close",
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: "btn btn-light-danger"
+                    }
+                });
+            }
+        });
+    }
+
+    function toggleEmojiMenu(element) {
+        var emojiMenu = $(element).closest('.reaction-options').find('.emoji-menu');
+        emojiMenu.toggleClass('d-none'); // Toggle visibility of the emoji menu
+    }
+
 </script>

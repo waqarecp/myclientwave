@@ -48,6 +48,12 @@ mix.js('resources/js/app.js', 'public/js');
     mix.scripts(file, output);
 });
 
+// Add your custom general.js here
+mix.scripts(`${dir}/js/custom/authentication/sign-in/general.js`, `public/assets/js/custom/authentication/sign-in/general.js`);
+
+// Add your custom calendar.js here
+mix.scripts(`${dir}/js/custom/apps/calendar/calendar.js`, `public/assets/js/custom/apps/calendar/calendar.js`);
+
 // Build media
 mix.copyDirectory(`${dir}/media`, `public/assets/media`);
 

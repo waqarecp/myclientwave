@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\Lead;
 use App\Models\UtilityCompany;
 use App\Models\Country;
+use App\Models\Deal;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -58,7 +59,7 @@ class DashboardController extends Controller
         $utilitycompanies = UtilityCompany::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
-        $companies = Company::where('deleted_at', null)->get();
+        $company = Company::where('id', Auth::user()->company_id)->where('deleted_at', null)->first();
         $sources = LeadSource::where('deleted_at', null)
             ->where('company_id', $companyId)
             ->get();
@@ -74,8 +75,7 @@ class DashboardController extends Controller
             return Carbon::parse($date->created_at)->format('M d');
         })->map(function ($dateLeads) {
             return count($dateLeads);
-        })->sortKeysDesc()
-            ->take(5);
+        })->sortKeys();
         $leadData = $leadData->toJson();
         $countLeads = count($leads);
 
@@ -92,12 +92,26 @@ class DashboardController extends Controller
         })->sortKeys();
         $appointmentData = $appointmentData->toJson();
         $countAppointments = count($appointments);
+        
+        $deals = Deal::whereNull('deals.deleted_at')
+            ->whereBetween('deals.created_at', [Carbon::now()->subDays(30), Carbon::now()])
+            ->join('leads', 'leads.id', '=', 'deals.lead_id')
+            ->where('leads.company_id', $companyId)
+            ->select('deals.*')
+            ->get();
+        $dealData = $deals->groupBy(function ($date) {
+            return Carbon::parse($date->created_at)->format('M d'); // Group by day
+        })->map(function ($dayDeals) {
+            return count($dayDeals);
+        })->sortKeys();
+        $dealData = $dealData->toJson();
+        $countDeals= count($deals);
 
         return view(
             'pages/dashboards.index',
             compact(
                 'users',
-                'companies',
+                'company',
                 'sources',
                 'utilitycompanies',
                 'statuses',
@@ -106,6 +120,8 @@ class DashboardController extends Controller
                 'countLeads',
                 'appointmentData',
                 'countAppointments',
+                'dealData',
+                'countDeals',
                 'countries'
             )
         );
