@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeTypeController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\StageController;
 use Illuminate\Support\Facades\Route;
 
@@ -124,7 +125,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('home_types', HomeTypeController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:home type');
         Route::post('/home_types/update', [HomeTypeController::class, 'update'])->name('home_types.update');
         Route::post('/home_types/destroy', [HomeTypeController::class, 'destroy'])->name('home_types.destroy');
-    
+
+        // Routes for organizations
+        Route::resource('organizations', OrganizationController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:organization');
+        Route::post('/organizations/update', [OrganizationController::class, 'update'])->name('organizations.update');
+        Route::post('/organizations/destroy', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+
         // communications routes
         Route::resource('communication_methods', CommunicationMethodController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:communication method');
         Route::post('/communication_methods/update', [CommunicationMethodController::class, 'update'])->name('communication_methods.update');

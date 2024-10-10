@@ -79,7 +79,6 @@ class LeadController extends Controller
         // Retrieve leads based on these states
         $leadsQuery = Lead::with('leadSource', 'utilityCompany', 'user', 'company')
             ->where('company_id', $companyId)
-            ->whereIn('state_id', $states)
             ->join('states', 'leads.state_id', '=', 'states.id')  // Join with states table
             ->where(function ($query) {
                 $query->where('owner_id', Auth::user()->id)

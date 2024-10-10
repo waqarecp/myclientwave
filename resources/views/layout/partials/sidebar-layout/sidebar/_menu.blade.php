@@ -139,10 +139,11 @@ $user = auth()->user();
                 $hasPermissionState = $user->can('read state colour') || $user->can('write state colour') || $user->can('create state colour');
                 $hasPermissionStage = $user->can('read stage') || $user->can('write stage') || $user->can('create stage');
                 $hasPermissionHomeType = $user->can('read home type') || $user->can('write home type') || $user->can('create home type');
+                $hasPermissionOrganization = $user->can('read organization') || $user->can('write organization') || $user->can('create organization');
                 $hasPermissionCommunicationMethod = $user->can('read communication method') || $user->can('write communication method') || $user->can('create communication method');
                 $hasPermissionCountrySetting = $user->can('read setting') || $user->can('write setting') || $user->can('create setting');
 
-                $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting;
+                $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting || $hasPermissionOrganization;
                 $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
 
@@ -194,6 +195,15 @@ $user = auth()->user();
                                 <a class="menu-link {{ request()->routeIs('home_types.index') ? 'active' : '' }}" href="{{ route('home_types.index') }}">
                                     <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                     <span class="menu-title">Deal Home Types</span>
+                                </a>
+                            </div>
+                        @endif
+
+                        @if($hasPermissionOrganization)
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('organizations.index') ? 'active' : '' }}" href="{{ route('organizations.index') }}">
+                                    <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                    <span class="menu-title">Manage Organizations</span>
                                 </a>
                             </div>
                         @endif
