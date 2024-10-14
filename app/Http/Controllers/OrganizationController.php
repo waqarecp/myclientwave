@@ -11,7 +11,7 @@ class OrganizationController extends Controller
     // Display a listing of records
     public function index(Request $request)
     {
-        $companyId = Auth::user()->company_id;
+        $companyId = Auth::user()->company_id;     
         $query = Organization::where('organizations.company_id', $companyId)
             ->join('users', 'organizations.created_by', '=', 'users.id')
             ->whereNull('organizations.deleted_at')

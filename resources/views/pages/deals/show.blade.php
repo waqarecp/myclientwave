@@ -58,13 +58,13 @@
                                         <div class="fw-bold mt-5">Financier</div>
                                         <div class="text-gray-600">{{ $deal->financier_id?:'N/A' }}</div>
                                         <div class="fw-bold mt-5">Home Type</div>
-                                        <div class="text-gray-600">{{ $deal->homeType->home_type_name }}</div>
+                                        <div class="text-gray-600">{{ $deal->getHomeType ? $deal->getHomeType->home_type_name : 'N/A' }}</div>
                                         <div class="fw-bold mt-5">Lead Source</div>
                                         <div class="text-gray-600">{{ $deal->source->source_name }}</div>
                                         <div class="fw-bold mt-5">Account Name</div>
-                                        <div class="text-gray-600">{{ $deal->deal_account_name }}</div>
+                                        <div class="text-gray-600">{{ $deal->deal_account_name?:'N/A' }}</div>
                                         <div class="fw-bold mt-5">Contact Name</div>
-                                        <div class="text-gray-600">{{ $deal->deal_contact_name }}</div>
+                                        <div class="text-gray-600">{{ $deal->deal_contact_name?:'N/A' }}</div>
                                         <div class="fw-bold mt-5">Phone Burner Last Call Outcome</div>
                                         <div class="text-gray-600">{{ $deal->deal_phone_burner_last_call_outcome }}</div>
                                         <div class="fw-bold mt-5">Social Lead Id</div>
@@ -76,7 +76,7 @@
                                             <div class="fw-bold mt-5">Closing Date</div>
                                             <div class="text-gray-600">{{ \Carbon\Carbon::parse($deal->deal_closing_date)->format('d F Y') }}</div>
                                             <div class="fw-bold mt-5">Pipeline</div>
-                                            <div class="text-gray-600">{{ $deal->deal_pipeline?:'N/A' }}</div>
+                                            <div class="text-gray-600">{{ $deal->getPipeline ? $deal->getPipeline->pipeline_name : 'N/A' }}</div>
                                             <div class="fw-bold mt-5">Communication Method</div>
                                             <div class="text-gray-600">{{ $deal->communicationMethod->method_name }}</div>
                                             <div class="fw-bold mt-5">Stage</div>

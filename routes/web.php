@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DealController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\HomeTypeController;
+use App\Http\Controllers\PipelineController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\StageController;
 use Illuminate\Support\Facades\Route;
@@ -45,9 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/dashboard', [DashboardController::class, 'handlePostRequest'])->name('dashboard');
     Route::post('/switch-dealer', [DashboardController::class, 'switchDealerAccount'])->name('dashboard.switch.dealer');
 
-    Route::name('dashboard.')->group(function () {
-
-    });
+    Route::name('dashboard.')->group(function () {});
     // User Management routes
     Route::name('user-management.')->group(function () {
         Route::resource('/user-management/users', UserManagementController::class)->middleware('check.dynamic.route.permissions:user');
@@ -90,7 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/deals/view-deal-timeline', [DealController::class, 'viewDealTimeline'])->name('deals.viewTimeline');
     Route::post('/deals/update-deal-timeline', [DealController::class, 'updateDealTimeline'])->name('deals.updateTimeline');
     Route::post('/deals/export', [DealController::class, 'export'])->name('deals.export');
-    
+
     // Utility Company routes
     Route::resource('utility-companies', UtilityCompanyController::class)->middleware('check.dynamic.route.permissions:utility company');
 
@@ -105,7 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('manage-settings')->group(function () {
         // Lead Sources routes
         Route::resource('lead-sources', LeadSourceController::class)->middleware('check.dynamic.route.permissions:lead source');
-    
+
         // Statuses routes
         Route::resource('statuses', StatusController::class)->middleware('check.dynamic.route.permissions:status');
 
@@ -120,7 +119,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('stages', StageController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:stage');
         Route::post('/stages/update', [StageController::class, 'update'])->name('stage.update');
         Route::post('/stages/destroy', [StageController::class, 'destroy'])->name('stage.destroy');
-    
+       
+        // Routes for pipeline
+        Route::resource('pipeline', PipelineController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:pipeline');
+        Route::post('/pipeline/update', [PipelineController::class, 'update'])->name('pipeline.update');
+        Route::post('/pipeline/destroy', [PipelineController::class, 'destroy'])->name('pipeline.destroy');
+
         // home types routes
         Route::resource('home_types', HomeTypeController::class)->except(['update', 'destroy'])->middleware('check.dynamic.route.permissions:home type');
         Route::post('/home_types/update', [HomeTypeController::class, 'update'])->name('home_types.update');
@@ -140,7 +144,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('country', [SettingController::class, 'index'])->middleware('check.dynamic.route.permissions:setting')->name('settings.index');
         Route::post('country/update', [SettingController::class, 'update'])->name('setting.update');
     });
-
 });
 
 Route::get('/error', function () {

@@ -140,9 +140,9 @@ $user = auth()->user();
                 $hasPermissionStage = $user->can('read stage') || $user->can('write stage') || $user->can('create stage');
                 $hasPermissionHomeType = $user->can('read home type') || $user->can('write home type') || $user->can('create home type');
                 $hasPermissionOrganization = $user->can('read organization') || $user->can('write organization') || $user->can('create organization');
+                $hasPermissionPipeline = $user->can('read pipeline') || $user->can('write pipeline') || $user->can('create pipeline');
                 $hasPermissionCommunicationMethod = $user->can('read communication method') || $user->can('write communication method') || $user->can('create communication method');
                 $hasPermissionCountrySetting = $user->can('read setting') || $user->can('write setting') || $user->can('create setting');
-
                 $hasPermissionManagementSetting = $hasPermissionLeadSources || $hasPermissionStatus || $hasPermissionState || $hasPermissionStage || $hasPermissionHomeType || $hasPermissionCommunicationMethod || $hasPermissionCountrySetting || $hasPermissionOrganization;
                 $manageSettingsActive = request()->routeIs('lead-sources.*', 'statuses.*', 'state-colours.*', 'stages.*', 'home_types.*', 'communication_methods.*', 'settings.index');
             @endphp
@@ -189,6 +189,16 @@ $user = auth()->user();
                                 </a>
                             </div>
                         @endif
+
+                        @if($hasPermissionPipeline)
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('pipeline.index') ? 'active' : '' }}" href="{{ route('pipeline.index') }}">
+                                <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                                <span class="menu-title">Deal Pipeline</span>
+                            </a>
+                        </div>
+                    @endif
+                        
 
                         @if($hasPermissionHomeType)
                             <div class="menu-item">

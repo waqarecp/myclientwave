@@ -10,11 +10,13 @@ use App\Models\Lead;
 use App\Models\LeadSource;
 use App\Models\Role;
 use App\Models\Stage;
+use App\Models\Pipeline;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Models\Organization;
 
 class DealController extends Controller
 {
@@ -30,8 +32,11 @@ class DealController extends Controller
         $homeTypes = HomeType::whereNull('deleted_at')->where('company_id', $companyId)->get();
         $leadSources = LeadSource::whereNull('deleted_at')->where('company_id', $companyId)->get();
         $dealStages = Stage::whereNull('deleted_at')->where('company_id', $companyId)->get();
+        $dealPipelines = Pipeline::whereNull('deleted_at')->where('company_id', $companyId)->get();
+      
         $communicationMethods = CommunicationMethod::whereNull('deleted_at')->where('company_id', $companyId)->get();
-
+        $organizations = Organization::where('company_id', $companyId)
+        ->whereNull('deleted_at')->get();
         // Initialize the deal query with necessary joins and filters
         $dealQuery = Deal::query()
             ->join('users', 'deals.created_by', '=', 'users.id')
@@ -82,7 +87,7 @@ class DealController extends Controller
 
         // Return the view with all necessary data
         return view('pages.deals.index', compact(
-            'rows', 'users', 'roles', 'leads', 'homeTypes', 'leadSources', 'dealStages', 'communicationMethods'
+            'rows', 'users', 'roles', 'leads', 'homeTypes', 'leadSources', 'dealStages', 'communicationMethods' ,'organizations','dealPipelines'
         ));
     }
 

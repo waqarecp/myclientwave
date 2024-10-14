@@ -383,10 +383,15 @@
 
                                     <!-- Pipeline -->
                                     <div class="fv-row mb-7">
+                                        
                                         <label class="fw-semibold fs-6 mb-2">Pipeline</label>
-                                        <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid">
-                                            <option value="">-- Select --</option>
-                                            <!-- Dynamic options here -->
+                                        <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select Pipeline">
+                                            <option value="">-- Select Pipeline--</option>
+                                            @foreach($dealPipelines as $dealPipeline)
+                                            <option value="{{ $dealPipeline->id }}" data-color="{{ $dealPipeline->stage_color_code }}">
+                                                {{ $dealPipeline->pipeline_name }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                         @error('deal_pipeline')
                                         <span class="text-danger">{{ $message }}</span> @enderror
@@ -394,7 +399,7 @@
 
                                     <!-- communication_method_id -->
                                     <div class="fv-row mb-7">
-                                        <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                        <label class="fw-semibold fs-6 mb-2">Select Communication</label>
                                         <select name="communication_method_id" id="communication_method_id" class="form-control form-select form-control-solid">
                                             <option value="">-- Select --</option>
                                             @foreach($communicationMethods as $communicationMethod)
@@ -479,8 +484,13 @@
                                     <!-- Organization -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Organization</label>
-                                        <select name="organization_id" id="organization_id" class="form-control form-select form-control-solid">
-                                            <option value="">None</option>
+                                        <select name="organization_id" id="organization_id" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_add_deal" data-placeholder="Select organization">                                        
+                                            <option value="">select organization</option>  
+                                            @foreach($organizations as $organization)
+                                            <option value="{{ $organization->id }}">
+                                                {{ $organization->organization_name }}
+                                            </option>
+                                            @endforeach
                                             <!-- Dynamic options here -->
                                         </select>
                                         @error('organization_id')
@@ -719,9 +729,13 @@
                                     <!-- Pipeline -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Pipeline</label>
-                                        <select name="update_deal_pipeline" id="update_deal_pipeline" class="form-control form-select form-control-solid">
-                                            <option value="">-- Select --</option>
-                                            <!-- Dynamic options here -->
+                                        <select name="update_deal_pipeline" id="update_deal_pipeline" class="form-control form-select form-control-solid" data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select Pipeline">
+                                            <option value="">-- Select Pipeline--</option>
+                                            @foreach($dealPipelines as $dealpipeline)
+                                            <option value="{{ $dealPipeline->id }}">
+                                                {{ $dealPipeline->pipeline_name }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                         @error('update_deal_pipeline')
                                         <span class="text-danger">{{ $message }}</span> @enderror
@@ -729,7 +743,7 @@
 
                                     <!-- update_communication_method_id -->
                                     <div class="fv-row mb-7">
-                                        <label class="fw-semibold fs-6 mb-2">Communication Method Id</label>
+                                        <label class="fw-semibold fs-6 mb-2">Select Communication</label>
                                         <select name="update_communication_method_id" id="update_communication_method_id" class="form-control form-select form-control-solid">
                                             <option value="">-- Select --</option>
                                             @foreach($communicationMethods as $communicationMethod)
@@ -814,9 +828,13 @@
                                     <!-- Organization -->
                                     <div class="fv-row mb-7">
                                         <label class="fw-semibold fs-6 mb-2">Organization</label>
-                                        <select name="update_organization_id" id="update_organization_id" class="form-control form-select form-control-solid">
-                                            <option value="">None</option>
-                                            <!-- Dynamic options here -->
+                                        <select name="update_organization_id" id="update_organization_id" class="form-control form-select form-control-solid"  data-control="select2" data-dropdown-parent="#kt_modal_update_deal" data-placeholder="Select organization">
+                                            <option value="">-- Select Organization--</option>
+                                            @foreach($organizations as $organization)
+                                            <option value="{{ $organization->id }}" data-color="{{ $organization->organization_name}}">
+                                                {{ $organization->organization_name }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                         @error('update_organization_id')
                                         <span class="text-danger">{{ $message }}</span> @enderror
@@ -1072,7 +1090,11 @@
                 $('#update_deal_social_lead_id').val(dealSocialLeadId);
                 $('#update_deal_amount').val(dealAmount);
                 $('#update_deal_closing_date').val(dealClosingDate);
-                $('#update_deal_pipeline').val(dealPipeline);
+                $('#update_deal_pipeline').select2({
+                        dropdownParent: $('#kt_modal_update_deal'),
+                        templateResult: formatStageColour,
+                        templateSelection: formatStageColour
+                    });
                 $('#update_communication_method_id').val(communicationMethodId);
                 $('#update_stage_id').val(stageId).trigger('change');
                 $('#update_stage_id').select2({
@@ -1087,7 +1109,7 @@
                 $('#update_deal_phone_burner_last_call_time').val(dealLastCallTime);
                 $('#update_deal_availability_start').val(dealAvailabilityStart);
                 $('#update_deal_availability_end').val(dealAvailabilityEnd);
-                $('#update_organization_id').val(organizationId);
+                $('#update_organization_id').val(organizationId).trigger('change');
 
                 $('#kt_modal_update_deal').modal('show');
             }

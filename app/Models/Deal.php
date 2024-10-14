@@ -59,7 +59,7 @@ class Deal extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function homeType()
+    public function getHomeType()
     {
         return $this->belongsTo(HomeType::class, 'home_type_id');
     }
@@ -77,6 +77,11 @@ class Deal extends Model
     public function stage()
     {
         return $this->belongsTo(Stage::class, 'stage_id');
+    }
+
+    public function getPipeline()
+    {
+        return $this->belongsTo(Pipeline::class, 'deal_pipeline');
     }
 
     public function creator()

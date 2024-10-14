@@ -596,8 +596,13 @@
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Pipeline</label>
                                             <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid">
+                                                
                                                 <option value="">-- Select --</option>
-                                                <!-- Dynamic options here -->
+                                                @foreach($dealPipeline as $pipeline)
+                                                <option value="{{ $pipeline->id }}">
+                                                    {{ $dealpipeline->pipe;ine_name }}
+                                                </option>
+                                                @endforeach
                                             </select>
                                             @error('deal_pipeline')
                                             <span class="text-danger">{{ $message }}</span> @enderror
