@@ -27,6 +27,7 @@ use App\Mail\UserTagged;
 use App\Models\CommunicationMethod;
 use App\Models\Deal;
 use App\Models\HomeType;
+use App\Models\Pipeline;
 use App\Models\Stage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -76,6 +77,7 @@ class LeadController extends Controller
         $homeTypes = HomeType::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $dealStages = Stage::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
         $communicationMethods = CommunicationMethod::where('deleted_at', null)->where('company_id', Auth::user()->company_id)->get();
+        $dealPipelines = Pipeline::whereNull('deleted_at')->where('company_id', $companyId)->get();
         // Retrieve leads based on these states
         $leadsQuery = Lead::with('leadSource', 'utilityCompany', 'user', 'company')
             ->where('company_id', $companyId)
@@ -138,7 +140,7 @@ class LeadController extends Controller
         // Paginate the results
         $rows = $leadsQuery->paginate(15)->withQueryString();
 
-        return view('pages.lead.list', compact('sources', 'roles', 'utilityCompanies', 'states', 'cities', 'rows', 'request', 'users', 'companies', 'note', 'appointment', 'countries', 'homeTypes', 'dealStages', 'communicationMethods' ));
+        return view('pages.lead.list', compact('sources', 'roles', 'utilityCompanies', 'states', 'cities', 'rows', 'request', 'users', 'companies', 'note', 'appointment', 'countries', 'homeTypes', 'dealStages', 'communicationMethods', 'dealPipelines'));
     }
 
     /**

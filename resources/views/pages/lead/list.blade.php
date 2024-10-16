@@ -607,12 +607,14 @@
                                         <!-- Pipeline -->
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Pipeline</label>
-                                            <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid">
-                                                
+                                            <select name="deal_pipeline" id="deal_pipeline" class="form-control form-select form-control-solid" data-control="select2"
+                                            data-dropdown-parent="#kt_modal_convert_lead_to_deal"
+                                            data-placeholder="Select Pipeline">
                                                 <option value="">-- Select --</option>
-                                                @foreach($dealPipeline as $pipeline)
-                                                <option value="{{ $pipeline->id }}">
-                                                    {{ $dealpipeline->pipe;ine_name }}
+                                                @foreach($dealPipelines as $dealPipeline)
+                                                <option value="{{ $dealPipeline->id }}"
+                                                    data-color="{{ $dealPipeline->pipeline_color_code }}">
+                                                    {{ $dealPipeline->pipeline_name }}
                                                 </option>
                                                 @endforeach
                                             </select>
@@ -1131,12 +1133,23 @@
                     templateResult: formatStageColour,
                     templateSelection: formatStageColour
                 });
+            $('#deal_pipeline').select2({
+                    dropdownParent: $('#kt_modal_convert_lead_to_deal'),
+                    templateResult: formatPipelineColour,
+                    templateSelection: formatPipelineColour
+                });
             $('#kt_modal_convert_lead_to_deal').modal('show');
                 
         }
         $('#stage_id').select2({
             templateResult: formatStageColour,
             templateSelection: formatStageColour,
+            dropdownParent: $('#kt_modal_convert_lead_to_deal')
+        });
+
+        $('#deal_pipeline').select2({
+            templateResult: formatPipelineColour,
+            templateSelection: formatPipelineColour,
             dropdownParent: $('#kt_modal_convert_lead_to_deal')
         });
 
@@ -1152,6 +1165,20 @@
 
             return $stage;
         }
+
+        function formatPipelineColour(pipeline) {
+            if (!pipeline.id) {
+                return pipeline.text;
+            }
+
+            var color = $(pipeline.element).data('color'); // Get color from option data
+            var $pipeline = $(
+                '<span><span class="badge badge-circle w-15px h-15px me-1" style="background-color:' + color + '"></span>' + pipeline.text + '</span>'
+            );
+
+            return $pipeline;
+        }
+
         $('#kt_modal_convert_lead_to_deal_form').on('submit', function(e) {
             e.preventDefault();
             if (this.checkValidity()) {

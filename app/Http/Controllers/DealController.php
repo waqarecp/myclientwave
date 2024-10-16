@@ -41,6 +41,7 @@ class DealController extends Controller
         $dealQuery = Deal::query()
             ->join('users', 'deals.created_by', '=', 'users.id')
             ->join('stages', 'deals.stage_id', '=', 'stages.id')
+            ->join('pipeline', 'deals.deal_pipeline', '=', 'pipeline.id')
             ->whereNull('deals.deleted_at')
             ->select('deals.*', 'deals.id as deal_id');
 
@@ -81,6 +82,11 @@ class DealController extends Controller
         if (!empty($filterStage)) {
             $dealQuery->where('deals.stage_id', '=', $filterStage);
         }
+ // Apply pipeline filter
+ $filterPipeline = $request->input('filter_pipeline');
+ if (!empty($filterPipeline)) {
+     $dealQuery->where('deals.pipeline_id', '=', $filterPipeline);
+ }
 
         // Fetch results with pagination
         $rows = $dealQuery->paginate(15)->withQueryString();
