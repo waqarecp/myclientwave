@@ -12,7 +12,8 @@ class SubscriptionController extends Controller
 {
     public function billing(){
         $company = Company::where('id', Auth::user()->company_id)->first(); 
-        if($company->stripe_id){
+        $subscription = $company->subscription('default');
+        if($company->stripe_id && $company->subscribed('default') && $subscription){
             return $company->redirectToBillingPortal(route('dashboard'));
         }else{
             return view('pages/billing/index', compact('company'));
