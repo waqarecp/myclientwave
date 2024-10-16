@@ -16,7 +16,8 @@ class SubscriptionController extends Controller
         if($company->stripe_id && $company->subscribed('default') && $subscription){
             return $company->redirectToBillingPortal(route('dashboard'));
         }else{
-            return view('pages/billing/index', compact('company'));
+            $plans = Plan::all();
+            return view('pages/billing/index', compact('company', 'plans'));
         }
     }
     public function success()

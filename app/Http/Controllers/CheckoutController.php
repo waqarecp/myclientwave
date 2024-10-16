@@ -11,7 +11,7 @@ class CheckoutController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, string $plan = "prod_QzHOhLntSqGFa8")
+    public function __invoke(Request $request, string $plan = "prod_QvxJuI6BTGUZwk")
     {
         // Retrieve the company associated with the authenticated user
         $company = Company::where('id', Auth::user()->company_id)->first();

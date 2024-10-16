@@ -21,6 +21,7 @@ use App\Models\Stage;
 use App\Models\Status;
 use App\Models\LeadSource;
 use App\Models\HomeType;
+use App\Models\Plan;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CompanyController extends Controller
@@ -235,16 +236,8 @@ class CompanyController extends Controller
 
     private function getPlanId($accountType)
     {
-        switch ($accountType) {
-            case 1:
-                return 'price_1Q7IocLaW8b3mxPpiwNdtXH2'; // Basic Plan
-            case 2:
-                return 'price_1Q7Ip5LaW8b3mxPp0j6a0bGA'; // Deluxe Plan
-            case 3:
-                return 'price_1Q7IpiLaW8b3mxPpV8h0r2fO'; // Exclusive Plan
-            default:
-                return 'price_1Q7IocLaW8b3mxPpiwNdtXH2'; // Default Basic Plan
-        }
+        $plan = Plan::where('id', $accountType)->first();        
+        return $plan ? $plan->stripe_plan : 'price_1Q45PKKb9baEyQNdi5ppTVTT';
     }
     
     protected function validateRequest($request)

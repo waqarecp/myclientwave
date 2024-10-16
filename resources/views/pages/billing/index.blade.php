@@ -25,93 +25,40 @@
                 </div>
                 <!--end::Heading-->
                 <!--begin::Row-->
-                <div class="row g-10">
-                    <!--begin::Col-->
-                    <div class="col-xl-4">
-                        <div class="d-flex h-100 align-items-center">
-                            <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
-                                <!--begin::Heading-->
-                                <div class="mb-7 text-center">
-                                    <!--begin::Title-->
-                                    <h1 class="text-gray-900 mb-5 fw-bolder">Basic</h1>
-                                    <!--end::Title-->
-                                    <!--begin::Price-->
-                                    <div class="text-center">
-                                        <span class="mb-2 text-primary">$</span>
-                                        <span class="fs-3x fw-bold text-primary">15</span>
-                                        <span class="fs-7 fw-semibold opacity-50">/ 
-                                        <span data-kt-element="period">Mon</span></span>
+                    <div class="row g-10">
+                        @foreach ($plans as $plan)
+                            <!--begin::Col-->
+                            <div class="col-xl-4">
+                                <div class="d-flex h-100 align-items-center">
+                                    <!--begin::Option-->
+                                    <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                        <!--begin::Heading-->
+                                        <div class="mb-7 text-center">
+                                            <!--begin::Title-->
+                                            <h1 class="text-gray-900 mb-5 fw-bolder">{{ $plan->name }}</h1>
+                                            <!--end::Title-->
+                                            <!--begin::Price-->
+                                            <div class="text-center">
+                                                <span class="mb-2 text-primary">$</span>
+                                                <span class="fs-3x fw-bold text-primary">{{ $plan->price }}</span>
+                                                <span class="fs-7 fw-semibold opacity-50">/ 
+                                                <span data-kt-element="period">Mon</span></span>
+                                            </div>
+                                            <!--end::Price-->
+                                        </div>
+                                        <!--end::Heading-->
+                                        <!--begin::Select-->
+                                        <a href="{{ route('subscription.StripeCheckout', ['plan' => $plan->stripe_plan]) }}" class="btn btn-sm btn-primary">Select</a>
+                                        <!--end::Select-->
                                     </div>
-                                    <!--end::Price-->
+                                    <!--end::Option-->
                                 </div>
-                                <!--end::Heading-->
-                                <!--begin::Select-->
-                                <a href="{{ route('subscription.StripeCheckout', ['plan' => 'price_1Q7IocLaW8b3mxPpiwNdtXH2']) }}" class="btn btn-sm btn-primary">Select</a>
-                                <!--end::Select-->
                             </div>
-                            <!--end::Option-->
-                        </div>
+                            <!--end::Col-->
+                        @endforeach
                     </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-xl-4">
-                        <div class="d-flex h-100 align-items-center">
-                            <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-20 px-10">
-                                <!--begin::Heading-->
-                                <div class="mb-7 text-center">
-                                    <!--begin::Title-->
-                                    <h1 class="text-gray-900 mb-5 fw-bolder">Deluxe</h1>
-                                    <!--end::Title-->
-                                    <!--begin::Price-->
-                                    <div class="text-center">
-                                        <span class="mb-2 text-primary">$</span>
-                                        <span class="fs-3x fw-bold text-primary">35</span>
-                                        <span class="fs-7 fw-semibold opacity-50">/ 
-                                        <span data-kt-element="period">Mon</span></span>
-                                    </div>
-                                    <!--end::Price-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Select-->
-                                <a href="{{ route('subscription.StripeCheckout', ['plan' => 'price_1Q7Ip5LaW8b3mxPp0j6a0bGA']) }}" class="btn btn-sm btn-primary">Select</a>
-                                <!--end::Select-->
-                            </div>
-                            <!--end::Option-->
-                        </div>
-                    </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-xl-4">
-                        <div class="d-flex h-100 align-items-center">
-                            <!--begin::Option-->
-                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
-                                <!--begin::Heading-->
-                                <div class="mb-7 text-center">
-                                    <!--begin::Title-->
-                                    <h1 class="text-gray-900 mb-5 fw-bolder">Exclusive</h1>
-                                    <!--end::Title-->
-                                    <!--begin::Price-->
-                                    <div class="text-center">
-                                        <span class="mb-2 text-primary">$</span>
-                                        <span class="fs-3x fw-bold text-primary">50</span>
-                                        <span class="fs-7 fw-semibold opacity-50">/ 
-                                        <span data-kt-element="period">Mon</span></span>
-                                    </div>
-                                    <!--end::Price-->
-                                </div>
-                                <!--end::Heading-->
-                                <!--begin::Select-->
-                                <a href="{{ route('subscription.StripeCheckout', ['plan' => 'price_1Q7IpiLaW8b3mxPpV8h0r2fO']) }}" class="btn btn-primary">Select</a> 
-                                <!--end::Select-->
-                            </div>
-                            <!--end::Option-->
-                        </div>
-                    </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Row-->
+                    <!--end::Row-->
+
             </div>
             <!--end::Plans-->
         </div>
