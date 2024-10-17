@@ -69,7 +69,9 @@
 								</div>
 								<!--end::Heading-->
 								<div class="row g-10">
-										<label for="start_trial" class="btn btn-outline-primary"><input type="checkbox" name="start_trial" id="start_trial" value="1"> Start 14-day free trial</label>
+									<div class="col-md-12 mt-0">
+									<label for="start_trial" class="btn btn-outline btn-outline-dashed btn-light-danger offset-md-5"><input type="checkbox" name="start_trial" id="start_trial" value="1"> Start 14-days Free Trial</label>
+									</div>									
 									<!--begin::Col-->
 									<div class="col-xl-4">
 										<div class="d-flex h-100 align-items-center">
@@ -81,8 +83,8 @@
 													<h1 class="text-gray-900 mb-5 fw-bolder">Basic Plan</h1>
 													<!--end::Title-->
 													<!--begin::Description-->
-													<div class="text-gray-600 fw-semibold mb-5">Optimal for 1-5 team size
-														<br />and small businesses
+													<div class="text-gray-600 fw-semibold mb-5">Optimal for 1-5 member size
+														<br />and new startup
 													</div>
 													<!--end::Description-->
 													<!--begin::Price-->
@@ -94,76 +96,86 @@
 													</div>
 													<!--end::Price-->
 												</div>
-												<!--end::Heading--><!--begin::Features-->
+												<!--end::Heading-->
+												<!--begin::Features-->
 												<div class="w-100 mb-10">
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 10 Active Users</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 1-5 Active Users</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Lead Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Calendar Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Appointment Module</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Deal Module</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Analytics and Reports</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Monthly Update Features</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Full Access To CRM</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
 												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 30 Project Integrations</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Analytics Module</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Finance Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Accounting Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Network Platform</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Unlimited Cloud Space</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-											</div>
-											<!--end::Features-->
+												<!--end::Features-->
 												<!--begin::Select-->
 												<input type="radio" class="btn-check" name="account_type" value="1" id="basic_plan" />
-												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="basic_plan">
+												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" onclick="scrollDown()" for="basic_plan">
 													Choose Basic Plan
 												</label>
 												<!--end::Select-->
@@ -184,7 +196,7 @@
 													<h1 class="text-gray-900 mb-5 fw-bolder">Deluxe Plan</h1>
 													<!--end::Title-->
 													<!--begin::Description-->
-													<div class="text-gray-600 fw-semibold mb-5">Optimal for 10+ team size
+													<div class="text-gray-600 fw-semibold mb-5">Optimal for 5-10 member size
 														<br />and growing companies
 													</div>
 													<!--end::Description-->
@@ -197,76 +209,86 @@
 													</div>
 													<!--end::Price-->
 												</div>
-												<!--end::Heading--><!--begin::Features-->
+												<!--end::Heading-->
+												<!--begin::Features-->
 												<div class="w-100 mb-10">
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 10 Active Users</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 5-10 Active Users</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Lead Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Calendar Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1">Appointment Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1">Analytics and Reports</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Deal Module</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Monthly Update Features</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Full Access To CRM</span>
+														<i class="ki-duotone ki-cross-circle fs-1">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
 												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 30 Project Integrations</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Analytics Module</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Finance Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Accounting Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Network Platform</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Unlimited Cloud Space</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-											</div>
-											<!--end::Features-->
+												<!--end::Features-->
 												<!--begin::Select-->
 												<input type="radio" class="btn-check" name="account_type" value="2" id="deluxe_plan" />
-												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="deluxe_plan">
+												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" onclick="scrollDown()" for="deluxe_plan">
 													Choose Deluxe Plan
 												</label>
 												<!--end::Select-->
@@ -287,7 +309,7 @@
 													<h1 class="text-gray-900 mb-5 fw-bolder">Exclusive Plan</h1>
 													<!--end::Title-->
 													<!--begin::Description-->
-													<div class="text-gray-600 fw-semibold mb-5">Optimal for 50+ team size
+													<div class="text-gray-600 fw-semibold mb-5">Optimal for 10-50 member size
 														<br />and large organizations
 													</div>
 													<!--end::Description-->
@@ -300,76 +322,86 @@
 													</div>
 													<!--end::Price-->
 												</div>
-												<!--end::Heading--><!--begin::Features-->
+												<!--end::Heading-->
+												<!--begin::Features-->
 												<div class="w-100 mb-10">
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 10 Active Users</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 10-50 Active Users</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Full Access To CRM</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Monthly Update Features</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Analytics and Reports</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Lead Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Calendar Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Appointment Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
+													<!--begin::Item-->
+													<div class="d-flex align-items-center mb-5">
+														<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Deal Module</span>
+														<i class="ki-duotone ki-check-circle fs-1 text-success">
+															<span class="path1"></span>
+															<span class="path2"></span>
+														</i>
+													</div>
+													<!--end::Item-->
 												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 30 Project Integrations</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Analytics Module</span>
-													<i class="ki-duotone ki-check-circle fs-1 text-success">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Finance Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Accounting Module</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center mb-5">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Network Platform</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex align-items-center">
-													<span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Unlimited Cloud Space</span>
-													<i class="ki-duotone ki-cross-circle fs-1">
-														<span class="path1"></span>
-														<span class="path2"></span>
-													</i>
-												</div>
-												<!--end::Item-->
-											</div>
-											<!--end::Features-->
+												<!--end::Features-->
 												<!--begin::Select-->
 												<input type="radio" class="btn-check" name="account_type" value="3" id="exclusive_plan" />
-												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" for="exclusive_plan">
+												<label class="btn btn-outline btn-outline-dashed btn-active-light-primary p-7 d-flex align-items-center" onclick="scrollDown()" for="exclusive_plan">
 													Choose Exclusive Plan
 												</label>
 												<!--end::Select-->
@@ -384,7 +416,7 @@
 					</div>
 					<!--end::card-->
 					<!--begin::Step 1-->
-					<div class="col-md-6 mt-4">
+					<div class="col-md-6" id="form_fields">
 						<!--begin::Wrapper-->
 						<div class="w-100">
 							<!--begin::Input group-->
@@ -479,9 +511,9 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 mt-4">
 						<div class="w-100">
-							<div class="row">
+							<div class="row mt-4">
 								<div class="fv-row mb-10 col-md-6">
 									<label class="form-label">Contact Person Name</label>
 									<input type="text" class="form-control form-control-lg" name="contact_person_name" placeholder="Your Name or Contact Person Name" required />
@@ -525,9 +557,9 @@
 								</div>
 							</div>
 							<div class="row mt-3">
-								<div class="fv-row mb-10">
+								<div class="fv-row mb-2">
 									<label class="form-label">About Business/ Company Information</label>
-									<textarea name="description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="8"></textarea>
+									<textarea name="description" placeholder="Enter details about the company" class="form-control form-control-lg" rows="3"></textarea>
 								</div>
 								<div class="col-md-12">
 									<div class="fv-row mb-4">
@@ -576,7 +608,14 @@
 			}
 		});
 	</script>
-
+<script>
+     function scrollDown() {
+        // Scroll to the form_fields section smoothly
+        document.getElementById('form_fields').scrollIntoView({
+            behavior: 'smooth'
+        });
+    };
+</script>
 	<!--begin::Global Javascript Bundle(mandatory for all pages)-->
 	<script src="assets/plugins/global/plugins.bundle.js"></script>
 	<script src="assets/js/scripts.bundle.js"></script>
