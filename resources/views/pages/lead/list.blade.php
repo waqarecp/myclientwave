@@ -729,8 +729,12 @@
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Organization</label>
                                             <select name="organization_id" id="organization_id" class="form-control form-select form-control-solid">
-                                                <option value="">None</option>
-                                                <!-- Dynamic options here -->
+                                                <option value="">-- Select --</option>
+                                                @foreach($organizations as $organization)
+                                                <option value="{{ $organization->id }}">
+                                                    {{ $organization->organization_name }}
+                                                </option>
+                                                @endforeach
                                             </select>
                                             @error('organization_id')
                                             <span class="text-danger">{{ $message }}</span> @enderror

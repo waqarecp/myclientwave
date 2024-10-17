@@ -109,8 +109,8 @@
                 </div>
                 @if (!$userReacted)
                     <div class="reaction-options position-relative">
-                        <a href="javascript:void(0)" class="text-dark me-2" onclick="toggleEmojiMenu(this)">
-                            More Actions <i class="fa fa-ellipsis-h"></i>
+                        <a href="javascript:void(0)" class="text-dark me-2" style="font-size: 20px;" data-bs-toggle="tooltip" title="Add Your Reaction..." onclick="toggleEmojiMenu(this)">
+                            ☺
                         </a>
                         <div class="emoji-menu position-absolute d-none" style="top: 20px; right: 0; background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 6px; z-index: 100;">
                             @foreach (getReactionEmojis() as $emojiKey => $emojiIcon)

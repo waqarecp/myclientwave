@@ -37,6 +37,10 @@
                                             <!--begin::Title-->
                                             <h1 class="text-gray-900 mb-5 fw-bolder">{{ $plan->name }}</h1>
                                             <!--end::Title-->
+                                            <!--begin::Description-->
+                                            <div class="text-gray-600 fw-semibold mb-5">Optimal for 10+ team size
+                                            <br />and new startup</div>
+                                            <!--end::Description-->
                                             <!--begin::Price-->
                                             <div class="text-center">
                                                 <span class="mb-2 text-primary">$</span>
@@ -47,6 +51,73 @@
                                             <!--end::Price-->
                                         </div>
                                         <!--end::Heading-->
+                                        <!--begin::Features-->
+                                        <div class="w-100 mb-10">
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 10 Active Users</span>
+                                                <i class="ki-duotone ki-check-circle fs-1 text-success">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Up to 30 Project Integrations</span>
+                                                <i class="ki-duotone ki-check-circle fs-1 text-success">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-800 flex-grow-1 pe-3">Analytics Module</span>
+                                                <i class="ki-duotone ki-check-circle fs-1 text-success">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Finance Module</span>
+                                                <i class="ki-duotone ki-cross-circle fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Accounting Module</span>
+                                                <i class="ki-duotone ki-cross-circle fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Network Platform</span>
+                                                <i class="ki-duotone ki-cross-circle fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-semibold fs-6 text-gray-600 flex-grow-1">Unlimited Cloud Space</span>
+                                                <i class="ki-duotone ki-cross-circle fs-1">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                </i>
+                                            </div>
+                                            <!--end::Item-->
+                                        </div>
+                                        <!--end::Features-->
                                         <!--begin::Select-->
                                         <a href="{{ route('subscription.StripeCheckout', ['plan' => $plan->stripe_plan]) }}" class="btn btn-sm btn-primary">Select</a>
                                         <!--end::Select-->

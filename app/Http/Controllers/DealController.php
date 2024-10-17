@@ -82,11 +82,11 @@ class DealController extends Controller
         if (!empty($filterStage)) {
             $dealQuery->where('deals.stage_id', '=', $filterStage);
         }
- // Apply pipeline filter
- $filterPipeline = $request->input('filter_pipeline');
- if (!empty($filterPipeline)) {
-     $dealQuery->where('deals.pipeline_id', '=', $filterPipeline);
- }
+
+        $filterPipeline = $request->input('filter_pipeline');
+        if (!empty($filterPipeline)) {
+            $dealQuery->where('deals.deal_pipeline', '=', $filterPipeline);
+        }
 
         // Fetch results with pagination
         $rows = $dealQuery->paginate(15)->withQueryString();
@@ -361,8 +361,10 @@ class DealController extends Controller
         $fileName = 'deals_' . $dateTime . '.csv';
     
         // Build the deal query with eager loading to optimize related models fetching
-        $deals = Deal::with(['projectAdministrator', 'owner', 'stage', 'homeType', 'source', 'communicationMethod', 'creator'])
-            ->when($request->has('search') && !empty($request->search), function($query) use ($request) {
+        $deals = Deal::join('users', 'deals.created_by', '=', 'users.id')
+                ->join('stages', 'deals.stage_id', '=', 'stages.id')
+                ->join('pipeline', 'deals.deal_pipeline', '=', 'pipeline.id')
+                ->when($request->has('search') && !empty($request->search), function($query) use ($request) {
                 $searchTerm = $request->search;
                 $query->where(function ($q) use ($searchTerm) {
                     $q->where('deal_name', 'LIKE', "%{$searchTerm}%")
@@ -381,6 +383,9 @@ class DealController extends Controller
             })
             ->when($request->has('filter_stage') && !empty($request->filter_stage), function ($query) use ($request) {
                 $query->where('stage_id', $request->filter_stage);
+            })
+            ->when($request->has('filter_pipeline') && !empty($request->filter_pipeline), function ($query) use ($request) {
+                $query->where('deal_pipeline', $request->filter_pipeline);
             })
             ->whereNull('deals.deleted_at')
             ->get();
@@ -416,7 +421,7 @@ class DealController extends Controller
                     optional($deal->projectAdministrator)->name,
                     optional($deal->owner)->name,
                     optional($deal->stage)->stage_name,
-                    optional($deal->homeType)->home_type_name,
+                    optional($deal->getHomeType)->home_type_name,
                     optional($deal->source)->source_name,
                     optional($deal->communicationMethod)->method_name,
                     $deal->deal_closing_date,

@@ -30,7 +30,7 @@
                             </i>Filter</a>
                         <!--end::Menu toggle-->
                         <!--begin::Menu 1-->
-                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true"
+                        <div class="menu menu-sub menu-sub-dropdown w-250px w-md-350px" data-kt-menu="true"
                             id="kt_menu_6606385758292">
                             <!--begin::Header-->
                             <div class="px-7 py-5">
@@ -44,58 +44,65 @@
                             <form method="GET" action="{{ route('deals.index') }}">
                                 <div class="px-7 py-5">
                                     <div class="mb-10">
-                                        <label class="form-label fw-semibold">Search Deal:</label>
-                                        <div>
-                                            <input type="text" name="search" value="{{ request('search') }}"
-                                                placeholder="Name,Phone,Email"
-                                                class="form-control form-control-sm me-3">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Search Deal:</label>
+                                                <input type="text" name="search" value="{{ request('search') }}"
+                                                    placeholder="Name,Phone" class="form-control form-control-sm me-3">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">Deal Amount:</label>
+                                                <div>
+                                                    <input type="number" name="amount" value="{{ request('amount') }}"
+                                                        placeholder="Amount..."
+                                                        class="form-control form-control-sm me-3">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="mb-10">
-                                        <label class="form-label fw-semibold">Deal Amount:</label>
-                                        <div>
-                                            <input type="number" name="amount" value="{{ request('amount') }}"
-                                                placeholder="Amount..." class="form-control form-control-sm me-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-10">
+                                                <label class="form-label fw-semibold">Date From:</label>
+                                                <div>
+                                                    <input type="date" id="date_from" name="date_from"
+                                                        value="{{ request('date_from') }}" placeholder="Date From..."
+                                                        class="form-control form-control-sm">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="mb-10">
-                                        <label class="form-label fw-semibold">Date From:</label>
-                                        <div>
-                                            <input type="date" id="date_from" name="date_from"
-                                                value="{{ request('date_from') }}" placeholder="Date From..."
-                                                class="form-control form-control-sm">
-                                        </div>
-                                    </div>
-                                    <div class="mb-10">
-                                        <label class="form-label fw-semibold">Date To:</label>
-                                        <div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Date To:</label>
                                             <input type="date" id="date_to" name="date_to"
                                                 value="{{ request('date_to') }}" placeholder="Date To..."
                                                 class="form-control form-control-sm">
                                         </div>
                                     </div>
-                                    <div class="mb-10">
-                                        <label class="form-label fw-semibold">Filter By Stage:</label>
-                                        <div>
-                                            <select name="filter_stage" class="form-select form-select-solid"
-                                                data-kt-select2="true" data-close-on-select="false"
-                                                data-placeholder="Select Stage"
-                                                data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
-                                                <option value="">--- Filter By Stage ---</option>
-                                                @foreach($dealStages as $stage)
-                                                <option {{ (isset($_GET['filter_stage']) &&
-                                                    $_GET['filter_stage']==$stage->id) ? 'selected' : ''}}
-                                                    value="{{$stage->id}}">{{$stage->stage_name}}</option>
-                                                @endforeach
-                                            </select>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-10">
+                                                <label class="form-label fw-semibold">Filter By Stage:</label>
+                                                <div>
+                                                    <select name="filter_stage" class="form-select form-select-solid"
+                                                        data-kt-select2="true" data-close-on-select="false"
+                                                        data-placeholder="---Select---"
+                                                        data-dropdown-parent="#kt_menu_6606385758292"
+                                                        data-allow-clear="true">
+                                                        <option value="">--- Filter By Stage ---</option>
+                                                        @foreach($dealStages as $stage)
+                                                        <option {{ (isset($_GET['filter_stage']) &&
+                                                            $_GET['filter_stage']==$stage->id) ? 'selected' : ''}}
+                                                            value="{{$stage->id}}">{{$stage->stage_name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>  
-                                     <div class="mb-10">
-                                        <label class="form-label fw-semibold">Filter By Pipeline:</label>
-                                        <div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Filter By Pipeline:</label>
                                             <select name="filter_pipeline" class="form-select form-select-solid"
                                                 data-kt-select2="true" data-close-on-select="false"
-                                                data-placeholder="Select Pipeline"
+                                                data-placeholder="---Select---"
                                                 data-dropdown-parent="#kt_menu_6606385758292" data-allow-clear="true">
                                                 <option value="">--- Filter By Pipeline ---</option>
                                                 @foreach($dealPipelines as $pipeline)
@@ -106,6 +113,8 @@
                                             </select>
                                         </div>
                                     </div>
+
+
                                     <!--begin::Actions-->
                                     <div class="d-flex justify-content-end">
                                         <a href="{{route('deals.index')}}"
@@ -147,6 +156,7 @@
                             <th>Deal Email</th>
                             <th>Deal Amount</th>
                             <th>Deal Stage</th>
+                            <th>Deal Pipeline</th>
                             <th>Created By</th>
                             <th>Action</th>
                         </tr>
@@ -171,6 +181,11 @@
                                 <span class="badge badge-success badge-circle w-15px h-15px me-1"
                                     style="background-color: {{ $row->stage->stage_color_code }};"></span>{{
                                 $row->stage->stage_name }}
+                            </td>
+                            <td>
+                                <span class="badge badge-success badge-circle w-15px h-15px me-1"
+                                    style="background-color: {{ $row->getPipeline->pipeline_color_code }};"></span>{{
+                                $row->getPipeline->pipeline_name }}
                             </td>
                             <td>
                                 {{ $row->creator->name}} <br>
