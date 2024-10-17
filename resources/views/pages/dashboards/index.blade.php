@@ -99,6 +99,7 @@
                     <div class="card-body py-7">
                         <div class="m-0">
                             <h2 class="text-danger">Please Activate Your Subscription To Access More Pages..!</h2>
+                            <a href="{{route('billing')}}" class="btn btn-primary">Subscribe Package</a>
                         </div>
                     </div>
                 </div>
