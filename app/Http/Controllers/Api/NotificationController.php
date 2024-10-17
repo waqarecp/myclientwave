@@ -30,7 +30,7 @@ class NotificationController extends Controller
                         array(
                             'title' => 'New Lead Created',
                             'body' => 'A new lead has been assigned to you.',
-                            'click_action' => 'http://127.0.0.1:8000/statuses'
+                            'click_action' => 'https://myclientwave.com/statuses'
                         )
                     );
                 }
