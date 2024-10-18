@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Support\Facades\Log;
 
 class CommentReaction extends Mailable implements ShouldQueue
 {
@@ -40,7 +41,17 @@ class CommentReaction extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
-        // Log::info("Sender: {$this->senderUser}, Receiver: {$this->taggedUser}");
+        // Log the details for debugging
+        Log::info('Creating email envelope', [
+            'sender' => $this->senderUser,
+            'receiver' => $this->receiverUser,
+            'receiver_email' => $this->receiverUser->email ?: 'null'
+        ]);
+
+        // Ensure the email is set
+        if (is_null($this->receiverUser->email)) {
+            throw new \Exception("Receiver user email is null.");
+        }
         return new Envelope(
             from: new Address(address: env('MAIL_FROM_ADDRESS'), name: env('MAIL_FROM_NAME')),
             subject: 'Someone reacted to your comment',

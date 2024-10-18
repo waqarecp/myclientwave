@@ -19,6 +19,8 @@ class FirebaseNotifications
     {
         // Get the path to the service account file from .env
         $serviceAccountPath = base_path(env('FIREBASE_CREDENTIALS'));
+        Log::info("Firebase credentials path: " . $serviceAccountPath); // Log the resolved path
+
         $projectId = 'crmanagement-7a4dc';
 
         // Define the required scopes for Firebase Cloud Messaging
