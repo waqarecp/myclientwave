@@ -40,13 +40,15 @@ class CommentReaction extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        // Log::info("Sender: {$this->senderUser}, Receiver: {$this->taggedUser}");
         return new Envelope(
-            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
+            from: new Address(address: env('MAIL_FROM_ADDRESS'), name: env('MAIL_FROM_NAME')),
             subject: 'Someone reacted to your comment',
             to: $this->receiverUser->email,
-            replyTo: [
-                new Address(env('MAIL_NOREPLY_ADDRESS'), env('MAIL_FROM_NAME'))
-            ]
+            replyTo: 
+                [
+                    new Address(env('MAIL_NOREPLY_ADDRESS'), env('MAIL_FROM_NAME'))
+                ]
         );
     }
 

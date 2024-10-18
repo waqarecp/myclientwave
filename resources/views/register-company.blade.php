@@ -70,7 +70,7 @@
 								<!--end::Heading-->
 								<div class="row g-10">
 									<div class="col-md-12 mt-0">
-									<label for="start_trial" class="btn btn-outline btn-outline-dashed btn-light-danger offset-md-5"><input type="checkbox" name="start_trial" id="start_trial" value="1"> Start 14-days Free Trial</label>
+									<label for="start_trial" class="btn btn-outline btn-outline-dashed btn-light-danger offset-md-5"><input type="checkbox" name="start_trial" id="start_trial" value="1" onchange="scrollDown()"> Start 14-days Free Trial</label>
 									</div>									
 									<!--begin::Col-->
 									<div class="col-xl-4">

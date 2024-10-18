@@ -24,8 +24,13 @@ class FirebaseNotifications
         // Define the required scopes for Firebase Cloud Messaging
         $scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
-        // Create a credentials object using the service account JSON file and the required scopes
-        $credentials = new ServiceAccountCredentials($scopes, $serviceAccountPath);
+        try {
+            // Create a credentials object using the service account JSON file and the required scopes
+            $credentials = new ServiceAccountCredentials($scopes, $serviceAccountPath);
+        } catch (\Exception $e) {
+            Log::error("Error initializing Firebase credentials: " . $e->getMessage());
+            return; // or handle it accordingly
+        }
 
         // Fetch the access token
         $accessToken = $credentials->fetchAuthToken()['access_token'];
