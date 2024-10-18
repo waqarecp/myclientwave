@@ -45,21 +45,33 @@ class CommentReaction extends Mailable implements ShouldQueue
         Log::info('Creating email envelope', [
             'sender' => $this->senderUser,
             'receiver' => $this->receiverUser,
-            'receiver_email' => $this->receiverUser->email ?: 'null'
+            'receiver_email' => $this->receiverUser->email ?: 'null',
+            'from_address' => env('MAIL_FROM_ADDRESS') ?: 'null',
+            'reply_to' => env('MAIL_NOREPLY_ADDRESS') ?: 'null',
         ]);
 
-        // Ensure the email is set
+        // Ensure the sender email is set
+        $fromAddress = env('MAIL_FROM_ADDRESS');
+        if (is_null($fromAddress)) {
+            throw new \Exception("MAIL_FROM_ADDRESS is not set in .env.");
+        }
+
+        // Ensure the receiver email is set
         if (is_null($this->receiverUser->email)) {
             throw new \Exception("Receiver user email is null.");
         }
+
+        // Ensure the reply-to email is set
+        $replyToAddress = env('MAIL_NOREPLY_ADDRESS');
+        if (is_null($replyToAddress)) {
+            throw new \Exception("MAIL_NOREPLY_ADDRESS is not set in .env.");
+        }
+
         return new Envelope(
-            from: new Address(address: env('MAIL_FROM_ADDRESS'), name: env('MAIL_FROM_NAME')),
+            from: new Address(address: $fromAddress, name: env('MAIL_FROM_NAME')),
             subject: 'Someone reacted to your comment',
             to: $this->receiverUser->email,
-            replyTo: 
-                [
-                    new Address(env('MAIL_NOREPLY_ADDRESS'), env('MAIL_FROM_NAME'))
-                ]
+            replyTo: [new Address($replyToAddress, env('MAIL_FROM_NAME'))]
         );
     }
 
